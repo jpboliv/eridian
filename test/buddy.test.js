@@ -64,9 +64,10 @@ test('tall render: 3 connected rows, eyeless, quips carried', () => {
   assert.strictEqual(rows.length, 3);
   for (const row of rows) assert.strictEqual([...row].length, 9);
   assert.ok(!/[▛▜]/.test(rows[0]), 'dome has no eye notches');
-  // legs: exactly five ticks, ends are ▘ so they touch ▐/▌ filled halves
+  // legs: 5 down (stance) or 3 down (middle pair lifted), ends always
+  // anchored with ▘ so they touch the ▐/▌ filled halves
   const ticks = [...rows[2]].filter((c) => c === '▘' || c === '▝');
-  assert.strictEqual(ticks.length, 5);
+  assert.ok([5, 3].includes(ticks.length), `stance or lifted, got ${ticks.length}`);
   assert.match(rows[2], /^ ▘/);
   assert.match(rows[2], /▘$/);
   assert.ok(quip.length > 0);
@@ -77,4 +78,24 @@ test('tall render: 3 connected rows, eyeless, quips carried', () => {
 
   const party = renderTall({ milestoneAt: secsAgo(5) }, NOW);
   assert.match(party.rows[0], /^♪.*♪$/);
+});
+
+test('tall gait: legs lift and come back down across ticks', () => {
+  const { renderTall } = require('../scripts/lib/buddy');
+  const buddy = {}; // humming: 2s cadence
+  const t0 = Math.floor(NOW / 4000) * 4000;
+  const a = renderTall(buddy, t0).rows[2];
+  const b = renderTall(buddy, t0 + 2000).rows[2];
+  assert.notStrictEqual(a, b, 'gait frames alternate');
+  const count = (row) => [...row].filter((c) => c === '▘' || c === '▝').length;
+  assert.deepStrictEqual([count(a), count(b)].sort(), [3, 5]);
+});
+
+test('working mood steps at 1s cadence', () => {
+  const { renderTall } = require('../scripts/lib/buddy');
+  const buddy = { lastToolAt: secsAgo(1) };
+  const t0 = Math.floor(NOW / 2000) * 2000;
+  const a = renderTall(buddy, t0).rows[2];
+  const b = renderTall(buddy, t0 + 1000).rows[2];
+  assert.notStrictEqual(a, b, 'working gait alternates every second');
 });

@@ -52,12 +52,20 @@ const TALL = {
   dome: ' ▄█████▄ ',
   domeParty: '♪▄█████▄♪',
   body: '▐███████▌',
-  legs: [' ▘ ▘▘ ▝ ▘', ' ▘ ▝▝ ▘ ▘'],
+  // gait: stance (all five down) ↔ middle pair lifted; end legs stay
+  // anchored so Rocky never floats
+  legs: [' ▘ ▘▘ ▝ ▘', ' ▘  ▘   ▘'],
   legsTucked: ' ▄ ▄▄ ▄ ▄',
 };
 
 function pick(pool, nowMs) {
   return pool[Math.floor(nowMs / 10_000) % pool.length];
+}
+
+// legs step every 2s; twice as fast while working
+function gaitTick(mood, nowMs) {
+  const tick = mood === 'working' ? 1000 : 2000;
+  return Math.floor(nowMs / tick) % 2;
 }
 
 function quipFor(mood, buddy, nowMs) {
@@ -70,7 +78,7 @@ function quipFor(mood, buddy, nowMs) {
 
 function renderBuddy(buddy = {}, nowMs) {
   const mood = deriveMood(buddy, nowMs);
-  const step = MINI.step[Math.floor(nowMs / 2000) % 2];
+  const step = MINI.step[gaitTick(mood, nowMs)];
 
   if (mood === 'sleeping') return { art: MINI.sleeping, quip: '' };
   if (mood === 'alarmed') {
@@ -84,7 +92,7 @@ function renderBuddy(buddy = {}, nowMs) {
 
 function renderTall(buddy = {}, nowMs) {
   const mood = deriveMood(buddy, nowMs);
-  const legs = TALL.legs[Math.floor(nowMs / 2000) % 2];
+  const legs = TALL.legs[gaitTick(mood, nowMs)];
 
   if (mood === 'sleeping') {
     return { rows: [TALL.dome, TALL.body, TALL.legsTucked], quip: 'zzz' };
