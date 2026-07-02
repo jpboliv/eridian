@@ -26,7 +26,7 @@ test('sleeping after 10 min idle; humming when no history', () => {
   assert.strictEqual(deriveMood({}, NOW), 'humming');
 });
 
-test('recent prompt keeps rocky awake', () => {
+test('recent prompt keeps Rocky awake', () => {
   const buddy = { lastToolAt: secsAgo(700), lastPromptAt: secsAgo(30) };
   assert.strictEqual(deriveMood(buddy, NOW), 'humming');
 });
