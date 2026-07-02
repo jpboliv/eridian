@@ -16,7 +16,8 @@ OUT=eval/results.csv
 echo "prompt_id,mode,output_tokens" > "$OUT"
 
 run_one() { # $1=id $2=mode $3=full-prompt
-  tokens=$(claude -p "$3" --output-format json 2>/dev/null | jq -r '.usage.output_tokens')
+  # </dev/null: claude -p reads stdin, which would drain the while-read pipe
+  tokens=$(claude -p "$3" --output-format json </dev/null 2>/dev/null | jq -r '.usage.output_tokens')
   echo "$1,$2,$tokens" | tee -a "$OUT"
 }
 
