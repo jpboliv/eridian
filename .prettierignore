@@ -1,0 +1,6 @@
+# Hand-tuned prompt content consumed verbatim as LLM instructions —
+# not code style, and skills/speak/SKILL.md is parsed by exact
+# HTML-comment delimiters (see scripts/lib/persona.js). Reformatting
+# would risk silently altering injected persona text.
+skills/
+commands/

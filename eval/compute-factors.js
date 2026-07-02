@@ -5,8 +5,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const rows = fs.readFileSync(path.join(__dirname, 'results.csv'), 'utf8')
-  .trim().split('\n').slice(1)
+const rows = fs
+  .readFileSync(path.join(__dirname, 'results.csv'), 'utf8')
+  .trim()
+  .split('\n')
+  .slice(1)
   .map((l) => {
     const [id, mode, tokens] = l.split(',');
     return { id, mode, tokens: Number(tokens) };
@@ -54,5 +57,7 @@ if (Object.values(vsTerse).some((list) => list.length)) {
   console.log('\nvs terse control ("Answer concisely." — README only):\n');
   printTable(vsTerse);
 } else {
-  console.log('\nno terse cells in results.csv — for the vs-terse table run: bash eval/run.sh terse');
+  console.log(
+    '\nno terse cells in results.csv — for the vs-terse table run: bash eval/run.sh terse'
+  );
 }

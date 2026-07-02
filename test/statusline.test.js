@@ -9,12 +9,15 @@ test('renders nothing when off', () => {
 });
 
 test('mini: 4 rows, quip on the arms row, level+savings on the body row', () => {
-  const lines = renderLines({
-    current: 'full',
-    buddyStyle: 'mini',
-    buddy: {},
-    cache: { savedTokens: 12300 },
-  }, NOW);
+  const lines = renderLines(
+    {
+      current: 'full',
+      buddyStyle: 'mini',
+      buddy: {},
+      cache: { savedTokens: 12300 },
+    },
+    NOW
+  );
   assert.strictEqual(lines.length, 4);
   assert.match(lines[0], /♫/);
   assert.match(lines[2], /·\s*full/);
@@ -28,12 +31,15 @@ test('mini omits savings segment without cache', () => {
 });
 
 test('tall: 5 rows, quip on the arms row, level+savings on the body row', () => {
-  const lines = renderLines({
-    current: 'ultra',
-    buddyStyle: 'tall',
-    buddy: {},
-    cache: { savedTokens: 12300 },
-  }, NOW);
+  const lines = renderLines(
+    {
+      current: 'ultra',
+      buddyStyle: 'tall',
+      buddy: {},
+      cache: { savedTokens: 12300 },
+    },
+    NOW
+  );
   assert.strictEqual(lines.length, 5);
   assert.match(lines[0], /♫/);
   assert.match(lines[3], /· ultra/);

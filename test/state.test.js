@@ -11,12 +11,21 @@ const state = require('../scripts/lib/state');
 test('readState returns default when file missing', () => {
   const s = state.readState();
   assert.deepStrictEqual(s, {
-    current: 'off', events: [], cache: null, buddy: {}, buddyStyle: 'mini',
+    current: 'off',
+    events: [],
+    cache: null,
+    buddy: {},
+    buddyStyle: 'mini',
   });
 });
 
 test('writeState then readState round-trips', () => {
-  state.writeState({ current: 'full', events: [{ ts: 'T', level: 'full' }], cache: null, buddy: {} });
+  state.writeState({
+    current: 'full',
+    events: [{ ts: 'T', level: 'full' }],
+    cache: null,
+    buddy: {},
+  });
   assert.strictEqual(state.readState().current, 'full');
   assert.strictEqual(state.readState().events.length, 1);
 });
@@ -28,7 +37,10 @@ test('readState survives corrupt file', () => {
 
 test('update applies mutation and persists', () => {
   state.writeState({ current: 'off', events: [], cache: null, buddy: {} });
-  const next = state.update((s) => { s.current = 'ultra'; return s; });
+  const next = state.update((s) => {
+    s.current = 'ultra';
+    return s;
+  });
   assert.strictEqual(next.current, 'ultra');
   assert.strictEqual(state.readState().current, 'ultra');
 });

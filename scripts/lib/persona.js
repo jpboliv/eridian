@@ -1,15 +1,15 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const SKILL_FILE = path.join(
-  __dirname, '..', '..', 'skills', 'speak', 'SKILL.md'
-);
+const SKILL_FILE = path.join(__dirname, '..', '..', 'skills', 'speak', 'SKILL.md');
 
 const LEVELS = ['lite', 'full', 'ultra', 'off'];
 const ALIASES = { eridian: 'ultra' };
 
 function normalizeLevel(input) {
-  const key = String(input || '').trim().toLowerCase();
+  const key = String(input || '')
+    .trim()
+    .toLowerCase();
   if (ALIASES[key]) return ALIASES[key];
   return LEVELS.includes(key) ? key : null;
 }

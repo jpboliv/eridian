@@ -25,7 +25,11 @@ if (!process.env.ERIDIAN_STATE_DIR) {
 }
 
 const DEFAULT_STATE = {
-  current: 'off', events: [], cache: null, buddy: {}, buddyStyle: 'mini',
+  current: 'off',
+  events: [],
+  cache: null,
+  buddy: {},
+  buddyStyle: 'mini',
 };
 
 function readState() {
@@ -54,5 +58,10 @@ function update(fn) {
 }
 
 module.exports = {
-  readState, writeState, update, migrateLegacyStateDir, STATE_DIR, STATE_FILE,
+  readState,
+  writeState,
+  update,
+  migrateLegacyStateDir,
+  STATE_DIR,
+  STATE_FILE,
 };
