@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Rocky-speak token compression plugin for Claude Code",
   "scripts": {
-    "test": "node --test test/"
+    "test": "node --test"
   },
   "engines": { "node": ">=18" }
 }
