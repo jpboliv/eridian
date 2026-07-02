@@ -1,3 +1,5 @@
+const { MINI, TALL } = require('./buddy-art');
+
 const WINDOWS = {
   celebrating: 60_000,
   alarmed: 30_000,
@@ -17,6 +19,17 @@ const QUIPS = {
     build: 'I make.',
     other: 'I listen.',
   },
+};
+
+// Per mood: which arm poses cycle, how fast, and special flags.
+// still = frozen figure; party = ♪ dome; tucked = asleep; fastGait = 1s legs.
+const ANIM = {
+  humming: { arms: ['down', 'up'], armsTick: 2000 },
+  reacting: { arms: ['leftWave', 'rightWave'], armsTick: 600 },
+  working: { arms: ['up', 'wide'], armsTick: 1000, fastGait: true },
+  celebrating: { arms: ['celebrate', 'five'], armsTick: 500, party: true },
+  alarmed: { arms: ['up'], still: true },
+  sleeping: { tucked: true },
 };
 
 function within(ts, nowMs, windowMs) {
@@ -40,36 +53,26 @@ function deriveMood(buddy = {}, nowMs) {
   return 'humming';
 }
 
-// Eyeless, book-accurate: Eridians have no eyes, so Rocky is pure carapace.
-// Mini is a one-cell wedge; tall is a Clawd-sized dome with five legs whose
-// end ticks are ▘ so they touch the filled halves of the ▐/▌ body edges.
-const MINI = {
-  step: ['▟█▙', '▄█▄'],
-  alarmed: '▛█▜',
-  sleeping: '▄▄▄ zzz',
-};
-const TALL = {
-  dome: ' ▄█████▄ ',
-  domeParty: '♪▄█████▄♪',
-  body: '▐███████▌',
-  // gait: stance (all five down) ↔ middle pair lifted; end legs stay
-  // anchored so Rocky never floats
-  legs: [' ▘ ▘▘ ▝ ▘', ' ▘  ▘   ▘'],
-  legsTucked: ' ▄ ▄▄ ▄ ▄',
-};
-
 function pick(pool, nowMs) {
   return pool[Math.floor(nowMs / 10_000) % pool.length];
 }
 
-// legs step every 2s; twice as fast while working
-function gaitTick(mood, nowMs) {
-  const tick = mood === 'working' ? 1000 : 2000;
+// arms drift through the mood's poses; a single/still pose never changes
+function armFrame(anim, nowMs) {
+  const poses = anim.arms;
+  if (anim.still || poses.length === 1) return poses[0];
+  return poses[Math.floor(nowMs / anim.armsTick) % poses.length];
+}
+
+// legs step every 2s; twice as fast while working; frozen when still
+function gaitIndex(anim, nowMs) {
+  if (anim.still) return 0;
+  const tick = anim.fastGait ? 1000 : 2000;
   return Math.floor(nowMs / tick) % 2;
 }
 
 function quipFor(mood, buddy, nowMs) {
-  if (mood === 'sleeping') return '';
+  if (mood === 'sleeping') return 'zzz';
   if (mood === 'reacting') {
     return QUIPS.reacting[buddy.promptClass] || QUIPS.reacting.other;
   }
@@ -78,27 +81,28 @@ function quipFor(mood, buddy, nowMs) {
 
 function renderBuddy(buddy = {}, nowMs) {
   const mood = deriveMood(buddy, nowMs);
-  const step = MINI.step[gaitTick(mood, nowMs)];
-
-  if (mood === 'sleeping') return { art: MINI.sleeping, quip: '' };
-  if (mood === 'alarmed') {
-    return { art: MINI.alarmed, quip: quipFor(mood, buddy, nowMs) };
+  const anim = ANIM[mood];
+  const quip = quipFor(mood, buddy, nowMs);
+  if (anim.tucked) {
+    return { rows: ['', MINI.dome, MINI.body, MINI.legsTucked], quip };
   }
-  if (mood === 'celebrating') {
-    return { art: `♪ ${step} ♪`, quip: quipFor(mood, buddy, nowMs) };
-  }
-  return { art: step, quip: quipFor(mood, buddy, nowMs) };
+  const arms = MINI.arms[armFrame(anim, nowMs)];
+  const dome = anim.party ? MINI.domeParty : MINI.dome;
+  const legs = MINI.legs[gaitIndex(anim, nowMs)];
+  return { rows: [arms, dome, MINI.body, legs], quip };
 }
 
 function renderTall(buddy = {}, nowMs) {
   const mood = deriveMood(buddy, nowMs);
-  const legs = TALL.legs[gaitTick(mood, nowMs)];
-
-  if (mood === 'sleeping') {
-    return { rows: [TALL.dome, TALL.body, TALL.legsTucked], quip: 'zzz' };
+  const anim = ANIM[mood];
+  const quip = quipFor(mood, buddy, nowMs);
+  if (anim.tucked) {
+    return { rows: ['', TALL.dome, TALL.body[0], TALL.body[1], TALL.legsTucked], quip };
   }
-  const dome = mood === 'celebrating' ? TALL.domeParty : TALL.dome;
-  return { rows: [dome, TALL.body, legs], quip: quipFor(mood, buddy, nowMs) };
+  const arms = TALL.arms[armFrame(anim, nowMs)];
+  const dome = anim.party ? TALL.domeParty : TALL.dome;
+  const legs = TALL.legs[gaitIndex(anim, nowMs)];
+  return { rows: [arms, dome, TALL.body[0], TALL.body[1], legs], quip };
 }
 
 module.exports = { deriveMood, renderBuddy, renderTall };

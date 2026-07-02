@@ -18,20 +18,18 @@ function infoSegments(state) {
 function renderLines(state, nowMs) {
   if (!state.current || state.current === 'off') return [];
 
-  if (state.buddyStyle === 'tall') {
-    const { rows, quip } = renderTall(state.buddy || {}, nowMs);
-    return [
-      `${rows[0]}  ${quip || '♫'}`.trimEnd(),
-      `${rows[1]}  ${infoSegments(state).join('  ')}`,
-      rows[2],
-    ];
-  }
+  const info = infoSegments(state).join('  ');
+  const render = state.buddyStyle === 'tall' ? renderTall : renderBuddy;
+  const { rows, quip } = render(state.buddy || {}, nowMs);
 
-  const { art, quip } = renderBuddy(state.buddy || {}, nowMs);
-  const parts = [`♫ ${art}`];
-  if (quip) parts.push(quip);
-  parts.push(...infoSegments(state));
-  return [parts.join('  ')];
+  // quip rides the arms (top) row like a speech bubble; info rides the body
+  // row just above the legs. Height is fixed (mini 4 rows, tall 5).
+  const bodyRow = rows.length - 2;
+  return rows.map((row, i) => {
+    if (i === 0) return `${row}  ${quip || '♫'}`.trimEnd();
+    if (i === bodyRow) return `${row}  ${info}`.trimEnd();
+    return row;
+  });
 }
 
 module.exports = { renderLines, formatTokens };

@@ -11,12 +11,15 @@ const MINI = {
     down: '',
     up: '▘     ▘',
     wide: '▘       ▘',
-    leftWave: '▘',
+    // leftWave mirrors rightWave's true width (9) so the quip position
+    // (appended after this row) doesn't jump as the wave animates.
+    leftWave: '▘' + ' '.repeat(8),
     rightWave: '        ▘',
     five: '▘  ▘ ▘  ▘',
     celebrate: '▘ ▘   ▘ ▘',
   },
-  legs: ['▘ ▘ ▘▘', '▘    ▘'],
+  // gait frames: 4 ticks (stance) vs 3 ticks (mid-stride), ends anchored
+  legs: ['▘ ▘ ▘▘', '▘  ▘ ▘'],
   legsTucked: '▄ ▄ ▄▄',
 };
 
@@ -29,12 +32,14 @@ const TALL = {
     up: '▘       ▘',
     higher: '  ▘   ▘',
     wide: '▘         ▘',
-    leftWave: '▘',
+    // leftWave mirrors rightWave's true width (11)
+    leftWave: '▘' + ' '.repeat(10),
     rightWave: '          ▘',
     five: '▘  ▘ ▘  ▘',
     celebrate: '▘ ▘   ▘ ▘',
   },
-  legs: ['▘ ▘▘ ▘ ▘', '▘  ▘   ▘'],
+  // gait frames: 5 ticks (stance) vs 3 ticks (mid-stride), ends anchored
+  legs: ['▘ ▘▘ ▘ ▘', '▘   ▘  ▘'],
   legsTucked: '▄ ▄▄ ▄ ▄',
 };
 
