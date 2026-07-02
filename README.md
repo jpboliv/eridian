@@ -75,7 +75,7 @@ concisely" on every message):
 | `full` | ~26% |
 | `ultra` | ~9% |
 
-**vs a plain `Answer concisely.` instruction** — what the dialect adds over
+**vs a plain `Answer concisely.` instruction** — how the dialect compares to
 just asking for brevity:
 
 | level | avg reduction vs terse |
@@ -84,12 +84,14 @@ just asking for brevity:
 | `full` | ~-50% |
 | `ultra` | ~-77% |
 
-`lite` is the saver, `full` trades some savings for voice, and `ultra` is
-basically flavor-neutral — the triples and ♫ cost what the terseness saves.
-You run `ultra` because it is amaze, not because it is cheap. Single runs
-per cell, so expect variance; recalibrate with `bash eval/run.sh && node
-eval/compute-factors.js` (a partial re-run like `bash eval/run.sh terse`
-appends to the existing cells). All displayed savings are estimates.
+`lite` is the saver — about on par with plain terseness. `full` and `ultra`
+cost *more* tokens than a plain `Answer concisely.`: the triples and ♫
+outweigh what terseness buys back. You run `ultra` because it is amaze, not
+because it is cheap. Against default Claude all three still net a reduction
+(the table above). Single runs per cell, so expect variance; recalibrate
+with `bash eval/run.sh && node eval/compute-factors.js` (a partial re-run
+like `bash eval/run.sh terse` appends to the existing cells). All displayed
+savings are estimates.
 
 ## Development
 
