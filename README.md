@@ -64,7 +64,10 @@ with `/eridian:buddy`:
 ## Savings
 
 Measured on 10 real coding prompts via `claude -p`, one run per prompt/mode
-(`eval/run.sh`), 2026-07-02:
+(`eval/run.sh`), 2026-07-02. Two honest counterfactuals:
+
+**vs default Claude** — what the statusline counts (nobody types "answer
+concisely" on every message):
 
 | level | avg output-token reduction |
 |---|---|
@@ -72,12 +75,21 @@ Measured on 10 real coding prompts via `claude -p`, one run per prompt/mode
 | `full` | ~26% |
 | `ultra` | ~9% |
 
-Honest numbers: `lite` is the saver, `full` trades some savings for voice,
-and `ultra` is basically flavor-neutral — the triples and ♫ cost what the
-terseness saves. You run `ultra` because it is amaze, not because it is
-cheap. Single runs per cell, so expect variance; recalibrate with
-`bash eval/run.sh && node eval/compute-factors.js`. All displayed savings
-are estimates.
+**vs a plain `Answer concisely.` instruction** — what the dialect adds over
+just asking for brevity:
+
+| level | avg reduction vs terse |
+|---|---|
+| `lite` | ~10% |
+| `full` | ~-50% |
+| `ultra` | ~-77% |
+
+`lite` is the saver, `full` trades some savings for voice, and `ultra` is
+basically flavor-neutral — the triples and ♫ cost what the terseness saves.
+You run `ultra` because it is amaze, not because it is cheap. Single runs
+per cell, so expect variance; recalibrate with `bash eval/run.sh && node
+eval/compute-factors.js` (a partial re-run like `bash eval/run.sh terse`
+appends to the existing cells). All displayed savings are estimates.
 
 ## Development
 
