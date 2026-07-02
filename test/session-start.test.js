@@ -17,9 +17,15 @@ function run(stateDir) {
 
 test('emits additionalContext when mode active', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-ss-'));
-  fs.writeFileSync(path.join(dir, 'state.json'), JSON.stringify({
-    current: 'ultra', events: [], cache: null, buddy: {},
-  }));
+  fs.writeFileSync(
+    path.join(dir, 'state.json'),
+    JSON.stringify({
+      current: 'ultra',
+      events: [],
+      cache: null,
+      buddy: {},
+    })
+  );
   const out = JSON.parse(run(dir));
   assert.strictEqual(out.hookSpecificOutput.hookEventName, 'SessionStart');
   assert.match(out.hookSpecificOutput.additionalContext, /ROCKY MODE \(ultra\)/);

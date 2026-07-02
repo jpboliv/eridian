@@ -16,8 +16,7 @@ function buildWindows(events, nowMs) {
 }
 
 function attribute(messages, windows) {
-  const inAnyWindow = (ts) =>
-    windows.some((w) => ts >= w.startMs && ts < w.endMs);
+  const inAnyWindow = (ts) => windows.some((w) => ts >= w.startMs && ts < w.endMs);
   const totals = {};
   for (const m of messages) {
     const w = windows.find((w) => m.tsMs >= w.startMs && m.tsMs < w.endMs);

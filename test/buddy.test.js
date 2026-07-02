@@ -51,7 +51,10 @@ test('fixed height: mini is always 4 rows, tall always 5', () => {
 
 test('mini is eyeless and carries mood quips', () => {
   const hum = renderBuddy({}, NOW);
-  assert.ok(hum.rows.every((r) => !/[▛▜]/.test(r)), 'no eye notches');
+  assert.ok(
+    hum.rows.every((r) => !/[▛▜]/.test(r)),
+    'no eye notches'
+  );
   assert.ok(renderBuddy({ lastErrorAt: secsAgo(5) }, NOW).quip.length > 0);
   assert.strictEqual(renderBuddy({ lastToolAt: secsAgo(700) }, NOW).quip, 'zzz');
 });
@@ -73,14 +76,14 @@ test('alarmed is held still across ticks; humming animates', () => {
   assert.deepStrictEqual(
     renderBuddy(alarmed, NOW).rows,
     renderBuddy(alarmed, NOW + 3000).rows,
-    'alarmed frozen (stillness reads as alarm)',
+    'alarmed frozen (stillness reads as alarm)'
   );
 
   const t0 = Math.floor(NOW / 4000) * 4000; // arms & legs both flip within 2s
   assert.notDeepStrictEqual(
     renderBuddy({}, t0).rows,
     renderBuddy({}, t0 + 2000).rows,
-    'humming moves',
+    'humming moves'
   );
 });
 
@@ -95,6 +98,6 @@ test('working legs step faster than humming', () => {
   assert.notStrictEqual(
     renderTall(work, t0).rows[4],
     renderTall(work, t0 + 1000).rows[4],
-    'working gait alternates every second',
+    'working gait alternates every second'
   );
 });

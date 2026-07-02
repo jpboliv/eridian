@@ -1,7 +1,11 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const { buildWindows, attribute, estimateSaved, crossedMilestones } =
-  require('../scripts/lib/stats-lib');
+const {
+  buildWindows,
+  attribute,
+  estimateSaved,
+  crossedMilestones,
+} = require('../scripts/lib/stats-lib');
 
 const T0 = Date.parse('2026-07-01T10:00:00Z');
 const mins = (n) => T0 + n * 60_000;
@@ -58,10 +62,7 @@ test('attribute falls back to message ts when sessionStartMs missing', () => {
 });
 
 test('estimateSaved applies per-level factors', () => {
-  const saved = estimateSaved(
-    { full: { messages: 1, tokens: 100 } },
-    { full: 0.5 }
-  );
+  const saved = estimateSaved({ full: { messages: 1, tokens: 100 } }, { full: 0.5 });
   assert.strictEqual(saved, 100); // 100/(1-0.5) - 100
 });
 

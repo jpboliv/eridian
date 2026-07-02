@@ -5,7 +5,11 @@ function main(raw) {
 
   const kind = process.argv[2];
   let input = {};
-  try { input = JSON.parse(raw); } catch { /* tolerate bad stdin */ }
+  try {
+    input = JSON.parse(raw);
+  } catch {
+    /* tolerate bad stdin */
+  }
   const now = new Date().toISOString();
 
   if (kind === 'prompt') {
@@ -28,8 +32,14 @@ function main(raw) {
 }
 
 let raw = '';
-process.stdin.on('data', (c) => { raw += c; });
+process.stdin.on('data', (c) => {
+  raw += c;
+});
 process.stdin.on('end', () => {
-  try { main(raw); } catch { /* never block tool calls */ }
+  try {
+    main(raw);
+  } catch {
+    /* never block tool calls */
+  }
   process.exit(0);
 });
