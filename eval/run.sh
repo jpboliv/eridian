@@ -4,6 +4,14 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# Baseline runs must be clean: if rocky mode is on, the SessionStart hook
+# injects the dialect into every run and corrupts the measurements.
+current=$(node -e "console.log(require('./scripts/lib/state').readState().current)")
+if [ "$current" != "off" ]; then
+  echo "rocky mode is '$current' — run 'node scripts/mode.js off' first." >&2
+  exit 1
+fi
+
 OUT=eval/results.csv
 echo "prompt_id,mode,output_tokens" > "$OUT"
 

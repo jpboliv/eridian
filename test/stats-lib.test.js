@@ -26,13 +26,34 @@ test('attribute assigns messages to window levels', () => {
     { startMs: mins(60), endMs: mins(90), level: 'ultra' },
   ];
   const messages = [
-    { tsMs: mins(10), outputTokens: 100 },
-    { tsMs: mins(45), outputTokens: 999 }, // outside any window
-    { tsMs: mins(70), outputTokens: 50 },
+    { tsMs: mins(10), outputTokens: 100, sessionStartMs: mins(5) },
+    { tsMs: mins(45), outputTokens: 999, sessionStartMs: mins(5) }, // outside any window
+    { tsMs: mins(70), outputTokens: 50, sessionStartMs: mins(65) },
   ];
   assert.deepStrictEqual(attribute(messages, windows), {
     full: { messages: 1, tokens: 100 },
     ultra: { messages: 1, tokens: 50 },
+  });
+});
+
+test('attribute excludes messages from sessions started before mode-on', () => {
+  const windows = [{ startMs: mins(10), endMs: mins(60), level: 'full' }];
+  const messages = [
+    // session began at mins(0), before the window: hook never injected
+    { tsMs: mins(20), outputTokens: 500, sessionStartMs: mins(0) },
+    // session began inside the window: counts
+    { tsMs: mins(20), outputTokens: 100, sessionStartMs: mins(15) },
+  ];
+  assert.deepStrictEqual(attribute(messages, windows), {
+    full: { messages: 1, tokens: 100 },
+  });
+});
+
+test('attribute falls back to message ts when sessionStartMs missing', () => {
+  const windows = [{ startMs: mins(0), endMs: mins(30), level: 'lite' }];
+  const messages = [{ tsMs: mins(10), outputTokens: 40 }];
+  assert.deepStrictEqual(attribute(messages, windows), {
+    lite: { messages: 1, tokens: 40 },
   });
 });
 

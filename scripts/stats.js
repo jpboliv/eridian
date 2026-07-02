@@ -22,15 +22,21 @@ function collectMessages(dir) {
     for (const file of fs.readdirSync(projectDir).filter((f) => f.endsWith('.jsonl'))) {
       sessions += 1;
       const lines = fs.readFileSync(path.join(projectDir, file), 'utf8').split('\n');
+      const sessionMessages = [];
+      let sessionStartMs = Infinity;
       for (const line of lines) {
         try {
           const obj = JSON.parse(line);
-          const tokens = obj?.message?.usage?.output_tokens;
           const tsMs = Date.parse(obj?.timestamp);
+          if (Number.isFinite(tsMs) && tsMs < sessionStartMs) sessionStartMs = tsMs;
+          const tokens = obj?.message?.usage?.output_tokens;
           if (obj.type === 'assistant' && Number.isFinite(tsMs) && tokens > 0) {
-            messages.push({ tsMs, outputTokens: tokens });
+            sessionMessages.push({ tsMs, outputTokens: tokens });
           }
         } catch { /* skip malformed lines */ }
+      }
+      for (const m of sessionMessages) {
+        messages.push({ ...m, sessionStartMs });
       }
     }
   }
