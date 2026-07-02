@@ -10,7 +10,9 @@ const state = require('../scripts/lib/state');
 
 test('readState returns default when file missing', () => {
   const s = state.readState();
-  assert.deepStrictEqual(s, { current: 'off', events: [], cache: null, buddy: {} });
+  assert.deepStrictEqual(s, {
+    current: 'off', events: [], cache: null, buddy: {}, buddyStyle: 'mini',
+  });
 });
 
 test('writeState then readState round-trips', () => {

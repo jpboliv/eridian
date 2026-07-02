@@ -40,41 +40,57 @@ function deriveMood(buddy = {}, nowMs) {
   return 'humming';
 }
 
-function frame(eyes, armsAlt) {
-  return armsAlt ? `╲╱[${eyes}]╲╱` : `╱╲[${eyes}]╱╲`;
-}
+// Eyeless, book-accurate: Eridians have no eyes, so Rocky is pure carapace.
+// Mini is a one-cell wedge; tall is a Clawd-sized dome with five legs whose
+// end ticks are ▘ so they touch the filled halves of the ▐/▌ body edges.
+const MINI = {
+  step: ['▟█▙', '▄█▄'],
+  alarmed: '▛█▜',
+  sleeping: '▄▄▄ zzz',
+};
+const TALL = {
+  dome: ' ▄█████▄ ',
+  domeParty: '♪▄█████▄♪',
+  body: '▐███████▌',
+  legs: [' ▘ ▘▘ ▝ ▘', ' ▘ ▝▝ ▘ ▘'],
+  legsTucked: ' ▄ ▄▄ ▄ ▄',
+};
 
 function pick(pool, nowMs) {
   return pool[Math.floor(nowMs / 10_000) % pool.length];
 }
 
-function renderBuddy(buddy = {}, nowMs) {
-  const mood = deriveMood(buddy, nowMs);
-  const blink = Math.floor(nowMs / 1000) % 7 === 0;
-  const armsAlt = Math.floor(nowMs / 2000) % 2 === 1;
-
-  let art;
-  let quip;
-  if (mood === 'sleeping') {
-    art = `${frame('-ᴗ-', false)} zzz`;
-    quip = '';
-  } else if (mood === 'alarmed') {
-    art = frame('⊙_⊙', armsAlt);
-    quip = pick(QUIPS.alarmed, nowMs);
-  } else if (mood === 'celebrating') {
-    art = `♪ ${frame(blink ? '-ᴗ-' : '•ᴗ•', armsAlt)} ♪`;
-    quip = pick(QUIPS.celebrating, nowMs);
-  } else if (mood === 'reacting') {
-    art = frame(blink ? '-ᴗ-' : '•ᴗ•', armsAlt);
-    quip = QUIPS.reacting[buddy.promptClass] || QUIPS.reacting.other;
-  } else if (mood === 'working') {
-    art = frame(blink ? '-ᴗ-' : '•ᴗ•', armsAlt);
-    quip = pick(QUIPS.working, nowMs);
-  } else {
-    art = frame(blink ? '-ᴗ-' : '•ᴗ•', armsAlt);
-    quip = pick(QUIPS.humming, nowMs);
+function quipFor(mood, buddy, nowMs) {
+  if (mood === 'sleeping') return '';
+  if (mood === 'reacting') {
+    return QUIPS.reacting[buddy.promptClass] || QUIPS.reacting.other;
   }
-  return { art, quip };
+  return pick(QUIPS[mood], nowMs);
 }
 
-module.exports = { deriveMood, renderBuddy };
+function renderBuddy(buddy = {}, nowMs) {
+  const mood = deriveMood(buddy, nowMs);
+  const step = MINI.step[Math.floor(nowMs / 2000) % 2];
+
+  if (mood === 'sleeping') return { art: MINI.sleeping, quip: '' };
+  if (mood === 'alarmed') {
+    return { art: MINI.alarmed, quip: quipFor(mood, buddy, nowMs) };
+  }
+  if (mood === 'celebrating') {
+    return { art: `♪ ${step} ♪`, quip: quipFor(mood, buddy, nowMs) };
+  }
+  return { art: step, quip: quipFor(mood, buddy, nowMs) };
+}
+
+function renderTall(buddy = {}, nowMs) {
+  const mood = deriveMood(buddy, nowMs);
+  const legs = TALL.legs[Math.floor(nowMs / 2000) % 2];
+
+  if (mood === 'sleeping') {
+    return { rows: [TALL.dome, TALL.body, TALL.legsTucked], quip: 'zzz' };
+  }
+  const dome = mood === 'celebrating' ? TALL.domeParty : TALL.dome;
+  return { rows: [dome, TALL.body, legs], quip: quipFor(mood, buddy, nowMs) };
+}
+
+module.exports = { deriveMood, renderBuddy, renderTall };

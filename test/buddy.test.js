@@ -31,27 +31,50 @@ test('recent prompt keeps rocky awake', () => {
   assert.strictEqual(deriveMood(buddy, NOW), 'humming');
 });
 
-test('render is deterministic and mood-appropriate', () => {
+test('mini render is deterministic, eyeless, and mood-appropriate', () => {
   const sleeping = renderBuddy({ lastToolAt: secsAgo(700) }, NOW);
-  assert.match(sleeping.art, /zzz/);
+  assert.strictEqual(sleeping.art, '▄▄▄ zzz');
   assert.strictEqual(sleeping.quip, '');
 
   const alarmed = renderBuddy({ lastErrorAt: secsAgo(5) }, NOW);
-  assert.match(alarmed.art, /⊙_⊙/);
+  assert.strictEqual(alarmed.art, '▛█▜');
   assert.ok(alarmed.quip.length > 0);
 
   const a = renderBuddy({}, NOW);
   const b = renderBuddy({}, NOW);
   assert.deepStrictEqual(a, b);
+  assert.ok(['▟█▙', '▄█▄'].includes(a.art), 'base frame is an eyeless glyph');
 });
 
-test('blink frame on 7-second tick', () => {
-  const blinkNow = Math.floor(NOW / 7000) * 7000; // a multiple of 7s
-  const { art } = renderBuddy({}, blinkNow);
-  assert.match(art, /-ᴗ-/);
+test('mini legs shuffle across 2-second ticks', () => {
+  const even = renderBuddy({}, Math.floor(NOW / 4000) * 4000);
+  const odd = renderBuddy({}, Math.floor(NOW / 4000) * 4000 + 2000);
+  assert.notStrictEqual(even.art, odd.art);
 });
 
 test('reacting quip follows prompt class', () => {
   const buddy = { lastPromptAt: secsAgo(5), promptClass: 'bugfix' };
   assert.strictEqual(renderBuddy(buddy, NOW).quip, 'bad bad. I fix.');
+});
+
+test('tall render: 3 connected rows, eyeless, quips carried', () => {
+  const { renderTall } = require('../scripts/lib/buddy');
+
+  const { rows, quip } = renderTall({ lastToolAt: secsAgo(5) }, NOW);
+  assert.strictEqual(rows.length, 3);
+  for (const row of rows) assert.strictEqual([...row].length, 9);
+  assert.ok(!/[▛▜]/.test(rows[0]), 'dome has no eye notches');
+  // legs: exactly five ticks, ends are ▘ so they touch ▐/▌ filled halves
+  const ticks = [...rows[2]].filter((c) => c === '▘' || c === '▝');
+  assert.strictEqual(ticks.length, 5);
+  assert.match(rows[2], /^ ▘/);
+  assert.match(rows[2], /▘$/);
+  assert.ok(quip.length > 0);
+
+  const sleeping = renderTall({ lastToolAt: secsAgo(700) }, NOW);
+  assert.strictEqual(sleeping.quip, 'zzz');
+  assert.ok(!/[▘▝]/.test(sleeping.rows[2]), 'legs tucked when sleeping');
+
+  const party = renderTall({ milestoneAt: secsAgo(5) }, NOW);
+  assert.match(party.rows[0], /^♪.*♪$/);
 });

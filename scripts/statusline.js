@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { renderBuddy } = require('./lib/buddy');
+const { renderBuddy, renderTall } = require('./lib/buddy');
 
 function formatTokens(n) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
@@ -7,25 +7,40 @@ function formatTokens(n) {
   return String(n);
 }
 
-function renderLine(state, nowMs) {
-  if (!state.current || state.current === 'off') return '';
-  const { art, quip } = renderBuddy(state.buddy || {}, nowMs);
-  const parts = [`♫ ${art}`];
-  if (quip) parts.push(quip);
-  parts.push(`· ${state.current}`);
+function infoSegments(state) {
+  const parts = [`· ${state.current}`];
   if (state.cache && typeof state.cache.savedTokens === 'number') {
     parts.push(`· ~${formatTokens(state.cache.savedTokens)} saved`);
   }
-  return parts.join('  ');
+  return parts;
 }
 
-module.exports = { renderLine, formatTokens };
+function renderLines(state, nowMs) {
+  if (!state.current || state.current === 'off') return [];
+
+  if (state.buddyStyle === 'tall') {
+    const { rows, quip } = renderTall(state.buddy || {}, nowMs);
+    return [
+      `${rows[0]}  ${quip || '♫'}`.trimEnd(),
+      `${rows[1]}  ${infoSegments(state).join('  ')}`,
+      rows[2],
+    ];
+  }
+
+  const { art, quip } = renderBuddy(state.buddy || {}, nowMs);
+  const parts = [`♫ ${art}`];
+  if (quip) parts.push(quip);
+  parts.push(...infoSegments(state));
+  return [parts.join('  ')];
+}
+
+module.exports = { renderLines, formatTokens };
 
 if (require.main === module) {
   // Claude Code pipes session JSON on stdin; we render from our own state.
   try {
     const { readState } = require('./lib/state');
-    process.stdout.write(renderLine(readState(), Date.now()));
+    process.stdout.write(renderLines(readState(), Date.now()).join('\n'));
   } catch {
     // statusline must never crash the host renderer
   }

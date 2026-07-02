@@ -6,7 +6,9 @@ const STATE_DIR =
   process.env.ROCKY_STATE_DIR || path.join(os.homedir(), '.claude', 'rocky');
 const STATE_FILE = path.join(STATE_DIR, 'state.json');
 
-const DEFAULT_STATE = { current: 'off', events: [], cache: null, buddy: {} };
+const DEFAULT_STATE = {
+  current: 'off', events: [], cache: null, buddy: {}, buddyStyle: 'mini',
+};
 
 function readState() {
   try {
