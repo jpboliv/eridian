@@ -61,13 +61,13 @@ update((s) => {
   return s;
 });
 
-console.log('♫ rocky stats (all numbers estimated)\n');
+console.log('♫ eridian stats (all numbers estimated)\n');
 console.log('level  messages  output tokens  est. saved');
 for (const [level, t] of Object.entries(totals)) {
   const levelSaved = Math.round(t.tokens / (1 - FACTORS[level]) - t.tokens);
   console.log(`${level.padEnd(6)} ${String(t.messages).padEnd(9)} ${String(t.tokens).padEnd(14)} ~${levelSaved}`);
 }
-if (!Object.keys(totals).length) console.log('(no rocky-mode messages found yet)');
+if (!Object.keys(totals).length) console.log('(no eridian-mode messages found yet)');
 console.log(`\nlifetime est. saved: ~${saved} tokens`);
 console.log(`sessions scanned: ${sessions}`);
 if (milestones.length) console.log(`milestone crossed: ${milestones.join(', ')} — good good good!`);

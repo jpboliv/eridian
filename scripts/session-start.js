@@ -11,7 +11,7 @@ try {
         hookSpecificOutput: {
           hookEventName: 'SessionStart',
           additionalContext:
-            `Rocky mode "${state.current}" is active (persisted). Apply these style rules to all responses:\n\n${block}`,
+            `Eridian mode "${state.current}" is active (persisted). Apply these style rules to all responses:\n\n${block}`,
         },
       }));
     }

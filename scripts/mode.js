@@ -22,7 +22,7 @@ update((s) => {
 });
 
 if (target === 'off') {
-  console.log('rocky mode: off');
+  console.log('eridian mode: off');
 } else {
-  console.log(`rocky mode: ${target}\n\n${loadInjectionBlock(target)}`);
+  console.log(`eridian mode: ${target}\n\n${loadInjectionBlock(target)}`);
 }

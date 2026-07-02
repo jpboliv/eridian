@@ -22,7 +22,7 @@ function freshDir() {
 test('set full prints mode and dialect block, logs event', () => {
   const dir = freshDir();
   const out = run(['full'], dir);
-  assert.match(out, /rocky mode: full/);
+  assert.match(out, /eridian mode: full/);
   assert.match(out, /ROCKY MODE \(full\)/);
   const state = JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8'));
   assert.strictEqual(state.current, 'full');
@@ -31,13 +31,13 @@ test('set full prints mode and dialect block, logs event', () => {
 
 test('no arg toggles off -> full -> off', () => {
   const dir = freshDir();
-  assert.match(run([], dir), /rocky mode: full/);
-  assert.match(run([], dir), /rocky mode: off/);
+  assert.match(run([], dir), /eridian mode: full/);
+  assert.match(run([], dir), /eridian mode: off/);
 });
 
 test('eridian alias sets ultra', () => {
   const dir = freshDir();
-  assert.match(run(['eridian'], dir), /rocky mode: ultra/);
+  assert.match(run(['eridian'], dir), /eridian mode: ultra/);
 });
 
 test('unknown level prints usage, state unchanged', () => {

@@ -18,4 +18,4 @@ update((s) => {
   s.buddyStyle = target;
   return s;
 });
-console.log(`rocky buddy: ${target}`);
+console.log(`eridian buddy: ${target}`);
