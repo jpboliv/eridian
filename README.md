@@ -28,7 +28,6 @@ see [Credits](#credits).
 | `/eridian:commit`                 | terse conventional commit from staged diff           |
 | `/eridian:review`                 | one-line-per-finding review. `not ship. fix first.`  |
 | `/eridian:compress`               | compress CLAUDE.md to cut input tokens (backup kept) |
-| `/eridian:buddy mini\|tall`       | statusline buddy size (one-liner vs full Rocky)      |
 
 Or just say "talk like Rocky". Mode persists across sessions until
 `/eridian:mode off`.
@@ -44,21 +43,12 @@ Or just say "talk like Rocky". Mode persists across sessions until
 Rocky lives in your statusline — eyeless and five-legged, as Eridians are.
 He shuffles his legs while you work, reacts to what you prompt
 (`bad bad. I fix.`), celebrates savings milestones, and sleeps when you
-idle. Run `/eridian:stats` once to set the statusline up, and pick a size
-with `/eridian:buddy`:
-
-`mini` (default):
+idle. Run `/eridian:stats` once to set the statusline up:
 
 ```
-♫ ▟█▙  I fix.  · full  · ~12.3k saved
-```
-
-`tall`:
-
-```
- ▄█████▄    I fix.
-▐███████▌   · full  · ~12.3k saved
- ▘ ▘▘ ▝ ▘
+▘ ◼◼◼ ▘  I fix.
+ ◼◼◼◼◼  ∙ full  ∙ ~12.3k saved
+▘ ▘ ▘▘
 ```
 
 ## Savings
