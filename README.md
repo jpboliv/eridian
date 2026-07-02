@@ -1,10 +1,15 @@
 # rocky ♫
 
 > why use many token when few token do trick — but make it Eridian.
+>
+> — riffing on [caveman](https://github.com/juliusbrussee/caveman)'s tagline
 
 Talk terse like Rocky from *Project Hail Mary*. A Claude Code plugin that
 compresses responses into Rocky's dialect, tracks the output tokens you save,
 and puts a tiny animated Rocky in your statusline.
+
+Heavily inspired by [caveman](https://github.com/juliusbrussee/caveman) —
+see [Credits](#credits).
 
 ## Install
 
@@ -55,4 +60,18 @@ bash eval/run.sh  # calibrate savings factors (manual, costs tokens)
 ```
 
 Rules of the dialect live in one place: `skills/rocky-speak/SKILL.md`.
+
+## Credits
+
+- **[caveman](https://github.com/juliusbrussee/caveman)** by Julius Brussee —
+  the whole idea. Persona-driven token compression, intensity levels, savings
+  stats, terse commits/reviews, memory-file compression: rocky's feature set
+  is caveman's, re-themed. The implementation here is written from scratch as
+  a native Claude Code plugin, but conceptually this project is caveman
+  wearing an Eridian carapace. Go star it.
+- **Andy Weir's *Project Hail Mary*** — Rocky, the best engineer in the
+  galaxy. Read the book. Amaze.
+- **Claude Buddy** — Anthropic's short-lived April 2026 terminal pet, whose
+  removal inspired the statusline buddy.
+
 Good good good.
