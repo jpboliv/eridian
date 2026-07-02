@@ -4,7 +4,7 @@ const { extractInjectionBlock, loadInjectionBlock, normalizeLevel } =
   require('../scripts/lib/persona');
 
 test('extractInjectionBlock pulls delimited block', () => {
-  const md = 'x\n<!-- rocky:inject:full -->\nRULES HERE\n<!-- /rocky:inject:full -->\ny';
+  const md = 'x\n<!-- eridian:inject:full -->\nRULES HERE\n<!-- /eridian:inject:full -->\ny';
   assert.strictEqual(extractInjectionBlock(md, 'full'), 'RULES HERE');
 });
 

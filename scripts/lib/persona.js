@@ -15,8 +15,8 @@ function normalizeLevel(input) {
 }
 
 function extractInjectionBlock(markdown, level) {
-  const start = `<!-- rocky:inject:${level} -->`;
-  const end = `<!-- /rocky:inject:${level} -->`;
+  const start = `<!-- eridian:inject:${level} -->`;
+  const end = `<!-- /eridian:inject:${level} -->`;
   const si = markdown.indexOf(start);
   const ei = markdown.indexOf(end);
   if (si === -1 || ei === -1 || ei < si) return null;
