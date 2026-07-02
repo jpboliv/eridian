@@ -63,9 +63,21 @@ with `/rocky:buddy`:
 
 ## Savings
 
-Savings table pending calibration — run `bash eval/run.sh && node
-eval/compute-factors.js` (costs API tokens). All displayed numbers are
-estimates.
+Measured on 10 real coding prompts via `claude -p`, one run per prompt/mode
+(`eval/run.sh`), 2026-07-02:
+
+| level | avg output-token reduction |
+|---|---|
+| `lite` | ~52% |
+| `full` | ~26% |
+| `ultra` | ~9% |
+
+Honest numbers: `lite` is the saver, `full` trades some savings for voice,
+and `ultra` is basically flavor-neutral — the triples and ♫ cost what the
+terseness saves. You run `ultra` because it is amaze, not because it is
+cheap. Single runs per cell, so expect variance; recalibrate with
+`bash eval/run.sh && node eval/compute-factors.js`. All displayed savings
+are estimates.
 
 ## Development
 

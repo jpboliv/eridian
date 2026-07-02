@@ -1,6 +1,6 @@
 {
   "_note": "measured by eval/run.sh",
-  "lite": 0.66,
-  "full": 0.52,
-  "ultra": 0.39
+  "lite": 0.52,
+  "full": 0.26,
+  "ultra": 0.09
 }
