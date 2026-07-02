@@ -1,0 +1,12 @@
+[
+  { "id": "react-rerender", "prompt": "Why does my React component re-render when I pass an inline object as a prop, and how do I fix it?" },
+  { "id": "git-revert", "prompt": "How do I undo my last git commit but keep the changes staged?" },
+  { "id": "sql-index", "prompt": "My Postgres query with a WHERE on created_at is slow on a 10M row table. What should I do?" },
+  { "id": "docker-cache", "prompt": "Why does my Docker build re-run npm install on every build and how do I make it cache properly?" },
+  { "id": "js-closure", "prompt": "Explain why all my setTimeout callbacks in a for loop print the same value, and the fix." },
+  { "id": "css-center", "prompt": "What is the most reliable way to center a div vertically and horizontally in 2026?" },
+  { "id": "rails-n1", "prompt": "How do I find and fix N+1 queries in a Rails app?" },
+  { "id": "ts-generics", "prompt": "When should I use generics vs union types in TypeScript? Give practical guidance." },
+  { "id": "api-pagination", "prompt": "Design cursor-based pagination for a REST API — what does the contract look like and why is it better than offset?" },
+  { "id": "regex-email", "prompt": "Should I validate emails with a regex? What is the pragmatic approach?" }
+]
