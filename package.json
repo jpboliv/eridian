@@ -1,5 +1,5 @@
 {
-  "name": "rocky-plugin",
+  "name": "eridian-plugin",
   "private": true,
   "version": "0.1.0",
   "description": "Rocky-speak token compression plugin for Claude Code",

@@ -1,10 +1,10 @@
 {
-  "name": "rocky",
+  "name": "eridian",
   "description": "Rocky-speak for Claude Code — terse Eridian token compression, stats, and a statusline buddy",
   "owner": { "name": "João Oliveira" },
   "plugins": [
     {
-      "name": "rocky",
+      "name": "eridian",
       "source": "./",
       "description": "Rocky-speak token compression + animated statusline buddy for Claude Code"
     }
