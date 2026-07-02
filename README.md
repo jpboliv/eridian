@@ -22,15 +22,15 @@ see [Credits](#credits).
 
 | Command | What it does |
 |---|---|
-| `/rocky` | toggle rocky mode (full) on/off |
-| `/rocky lite\|full\|ultra` | set intensity (`eridian` = `ultra`) |
-| `/rocky-stats` | estimated token savings + statusline setup |
-| `/rocky-commit` | terse conventional commit from staged diff |
-| `/rocky-review` | one-line-per-finding review. `not ship. fix first.` |
-| `/rocky-compress` | compress CLAUDE.md to cut input tokens (backup kept) |
+| `/rocky:mode` | toggle rocky mode (full) on/off |
+| `/rocky:mode lite\|full\|ultra` | set intensity (`eridian` = `ultra`) |
+| `/rocky:stats` | estimated token savings + statusline setup |
+| `/rocky:commit` | terse conventional commit from staged diff |
+| `/rocky:review` | one-line-per-finding review. `not ship. fix first.` |
+| `/rocky:compress` | compress CLAUDE.md to cut input tokens (backup kept) |
 
 Or just say "talk like Rocky". Mode persists across sessions until
-`/rocky off`.
+`/rocky:mode off`.
 
 ## Levels
 
@@ -59,7 +59,7 @@ npm test          # unit tests (node:test, zero deps)
 bash eval/run.sh  # calibrate savings factors (manual, costs tokens)
 ```
 
-Rules of the dialect live in one place: `skills/rocky-speak/SKILL.md`.
+Rules of the dialect live in one place: `skills/speak/SKILL.md`.
 
 ## Credits
 

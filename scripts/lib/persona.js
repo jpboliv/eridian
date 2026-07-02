@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const SKILL_FILE = path.join(
-  __dirname, '..', '..', 'skills', 'rocky-speak', 'SKILL.md'
+  __dirname, '..', '..', 'skills', 'speak', 'SKILL.md'
 );
 
 const LEVELS = ['lite', 'full', 'ultra', 'off'];
