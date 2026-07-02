@@ -14,7 +14,7 @@ see [Credits](#credits).
 ## Install
 
 ```
-/plugin marketplace add <github-owner>/rocky
+/plugin marketplace add jpboliv/rocky
 /plugin install rocky@rocky
 ```
 
