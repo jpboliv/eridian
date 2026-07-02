@@ -8,42 +8,21 @@ test('renders nothing when off', () => {
   assert.deepStrictEqual(renderLines({ current: 'off', buddy: {} }, NOW), []);
 });
 
-test('mini: 4 rows, quip on the arms row, level+savings on the body row', () => {
+test('3 rows, quip on the top row, level+savings on the body row', () => {
   const lines = renderLines(
-    {
-      current: 'full',
-      buddyStyle: 'mini',
-      buddy: {},
-      cache: { savedTokens: 12300 },
-    },
-    NOW
+    { current: 'full', buddy: {}, cache: { savedTokens: 12300 } },
+    NOW,
   );
-  assert.strictEqual(lines.length, 4);
+  assert.strictEqual(lines.length, 3);
   assert.match(lines[0], /♫/);
-  assert.match(lines[2], /·\s*full/);
-  assert.match(lines[2], /~12\.3k saved/);
+  assert.match(lines[1], /∙\s*full/);
+  assert.match(lines[1], /~12\.3k saved/);
 });
 
-test('mini omits savings segment without cache', () => {
-  const lines = renderLines({ current: 'lite', buddyStyle: 'mini', buddy: {}, cache: null }, NOW);
+test('omits savings segment without cache', () => {
+  const lines = renderLines({ current: 'lite', buddy: {}, cache: null }, NOW);
   assert.ok(lines.every((l) => !l.includes('saved')));
   assert.ok(lines.some((l) => /lite/.test(l)));
-});
-
-test('tall: 5 rows, quip on the arms row, level+savings on the body row', () => {
-  const lines = renderLines(
-    {
-      current: 'ultra',
-      buddyStyle: 'tall',
-      buddy: {},
-      cache: { savedTokens: 12300 },
-    },
-    NOW
-  );
-  assert.strictEqual(lines.length, 5);
-  assert.match(lines[0], /♫/);
-  assert.match(lines[3], /· ultra/);
-  assert.match(lines[3], /~12\.3k saved/);
 });
 
 test('formatTokens', () => {

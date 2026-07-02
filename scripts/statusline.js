@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { renderBuddy, renderTall } = require('./lib/buddy');
+const { renderBuddy } = require('./lib/buddy');
 
 function formatTokens(n) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
@@ -8,9 +8,9 @@ function formatTokens(n) {
 }
 
 function infoSegments(state) {
-  const parts = [`· ${state.current}`];
+  const parts = [`∙ ${state.current}`];
   if (state.cache && typeof state.cache.savedTokens === 'number') {
-    parts.push(`· ~${formatTokens(state.cache.savedTokens)} saved`);
+    parts.push(`∙ ~${formatTokens(state.cache.savedTokens)} saved`);
   }
   return parts;
 }
@@ -19,11 +19,10 @@ function renderLines(state, nowMs) {
   if (!state.current || state.current === 'off') return [];
 
   const info = infoSegments(state).join('  ');
-  const render = state.buddyStyle === 'tall' ? renderTall : renderBuddy;
-  const { rows, quip } = render(state.buddy || {}, nowMs);
+  const { rows, quip } = renderBuddy(state.buddy || {}, nowMs);
 
-  // quip rides the arms (top) row like a speech bubble; info rides the body
-  // row just above the legs. Height is fixed (mini 4 rows, tall 5).
+  // quip rides the arms+dome (top) row like a speech bubble; info rides the
+  // body row. Height is fixed at 3 rows for every mood.
   const bodyRow = rows.length - 2;
   return rows.map((row, i) => {
     if (i === 0) return `${row}  ${quip || '♫'}`.trimEnd();
