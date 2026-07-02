@@ -4,3 +4,10 @@
 # would risk silently altering injected persona text.
 skills/
 commands/
+
+# Local-only design/plan docs and dev-workflow artifacts (gitignored,
+# never committed — see .git/info/exclude and .superpowers/sdd/.gitignore).
+# Excluded so local lint/format runs don't flag files that will never be
+# shipped or seen by CI.
+docs/superpowers/
+.superpowers/
