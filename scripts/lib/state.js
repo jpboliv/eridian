@@ -29,7 +29,6 @@ const DEFAULT_STATE = {
   events: [],
   cache: null,
   buddy: {},
-  buddyStyle: 'mini',
 };
 
 function readState() {
