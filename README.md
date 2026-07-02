@@ -1,4 +1,4 @@
-# rocky ♫
+# eridian ♫
 
 > why use many token when few token do trick — but make it Eridian.
 >
@@ -14,24 +14,24 @@ see [Credits](#credits).
 ## Install
 
 ```
-/plugin marketplace add jpboliv/rocky
-/plugin install rocky@rocky
+/plugin marketplace add jpboliv/eridian
+/plugin install eridian@eridian
 ```
 
 ## Use
 
 | Command | What it does |
 |---|---|
-| `/rocky:mode` | toggle rocky mode (full) on/off |
-| `/rocky:mode lite\|full\|ultra` | set intensity (`eridian` = `ultra`) |
-| `/rocky:stats` | estimated token savings + statusline setup |
-| `/rocky:commit` | terse conventional commit from staged diff |
-| `/rocky:review` | one-line-per-finding review. `not ship. fix first.` |
-| `/rocky:compress` | compress CLAUDE.md to cut input tokens (backup kept) |
-| `/rocky:buddy mini\|tall` | statusline buddy size (one-liner vs full Rocky) |
+| `/eridian:mode` | toggle eridian mode (full) on/off |
+| `/eridian:mode lite\|full\|ultra` | set intensity (`eridian` = `ultra`) |
+| `/eridian:stats` | estimated token savings + statusline setup |
+| `/eridian:commit` | terse conventional commit from staged diff |
+| `/eridian:review` | one-line-per-finding review. `not ship. fix first.` |
+| `/eridian:compress` | compress CLAUDE.md to cut input tokens (backup kept) |
+| `/eridian:buddy mini\|tall` | statusline buddy size (one-liner vs full Rocky) |
 
 Or just say "talk like Rocky". Mode persists across sessions until
-`/rocky:mode off`.
+`/eridian:mode off`.
 
 ## Levels
 
@@ -44,8 +44,8 @@ Or just say "talk like Rocky". Mode persists across sessions until
 Rocky lives in your statusline — eyeless and five-legged, as Eridians are.
 He shuffles his legs while you work, reacts to what you prompt
 (`bad bad. I fix.`), celebrates savings milestones, and sleeps when you
-idle. Run `/rocky:stats` once to set the statusline up, and pick a size
-with `/rocky:buddy`:
+idle. Run `/eridian:stats` once to set the statusline up, and pick a size
+with `/eridian:buddy`:
 
 `mini` (default):
 
@@ -92,10 +92,13 @@ Rules of the dialect live in one place: `skills/speak/SKILL.md`.
 
 - **[caveman](https://github.com/juliusbrussee/caveman)** by Julius Brussee —
   the whole idea. Persona-driven token compression, intensity levels, savings
-  stats, terse commits/reviews, memory-file compression: rocky's feature set
+  stats, terse commits/reviews, memory-file compression: eridian's feature set
   is caveman's, re-themed. The implementation here is written from scratch as
   a native Claude Code plugin, but conceptually this project is caveman
   wearing an Eridian carapace. Go star it.
+- **[hpbyte/rocky](https://github.com/hpbyte/rocky)** — an independent
+  Rocky-voice skill that predates this plugin (and had the name first).
+  This project renamed to eridian partly to stay out of its way.
 - **Andy Weir's *Project Hail Mary*** — Rocky, the best engineer in the
   galaxy. Read the book. Amaze.
 - **Claude Buddy** — Anthropic's short-lived April 2026 terminal pet, whose
