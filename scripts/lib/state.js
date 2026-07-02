@@ -2,9 +2,27 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 
-const STATE_DIR =
-  process.env.ROCKY_STATE_DIR || path.join(os.homedir(), '.claude', 'rocky');
+const DEFAULT_STATE_DIR = path.join(os.homedir(), '.claude', 'eridian');
+const LEGACY_STATE_DIR = path.join(os.homedir(), '.claude', 'rocky');
+
+const STATE_DIR = process.env.ERIDIAN_STATE_DIR || DEFAULT_STATE_DIR;
 const STATE_FILE = path.join(STATE_DIR, 'state.json');
+
+// One-shot rename of the pre-rename state dir so savings history survives.
+// Env overrides (tests) skip it so the real home dir is never touched.
+function migrateLegacyStateDir(legacyDir, dir) {
+  try {
+    if (!fs.existsSync(dir) && fs.existsSync(legacyDir)) {
+      fs.renameSync(legacyDir, dir);
+    }
+  } catch {
+    // best effort — never block state access
+  }
+}
+
+if (!process.env.ERIDIAN_STATE_DIR) {
+  migrateLegacyStateDir(LEGACY_STATE_DIR, DEFAULT_STATE_DIR);
+}
 
 const DEFAULT_STATE = {
   current: 'off', events: [], cache: null, buddy: {}, buddyStyle: 'mini',
@@ -35,4 +53,6 @@ function update(fn) {
   return next;
 }
 
-module.exports = { readState, writeState, update, STATE_DIR, STATE_FILE };
+module.exports = {
+  readState, writeState, update, migrateLegacyStateDir, STATE_DIR, STATE_FILE,
+};

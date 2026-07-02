@@ -10,13 +10,13 @@ const SCRIPT = path.join(__dirname, '..', 'scripts', 'session-start.js');
 
 function run(stateDir) {
   return execFileSync('node', [SCRIPT], {
-    env: { ...process.env, ROCKY_STATE_DIR: stateDir },
+    env: { ...process.env, ERIDIAN_STATE_DIR: stateDir },
     encoding: 'utf8',
   });
 }
 
 test('emits additionalContext when mode active', () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rocky-ss-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-ss-'));
   fs.writeFileSync(path.join(dir, 'state.json'), JSON.stringify({
     current: 'ultra', events: [], cache: null, buddy: {},
   }));
@@ -26,6 +26,6 @@ test('emits additionalContext when mode active', () => {
 });
 
 test('prints nothing when off', () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rocky-ss-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-ss-'));
   assert.strictEqual(run(dir), '');
 });

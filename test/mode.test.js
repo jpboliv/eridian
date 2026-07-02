@@ -10,13 +10,13 @@ const MODE = path.join(__dirname, '..', 'scripts', 'mode.js');
 
 function run(args, stateDir) {
   return execFileSync('node', [MODE, ...args], {
-    env: { ...process.env, ROCKY_STATE_DIR: stateDir },
+    env: { ...process.env, ERIDIAN_STATE_DIR: stateDir },
     encoding: 'utf8',
   });
 }
 
 function freshDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), 'rocky-mode-'));
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-mode-'));
 }
 
 test('set full prints mode and dialect block, logs event', () => {

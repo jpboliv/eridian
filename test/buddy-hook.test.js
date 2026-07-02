@@ -10,7 +10,7 @@ const SCRIPT = path.join(__dirname, '..', 'scripts', 'buddy-hook.js');
 
 function run(mode, stdinJson, stateDir) {
   return execFileSync('node', [SCRIPT, mode], {
-    env: { ...process.env, ROCKY_STATE_DIR: stateDir },
+    env: { ...process.env, ERIDIAN_STATE_DIR: stateDir },
     input: JSON.stringify(stdinJson),
     encoding: 'utf8',
   });
@@ -21,7 +21,7 @@ function readStateFile(dir) {
 }
 
 test('prompt event records timestamp and class', () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rocky-bh-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-bh-'));
   const out = run('prompt', { prompt: 'fix the crash please' }, dir);
   assert.strictEqual(out, '');
   const s = readStateFile(dir);
@@ -30,7 +30,7 @@ test('prompt event records timestamp and class', () => {
 });
 
 test('post-tool records lastToolAt, no error field on success', () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rocky-bh-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-bh-'));
   run('post-tool', { tool_name: 'Read', tool_response: { ok: true } }, dir);
   const s = readStateFile(dir);
   assert.ok(s.buddy.lastToolAt);
@@ -38,15 +38,15 @@ test('post-tool records lastToolAt, no error field on success', () => {
 });
 
 test('post-tool records lastErrorAt on error-looking response', () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rocky-bh-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-bh-'));
   run('post-tool', { tool_name: 'Bash', tool_response: { is_error: true } }, dir);
   assert.ok(readStateFile(dir).buddy.lastErrorAt);
 });
 
 test('garbage stdin exits 0 silently', () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rocky-bh-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-bh-'));
   const out = execFileSync('node', [SCRIPT, 'prompt'], {
-    env: { ...process.env, ROCKY_STATE_DIR: dir },
+    env: { ...process.env, ERIDIAN_STATE_DIR: dir },
     input: '{{{not json',
     encoding: 'utf8',
   });
