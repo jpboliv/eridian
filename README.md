@@ -6,7 +6,7 @@
 
 Talk terse like Rocky from *Project Hail Mary*. A Claude Code plugin that
 compresses responses into Rocky's dialect, tracks the output tokens you save,
-and puts a tiny animated Rocky in your statusline.
+and adds a tiny animated Rocky to your statusline.
 
 Heavily inspired by [caveman](https://github.com/juliusbrussee/caveman) —
 see [Credits](#credits).
