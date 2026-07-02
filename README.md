@@ -1,6 +1,58 @@
-# rocky
+# rocky ♫
 
-why use many token when few token do trick — but make it Eridian.
+> why use many token when few token do trick — but make it Eridian.
 
-Claude Code plugin: talk terse like Rocky from *Project Hail Mary*.
-Full README lands with v0.1.0.
+Talk terse like Rocky from *Project Hail Mary*. A Claude Code plugin that
+compresses responses into Rocky's dialect, tracks the output tokens you save,
+and puts a tiny animated Rocky in your statusline.
+
+## Install
+
+```
+/plugin marketplace add <github-owner>/rocky
+/plugin install rocky@rocky
+```
+
+## Use
+
+| Command | What it does |
+|---|---|
+| `/rocky` | toggle rocky mode (full) on/off |
+| `/rocky lite\|full\|ultra` | set intensity (`eridian` = `ultra`) |
+| `/rocky-stats` | estimated token savings + statusline setup |
+| `/rocky-commit` | terse conventional commit from staged diff |
+| `/rocky-review` | one-line-per-finding review. `not ship. fix first.` |
+| `/rocky-compress` | compress CLAUDE.md to cut input tokens (backup kept) |
+
+Or just say "talk like Rocky". Mode persists across sessions until
+`/rocky off`.
+
+## Levels
+
+- **lite** — max savings, light flavor. `Inline object prop = new ref each render. Wrap in useMemo.`
+- **full** — balanced. `New object every render. useMemo fix. Understand, question?`
+- **ultra** — full Eridian. `♫ Bad bad bad. Object born again every render. useMemo — I fix. Good good good.`
+
+## The buddy
+
+`♫ ╱╲[•ᴗ•]╱╲  I fix.  · full · ~12.3k saved`
+
+Rocky lives in your statusline: blinks, shifts his little arms, reacts to
+what you prompt (`bad bad. I fix.`), celebrates savings milestones, and
+sleeps when you idle. Run `/rocky-stats` once to set the statusline up.
+
+## Savings
+
+Savings table pending calibration — run `bash eval/run.sh && node
+eval/compute-factors.js` (costs API tokens). All displayed numbers are
+estimates.
+
+## Development
+
+```
+npm test          # unit tests (node:test, zero deps)
+bash eval/run.sh  # calibrate savings factors (manual, costs tokens)
+```
+
+Rules of the dialect live in one place: `skills/rocky-speak/SKILL.md`.
+Good good good.
