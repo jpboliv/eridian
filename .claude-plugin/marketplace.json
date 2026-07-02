@@ -1,0 +1,11 @@
+{
+  "name": "rocky",
+  "owner": { "name": "João Oliveira" },
+  "plugins": [
+    {
+      "name": "rocky",
+      "source": "./",
+      "description": "Rocky-speak token compression + animated statusline buddy for Claude Code"
+    }
+  ]
+}
