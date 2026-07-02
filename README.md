@@ -119,3 +119,7 @@ Rules of the dialect live in one place: `skills/speak/SKILL.md`.
   removal inspired the statusline buddy.
 
 Good good good.
+
+## License
+
+[MIT](LICENSE)
