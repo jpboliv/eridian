@@ -1,5 +1,5 @@
 ---
-description: Show estimated token savings from rocky mode; offers statusline setup
+description: Show estimated token savings from eridian mode; offers statusline setup
 allowed-tools: Bash(node:*), Bash(echo:*), Read, Edit
 ---
 
@@ -13,7 +13,7 @@ Plugin root (for statusline setup):
 
 1. Present the stats output above to the user as-is (it is already terse).
 2. Read `~/.claude/settings.json`. If it has no `statusLine` key, tell the
-   user the rocky buddy statusline is not set up and ask if they want it.
+   user the eridian buddy statusline is not set up and ask if they want it.
    If they say yes, add this to `~/.claude/settings.json` (using the plugin
    root path echoed above):
 

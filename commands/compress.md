@@ -20,8 +20,8 @@ Target file: `$ARGUMENTS` (default `./CLAUDE.md`).
 5. Back up FIRST, then write:
 
 ```bash
-mkdir -p ~/.claude/rocky/backups
-cp <target> ~/.claude/rocky/backups/"$(date -u +%Y%m%dT%H%M%SZ)"-<basename>
+mkdir -p ~/.claude/eridian/backups
+cp <target> ~/.claude/eridian/backups/"$(date -u +%Y%m%dT%H%M%SZ)"-<basename>
 ```
 
    Then overwrite the target with the compressed version. If the backup
