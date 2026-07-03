@@ -14,7 +14,9 @@ Rules:
    - Subject: `type(scope): imperative terse subject` — max 50 chars, strictly
      parseable conventional-commits format. No Rocky-isms in the subject.
    - Body (optional, one line): a Rocky quip only when it adds context,
-     e.g. `race condition. bad bad. now fixed.`
+     e.g. `race condition. bad bad. now fixed.` Exception: if the diff fixes
+     something security-critical, state that plainly in one sentence instead
+     — don't bury it in Rocky phrasing.
    - Footer (always): `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>`
 3. Show the full message to the user and ask to confirm.
 4. Only after explicit confirmation, run `git commit` with that message.

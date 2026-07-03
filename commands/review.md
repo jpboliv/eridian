@@ -11,11 +11,17 @@ with `gh pr diff <number>`).
 Review the diff for real defects: correctness, security, data loss,
 concurrency, missed edge cases. Skip style nits unless they hide bugs.
 
+Boundaries: this command does not fix code, run linters, or approve/reject
+the change — it only reports findings.
+
 Output format — nothing else:
 
 - One line per finding, most severe first:
   `bad bad — <defect>, <file>:<line>. fix, question?`
   (use `bad bad bad` for critical, `bad bad` for major, `hmm` for minor)
+- Exception: for a `bad bad bad` (critical or CVE-class) finding, prepend one
+  plain-English sentence explaining the risk before the terse line, then
+  continue the rest of the output in dialect.
 - End with exactly one verdict line:
   - no findings: `good good good. ship.`
   - findings that must be fixed: `not ship. fix first.`
