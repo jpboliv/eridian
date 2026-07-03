@@ -50,7 +50,10 @@ test('fixed height: every mood is always exactly 3 rows', () => {
 
 test('mini is eyeless and carries mood quips', () => {
   const hum = renderBuddy({}, NOW);
-  assert.ok(hum.rows.every((r) => !/[▛▜]/.test(r)), 'no eye notches');
+  assert.ok(
+    hum.rows.every((r) => !/[▛▜]/.test(r)),
+    'no eye notches'
+  );
   assert.ok(renderBuddy({ lastErrorAt: secsAgo(5) }, NOW).quip.length > 0);
   assert.strictEqual(renderBuddy({ lastToolAt: secsAgo(700) }, NOW).quip, 'zzz');
 });
@@ -70,8 +73,16 @@ test('celebrating dances: two synced beats, whole figure shifts one column toget
   // body row content doesn't depend on pose, so it isolates the shift
   assert.strictEqual(beat1[1], ` ${beat0[1]}`, 'beat 1 shifts the whole figure one column right');
   // arms+legs differ in more than just the shift (different pose/gait frame, not a jitter)
-  assert.notStrictEqual(beat1[0].trimStart(), beat0[0].trimStart(), 'arm pose changes between beats');
-  assert.notStrictEqual(beat1[2].trimStart(), beat0[2].trimStart(), 'leg frame changes between beats');
+  assert.notStrictEqual(
+    beat1[0].trimStart(),
+    beat0[0].trimStart(),
+    'arm pose changes between beats'
+  );
+  assert.notStrictEqual(
+    beat1[2].trimStart(),
+    beat0[2].trimStart(),
+    'leg frame changes between beats'
+  );
 });
 
 test('alarmed is held still across ticks; humming animates', () => {
@@ -79,14 +90,14 @@ test('alarmed is held still across ticks; humming animates', () => {
   assert.deepStrictEqual(
     renderBuddy(alarmed, NOW).rows,
     renderBuddy(alarmed, NOW + 3000).rows,
-    'alarmed frozen (stillness reads as alarm)',
+    'alarmed frozen (stillness reads as alarm)'
   );
 
   const t0 = Math.floor(NOW / 4000) * 4000; // arms & legs both flip within 2s
   assert.notDeepStrictEqual(
     renderBuddy({}, t0).rows,
     renderBuddy({}, t0 + 2000).rows,
-    'humming moves',
+    'humming moves'
   );
 });
 
@@ -101,6 +112,6 @@ test('working legs step faster than humming', () => {
   assert.notStrictEqual(
     renderBuddy(work, t0).rows[2],
     renderBuddy(work, t0 + 1000).rows[2],
-    'working gait alternates every second',
+    'working gait alternates every second'
   );
 });

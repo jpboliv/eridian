@@ -9,10 +9,7 @@ test('renders nothing when off', () => {
 });
 
 test('3 rows, quip on the top row, level+savings on the body row', () => {
-  const lines = renderLines(
-    { current: 'full', buddy: {}, cache: { savedTokens: 12300 } },
-    NOW,
-  );
+  const lines = renderLines({ current: 'full', buddy: {}, cache: { savedTokens: 12300 } }, NOW);
   assert.strictEqual(lines.length, 3);
   assert.match(lines[0], /♫/);
   assert.match(lines[1], /∙\s*full/);

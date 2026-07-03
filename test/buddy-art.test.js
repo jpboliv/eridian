@@ -24,7 +24,7 @@ test('leg gait frames alternate and keep the end legs anchored', () => {
 
 test("five/celebrate arm ticks never land on the dome's ink columns", () => {
   const domeInk = new Set(
-    [...MINI.dome].map((ch, i) => (ch !== ' ' ? i : null)).filter((i) => i !== null),
+    [...MINI.dome].map((ch, i) => (ch !== ' ' ? i : null)).filter((i) => i !== null)
   );
   for (const pose of ['five', 'celebrate']) {
     const armInk = [...MINI.arms[pose]]
@@ -37,13 +37,7 @@ test("five/celebrate arm ticks never land on the dome's ink columns", () => {
 });
 
 test('no ambiguous-width glyphs in the art data (they break column alignment)', () => {
-  const values = [
-    MINI.dome,
-    MINI.body,
-    MINI.legsTucked,
-    ...MINI.legs,
-    ...Object.values(MINI.arms),
-  ];
+  const values = [MINI.dome, MINI.body, MINI.legsTucked, ...MINI.legs, ...Object.values(MINI.arms)];
   for (const value of values) {
     for (const bad of AMBIGUOUS_WIDTH_CHARS) {
       assert.ok(!value.includes(bad), `"${value}" contains ambiguous-width char "${bad}"`);
