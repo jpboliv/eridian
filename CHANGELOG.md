@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.2.2...eridian-plugin-v0.2.3) (2026-07-03)
+
+
+### Bug Fixes
+
+* exclude CHANGELOG.md from prettier format:check ([#11](https://github.com/jpboliv/eridian/issues/11)) ([2a595b5](https://github.com/jpboliv/eridian/commit/2a595b54bf7395fdcf17a660c70ae62a01de28c4))
+
 ## [0.2.2](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.2.1...eridian-plugin-v0.2.2) (2026-07-03)
 
 
