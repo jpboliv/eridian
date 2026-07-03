@@ -29,6 +29,7 @@ const DEFAULT_STATE = {
   events: [],
   cache: null,
   buddy: {},
+  promptsSinceReinject: 0,
 };
 
 function readState() {
