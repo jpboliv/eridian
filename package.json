@@ -3,6 +3,15 @@
   "private": true,
   "version": "0.1.0",
   "description": "Rocky-speak token compression plugin for Claude Code",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpboliv/eridian.git"
+  },
+  "homepage": "https://github.com/jpboliv/eridian#readme",
+  "bugs": {
+    "url": "https://github.com/jpboliv/eridian/issues"
+  },
   "scripts": {
     "test": "node --test",
     "lint": "eslint .",

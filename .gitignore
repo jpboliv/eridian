@@ -1,2 +1,11 @@
 node_modules/
 eval/results.csv
+
+# OS / editor cruft
+.DS_Store
+.vscode/
+.idea/
+
+# env / local secrets
+.env
+.env.*
