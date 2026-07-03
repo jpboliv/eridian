@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.2.1...eridian-plugin-v0.2.2) (2026-07-03)
+
+
+### Bug Fixes
+
+* reinforce eridian persona across long sessions ([#9](https://github.com/jpboliv/eridian/issues/9)) ([802215b](https://github.com/jpboliv/eridian/commit/802215b6ca56e622aaa47e6cacde90ce5eb09fe9))
+
 ## [0.2.1](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.2.0...eridian-plugin-v0.2.1) (2026-07-03)
 
 ### Bug Fixes
