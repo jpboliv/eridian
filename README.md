@@ -1,4 +1,4 @@
-# eridian ♫
+# Eridian ♫
 
 > why use many token when few token do trick — but make it Eridian.
 >
