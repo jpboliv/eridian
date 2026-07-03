@@ -35,3 +35,20 @@ test('prints nothing when off', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-ss-'));
   assert.strictEqual(run(dir), '');
 });
+
+test('resets the reinject counter so a fresh session/compact starts clean', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-ss-'));
+  fs.writeFileSync(
+    path.join(dir, 'state.json'),
+    JSON.stringify({
+      current: 'full',
+      events: [],
+      cache: null,
+      buddy: {},
+      promptsSinceReinject: 15,
+    })
+  );
+  run(dir);
+  const state = JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8'));
+  assert.strictEqual(state.promptsSinceReinject, 0);
+});

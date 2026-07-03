@@ -18,6 +18,7 @@ if (!arg) {
 update((s) => {
   s.current = target;
   s.events.push({ ts: new Date().toISOString(), level: target });
+  s.promptsSinceReinject = 0;
   return s;
 });
 

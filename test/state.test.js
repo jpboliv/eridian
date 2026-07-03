@@ -15,6 +15,7 @@ test('readState returns default when file missing', () => {
     events: [],
     cache: null,
     buddy: {},
+    promptsSinceReinject: 0,
   });
 });
 

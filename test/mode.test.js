@@ -46,3 +46,21 @@ test('unknown level prints usage, state unchanged', () => {
   assert.match(out, /unknown level/);
   assert.ok(!fs.existsSync(path.join(dir, 'state.json')));
 });
+
+test('activating a level resets the reinject counter', () => {
+  const dir = freshDir();
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(
+    path.join(dir, 'state.json'),
+    JSON.stringify({
+      current: 'off',
+      events: [],
+      cache: null,
+      buddy: {},
+      promptsSinceReinject: 19,
+    })
+  );
+  run(['full'], dir);
+  const state = JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8'));
+  assert.strictEqual(state.promptsSinceReinject, 0);
+});
