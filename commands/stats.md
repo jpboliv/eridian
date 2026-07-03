@@ -1,28 +1,23 @@
 ---
 description: Show estimated token savings from eridian mode; offers statusline setup
-allowed-tools: Bash(node:*), Bash(echo:*), Read, Edit
+allowed-tools: Bash(node:*)
 ---
 
 Stats output:
 
 !`node "${CLAUDE_PLUGIN_ROOT}/scripts/stats.js"`
 
-Plugin root (for statusline setup):
+Statusline check:
 
-!`echo "${CLAUDE_PLUGIN_ROOT}"`
+!`node "${CLAUDE_PLUGIN_ROOT}/scripts/setup-statusline.js" check "${CLAUDE_PLUGIN_ROOT}"`
 
 1. Present the stats output above to the user as-is (it is already terse).
-2. Read `~/.claude/settings.json`. If it has no `statusLine` key, tell the
-   user the eridian buddy statusline is not set up and ask if they want it.
-   If they say yes, add this to `~/.claude/settings.json` (using the plugin
-   root path echoed above):
-
-```json
-"statusLine": {
-  "type": "command",
-  "command": "node \"<plugin-root>/scripts/statusline.js\""
-}
-```
-
-   Do not overwrite an existing `statusLine` — if one exists, show what ours
-   would be and let the user decide.
+2. If the statusline check above printed `not-configured`: tell the user the
+   eridian buddy statusline is not set up and ask if they want it.
+   - If yes, run via Bash:
+     `node "${CLAUDE_PLUGIN_ROOT}/scripts/setup-statusline.js" apply "${CLAUDE_PLUGIN_ROOT}"`
+     and relay the result: `added: ...` means it's set up now; `error: ...`
+     means report the failure plainly and stop.
+   - If no, do nothing.
+3. If the statusline check above printed `already-configured: ...`: show the
+   user the existing entry and don't touch it.
