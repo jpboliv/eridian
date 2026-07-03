@@ -29,10 +29,7 @@ test('apply adds the statusLine and writes the file', () => {
   const out = run(['apply', '/plugins/eridian'], file);
   assert.match(out, /^added:/);
   const written = JSON.parse(fs.readFileSync(file, 'utf8'));
-  assert.strictEqual(
-    written.statusLine.command,
-    'node "/plugins/eridian/scripts/statusline.js"'
-  );
+  assert.strictEqual(written.statusLine.command, 'node "/plugins/eridian/scripts/statusline.js"');
 });
 
 test('apply is idempotent — second call no-ops', () => {

@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 // scripts/setup-statusline.js
-const { readSettings, hasStatusLine, addStatusLine, writeSettings, SETTINGS_FILE } =
-  require('./lib/settings');
+const {
+  readSettings,
+  hasStatusLine,
+  addStatusLine,
+  writeSettings,
+  SETTINGS_FILE,
+} = require('./lib/settings');
 
 const [mode, pluginRoot] = process.argv.slice(2);
 
