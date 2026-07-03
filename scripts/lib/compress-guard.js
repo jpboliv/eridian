@@ -1,9 +1,5 @@
 const SENSITIVE_EXTENSIONS = ['.env', '.pem'];
-const SENSITIVE_BASENAME_PATTERNS = [
-  /^id_(rsa|ed25519|ecdsa|dsa)$/i,
-  /^credentials/i,
-  /^secret/i,
-];
+const SENSITIVE_BASENAME_PATTERNS = [/^id_(rsa|ed25519|ecdsa|dsa)$/i, /^credentials/i, /^secret/i];
 const SENSITIVE_PATH_SEGMENTS = ['.ssh', '.aws', '.gnupg'];
 const SENSITIVE_NAME_TOKENS = ['apikey', 'token'];
 
