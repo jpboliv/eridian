@@ -5,6 +5,7 @@ const {
   attribute,
   estimateSaved,
   crossedMilestones,
+  MILESTONES,
 } = require('../scripts/lib/stats-lib');
 
 const T0 = Date.parse('2026-07-01T10:00:00Z');
@@ -66,8 +67,12 @@ test('estimateSaved applies per-level factors', () => {
   assert.strictEqual(saved, 100); // 100/(1-0.5) - 100
 });
 
+test('MILESTONES are session-scale', () => {
+  assert.deepStrictEqual(MILESTONES, [5_000, 10_000, 25_000, 50_000, 100_000]);
+});
+
 test('crossedMilestones', () => {
   assert.deepStrictEqual(crossedMilestones(9000, 11_000), [10_000]);
   assert.deepStrictEqual(crossedMilestones(11_000, 12_000), []);
-  assert.deepStrictEqual(crossedMilestones(0, 60_000), [10_000, 50_000]);
+  assert.deepStrictEqual(crossedMilestones(0, 60_000), [5_000, 10_000, 25_000, 50_000]);
 });
