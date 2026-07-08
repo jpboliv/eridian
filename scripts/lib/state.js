@@ -27,7 +27,6 @@ if (!process.env.ERIDIAN_STATE_DIR) {
 const DEFAULT_STATE = {
   current: 'off',
   events: [],
-  cache: null,
   buddy: {},
   promptsSinceReinject: 0,
 };

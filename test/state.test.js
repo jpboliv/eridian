@@ -13,7 +13,6 @@ test('readState returns default when file missing', () => {
   assert.deepStrictEqual(s, {
     current: 'off',
     events: [],
-    cache: null,
     buddy: {},
     promptsSinceReinject: 0,
   });
@@ -23,7 +22,6 @@ test('writeState then readState round-trips', () => {
   state.writeState({
     current: 'full',
     events: [{ ts: 'T', level: 'full' }],
-    cache: null,
     buddy: {},
   });
   assert.strictEqual(state.readState().current, 'full');
@@ -36,7 +34,7 @@ test('readState survives corrupt file', () => {
 });
 
 test('update applies mutation and persists', () => {
-  state.writeState({ current: 'off', events: [], cache: null, buddy: {} });
+  state.writeState({ current: 'off', events: [], buddy: {} });
   const next = state.update((s) => {
     s.current = 'ultra';
     return s;
