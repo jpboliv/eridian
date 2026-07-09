@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.2.3...eridian-plugin-v0.3.0) (2026-07-09)
+
+
+### Features
+
+* session-based savings with auto-refreshing statusline ([#13](https://github.com/jpboliv/eridian/issues/13)) ([1d1ef48](https://github.com/jpboliv/eridian/commit/1d1ef483ca4ad66b5aa9ede3ffd7ed91ac70f66e))
+
 ## [0.2.3](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.2.2...eridian-plugin-v0.2.3) (2026-07-03)
 
 
