@@ -51,6 +51,22 @@ idle. Run `/eridian:stats` once to set the statusline up:
 ▘ ▘ ▘▘
 ```
 
+The savings figure is the **current session's** estimate, computed live
+from the session transcript on every statusline refresh. Rocky dances when
+the session crosses a savings milestone (5k/10k/25k/50k/100k). Lifetime
+totals live in `/eridian:stats`.
+
+Rocky animates whenever Claude Code refreshes the statusline (i.e. while
+the conversation is active); when you idle, the last frame stays put until
+the next refresh — that cadence is the host's, not Rocky's.
+
+Using your own statusline script instead of the generated one? Forward the
+JSON that Claude Code pipes on stdin, or the savings segment is omitted:
+
+```sh
+rocky=$(printf '%s' "$input" | node "<plugin-root>/scripts/statusline.js" 2>/dev/null)
+```
+
 ## Savings
 
 Measured on 10 real coding prompts via `claude -p`, one run per prompt/mode

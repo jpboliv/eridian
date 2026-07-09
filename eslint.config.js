@@ -17,6 +17,7 @@ module.exports = [
         console: 'readonly',
         Buffer: 'readonly',
         structuredClone: 'readonly',
+        setTimeout: 'readonly',
       },
     },
   },

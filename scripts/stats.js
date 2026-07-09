@@ -2,9 +2,11 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { readState, update } = require('./lib/state');
-const { buildWindows, attribute, estimateSaved, crossedMilestones } = require('./lib/stats-lib');
+const { readState } = require('./lib/state');
+const { buildWindows, attribute, estimateSaved } = require('./lib/stats-lib');
 const { collectMessages } = require('./lib/collect-messages');
+const { latestSessionSaved } = require('./lib/session-savings');
+const { formatTokens } = require('./statusline');
 
 const PROJECTS_DIR =
   process.env.CLAUDE_PROJECTS_DIR || path.join(os.homedir(), '.claude', 'projects');
@@ -17,20 +19,17 @@ const windows = buildWindows(state.events, Date.now());
 const { messages, sessions } = collectMessages(PROJECTS_DIR);
 const totals = attribute(messages, windows);
 const saved = estimateSaved(totals, FACTORS);
-const oldSaved = state.cache?.savedTokens || 0;
-const milestones = crossedMilestones(oldSaved, saved);
-
-update((s) => {
-  s.cache = {
-    savedTokens: saved,
-    messages: Object.values(totals).reduce((n, t) => n + t.messages, 0),
-    updatedAt: new Date().toISOString(),
-  };
-  if (milestones.length) s.buddy.milestoneAt = new Date().toISOString();
-  return s;
-});
 
 console.log('♫ eridian stats (all numbers estimated)\n');
+
+const sessionSaved = latestSessionSaved();
+if (sessionSaved === null) {
+  console.log('this session: (no data)\n');
+} else {
+  console.log(`this session: ~${formatTokens(sessionSaved)} saved (${state.current})\n`);
+}
+
+console.log('lifetime (all sessions):');
 console.log('level  messages  output tokens  est. saved');
 for (const [level, t] of Object.entries(totals)) {
   const levelSaved = Math.round(t.tokens / (1 - FACTORS[level]) - t.tokens);
@@ -41,4 +40,3 @@ for (const [level, t] of Object.entries(totals)) {
 if (!Object.keys(totals).length) console.log('(no eridian-mode messages found yet)');
 console.log(`\nlifetime est. saved: ~${saved} tokens`);
 console.log(`sessions scanned: ${sessions}`);
-if (milestones.length) console.log(`milestone crossed: ${milestones.join(', ')} — good good good!`);

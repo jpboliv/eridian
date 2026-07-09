@@ -1,4 +1,4 @@
-const MILESTONES = [10_000, 50_000, 100_000, 500_000, 1_000_000];
+const MILESTONES = [5_000, 10_000, 25_000, 50_000, 100_000];
 
 function buildWindows(events, nowMs) {
   const sorted = [...events]
