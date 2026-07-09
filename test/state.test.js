@@ -28,6 +28,11 @@ test('writeState then readState round-trips', () => {
   assert.strictEqual(state.readState().events.length, 1);
 });
 
+test('readState prunes retired keys from old state files', () => {
+  state.writeState({ current: 'full', events: [], buddy: {}, buddyStyle: 'tall' });
+  assert.ok(!('buddyStyle' in state.readState()), 'buddyStyle pruned');
+});
+
 test('readState survives corrupt file', () => {
   fs.writeFileSync(state.STATE_FILE, '{not json!!');
   assert.strictEqual(state.readState().current, 'off');

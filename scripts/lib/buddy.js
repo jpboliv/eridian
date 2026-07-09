@@ -21,14 +21,17 @@ const QUIPS = {
   },
 };
 
-// Per mood: which arm poses cycle, how fast, and special flags.
-// still = frozen figure; tucked = asleep; fastGait = 1s legs;
+// Per mood: which arm poses cycle, and special flags. Poses advance one
+// step per statusline refresh (buddy.frame, bumped by statusline.js) —
+// the host re-runs the statusline too rarely (~10s) for wall-clock ticks
+// to ever be seen, so the frame counter is the only animation clock.
+// still = frozen figure; tucked = asleep;
 // dance = synced arms+legs+shift cycle (celebrating only).
 const ANIM = {
-  humming: { arms: ['down', 'up'], armsTick: 2000 },
-  reacting: { arms: ['leftWave', 'rightWave'], armsTick: 600 },
-  working: { arms: ['up', 'wide'], armsTick: 1000, fastGait: true },
-  celebrating: { dance: true, tick: 500 },
+  humming: { arms: ['down', 'up'] },
+  reacting: { arms: ['leftWave', 'rightWave'] },
+  working: { arms: ['up', 'wide'] },
+  celebrating: { dance: true },
   alarmed: { arms: ['up'], still: true },
   sleeping: { tucked: true },
 };
@@ -67,17 +70,16 @@ function pick(pool, nowMs) {
 }
 
 // arms drift through the mood's poses; a single/still pose never changes
-function armFrame(anim, nowMs) {
+function armFrame(anim, frame) {
   const poses = anim.arms;
   if (anim.still || poses.length === 1) return poses[0];
-  return poses[Math.floor(nowMs / anim.armsTick) % poses.length];
+  return poses[frame % poses.length];
 }
 
-// legs step every 2s; twice as fast while working; frozen when still
-function gaitIndex(anim, nowMs) {
+// legs alternate gait frames each refresh; frozen when still
+function gaitIndex(anim, frame) {
   if (anim.still) return 0;
-  const tick = anim.fastGait ? 1000 : 2000;
-  return Math.floor(nowMs / tick) % 2;
+  return frame % 2;
 }
 
 function quipFor(mood, buddy, nowMs) {
@@ -104,13 +106,14 @@ function renderBuddy(buddy = {}, nowMs) {
   const mood = deriveMood(buddy, nowMs);
   const anim = ANIM[mood];
   const quip = quipFor(mood, buddy, nowMs);
+  const frame = buddy.frame || 0;
 
   if (anim.tucked) {
     return { rows: [MINI.dome, MINI.body, MINI.legsTucked], quip };
   }
 
   if (anim.dance) {
-    const beat = DANCE_BEATS[Math.floor(nowMs / anim.tick) % DANCE_BEATS.length];
+    const beat = DANCE_BEATS[frame % DANCE_BEATS.length];
     const pad = ' '.repeat(beat.shift);
     return {
       rows: [
@@ -122,8 +125,8 @@ function renderBuddy(buddy = {}, nowMs) {
     };
   }
 
-  const arms = MINI.arms[armFrame(anim, nowMs)];
-  const legs = MINI.legs[gaitIndex(anim, nowMs)];
+  const arms = MINI.arms[armFrame(anim, frame)];
+  const legs = MINI.legs[gaitIndex(anim, frame)];
   return { rows: [merge(arms, MINI.dome), MINI.body, legs], quip };
 }
 

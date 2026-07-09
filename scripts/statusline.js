@@ -39,9 +39,10 @@ if (require.main === module) {
   const render = (raw) => {
     try {
       const { readState, update } = require('./lib/state');
-      const state = readState();
+      let state = readState();
       const nowMs = Date.now();
       let savedTokens = null;
+      let crossedMilestone = false;
       try {
         const input = JSON.parse(raw);
         const fs = require('node:fs');
@@ -58,15 +59,20 @@ if (require.main === module) {
         );
         if (result) {
           savedTokens = result.savedTokens;
-          if (result.crossed.length) {
-            update((s) => {
-              s.buddy.milestoneAt = new Date(nowMs).toISOString();
-              return s;
-            });
-          }
+          crossedMilestone = result.crossed.length > 0;
         }
       } catch {
         // no/garbage stdin or unreadable transcript — render without savings
+      }
+      // each host refresh advances the animation one frame — the frame
+      // counter, not wall clock, is the buddy's clock (see lib/buddy.js)
+      if (state.current && state.current !== 'off') {
+        state = update((s) => {
+          s.buddy = s.buddy || {};
+          s.buddy.frame = (s.buddy.frame || 0) + 1;
+          if (crossedMilestone) s.buddy.milestoneAt = new Date(nowMs).toISOString();
+          return s;
+        });
       }
       process.stdout.write(renderLines(state, nowMs, savedTokens).join('\n'));
     } catch {

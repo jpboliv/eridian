@@ -73,6 +73,24 @@ test('CLI: empty stdin still renders the buddy, without savings', () => {
   assert.ok(!out.includes('saved'));
 });
 
+test('CLI: each invocation advances buddy.frame and the rendered pose', () => {
+  const { stateDir, env } = cliEnv();
+  const stateFile = path.join(stateDir, 'state.json');
+  const out1 = execFileSync('node', [SCRIPT], { env, input: '' }).toString();
+  assert.strictEqual(JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy.frame, 1);
+  const out2 = execFileSync('node', [SCRIPT], { env, input: '' }).toString();
+  assert.strictEqual(JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy.frame, 2);
+  assert.notStrictEqual(out1, out2, 'consecutive refreshes render different poses');
+});
+
+test('CLI: off mode leaves buddy.frame untouched', () => {
+  const { stateDir, env } = cliEnv();
+  const stateFile = path.join(stateDir, 'state.json');
+  fs.writeFileSync(stateFile, JSON.stringify({ current: 'off', events: [], buddy: {} }));
+  execFileSync('node', [SCRIPT], { env, input: '' });
+  assert.ok(!('frame' in JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy));
+});
+
 test('CLI: milestone crossing stamps buddy.milestoneAt', () => {
   const { stateDir, env } = cliEnv();
   const transcript = path.join(stateDir, 'transcript.jsonl');

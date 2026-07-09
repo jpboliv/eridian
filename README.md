@@ -56,9 +56,11 @@ from the session transcript on every statusline refresh. Rocky dances when
 the session crosses a savings milestone (5k/10k/25k/50k/100k). Lifetime
 totals live in `/eridian:stats`.
 
-Rocky animates whenever Claude Code refreshes the statusline (i.e. while
-the conversation is active); when you idle, the last frame stays put until
-the next refresh — that cadence is the host's, not Rocky's.
+Rocky steps one animation frame per statusline refresh: every time Claude
+Code re-runs the statusline (a handful of seconds apart while the
+conversation is active), the pose visibly changes. When you idle, the last
+frame stays put until the next refresh — that cadence is the host's, not
+Rocky's.
 
 Using your own statusline script instead of the generated one? Forward the
 JSON that Claude Code pipes on stdin, or the savings segment is omitted:
