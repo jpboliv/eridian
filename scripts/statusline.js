@@ -65,11 +65,19 @@ if (require.main === module) {
         // no/garbage stdin or unreadable transcript — render without savings
       }
       // each host refresh advances the animation one frame — the frame
-      // counter, not wall clock, is the buddy's clock (see lib/buddy.js)
+      // counter, not wall clock, is the buddy's clock (see lib/buddy.js).
+      // buddy.stepSeconds (set via /eridian:buddy) throttles the advance to
+      // at most once per that many seconds; 0/absent/invalid = every refresh.
       if (state.current && state.current !== 'off') {
         state = update((s) => {
           s.buddy = s.buddy || {};
-          s.buddy.frame = (s.buddy.frame || 0) + 1;
+          const secs = Number(s.buddy.stepSeconds);
+          const stepMs = Number.isFinite(secs) && secs > 0 ? secs * 1000 : 0;
+          const last = Date.parse(s.buddy.lastStepAt);
+          if (!stepMs || !Number.isFinite(last) || nowMs - last >= stepMs) {
+            s.buddy.frame = (s.buddy.frame || 0) + 1;
+            s.buddy.lastStepAt = new Date(nowMs).toISOString();
+          }
           if (crossedMilestone) s.buddy.milestoneAt = new Date(nowMs).toISOString();
           return s;
         });

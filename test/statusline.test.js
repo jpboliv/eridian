@@ -91,6 +91,50 @@ test('CLI: off mode leaves buddy.frame untouched', () => {
   assert.ok(!('frame' in JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy));
 });
 
+test('CLI: buddy.stepSeconds holds the frame between rapid refreshes', () => {
+  const { stateDir, env } = cliEnv();
+  const stateFile = path.join(stateDir, 'state.json');
+  fs.writeFileSync(
+    stateFile,
+    JSON.stringify({ current: 'full', events: [], buddy: { stepSeconds: 60 } })
+  );
+  execFileSync('node', [SCRIPT], { env, input: '' });
+  const after1 = JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy;
+  assert.strictEqual(after1.frame, 1, 'first refresh steps (no lastStepAt yet)');
+  assert.ok(after1.lastStepAt, 'lastStepAt stamped');
+  execFileSync('node', [SCRIPT], { env, input: '' });
+  const after2 = JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy;
+  assert.strictEqual(after2.frame, 1, 'second refresh within 60s holds the frame');
+  assert.strictEqual(after2.lastStepAt, after1.lastStepAt, 'lastStepAt unchanged on hold');
+});
+
+test('CLI: stale lastStepAt advances the frame', () => {
+  const { stateDir, env } = cliEnv();
+  const stateFile = path.join(stateDir, 'state.json');
+  fs.writeFileSync(
+    stateFile,
+    JSON.stringify({
+      current: 'full',
+      events: [],
+      buddy: { stepSeconds: 60, frame: 4, lastStepAt: '2020-01-01T00:00:00.000Z' },
+    })
+  );
+  execFileSync('node', [SCRIPT], { env, input: '' });
+  assert.strictEqual(JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy.frame, 5);
+});
+
+test('CLI: invalid stepSeconds steps every refresh', () => {
+  const { stateDir, env } = cliEnv();
+  const stateFile = path.join(stateDir, 'state.json');
+  fs.writeFileSync(
+    stateFile,
+    JSON.stringify({ current: 'full', events: [], buddy: { stepSeconds: 'fast' } })
+  );
+  execFileSync('node', [SCRIPT], { env, input: '' });
+  execFileSync('node', [SCRIPT], { env, input: '' });
+  assert.strictEqual(JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy.frame, 2);
+});
+
 test('CLI: milestone crossing stamps buddy.milestoneAt', () => {
   const { stateDir, env } = cliEnv();
   const transcript = path.join(stateDir, 'transcript.jsonl');
