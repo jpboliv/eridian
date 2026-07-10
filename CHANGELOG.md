@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.3.0...eridian-plugin-v0.4.0) (2026-07-10)
+
+
+### Features
+
+* step buddy per refresh, with configurable step rate ([#15](https://github.com/jpboliv/eridian/issues/15)) ([baa98c8](https://github.com/jpboliv/eridian/commit/baa98c820216d6a91235c16b6b27a721c7e3e44c))
+
 ## [0.3.0](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.2.3...eridian-plugin-v0.3.0) (2026-07-09)
 
 
