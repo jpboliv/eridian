@@ -39,9 +39,10 @@ if (require.main === module) {
   const render = (raw) => {
     try {
       const { readState, update } = require('./lib/state');
-      const state = readState();
+      let state = readState();
       const nowMs = Date.now();
       let savedTokens = null;
+      let crossedMilestone = false;
       try {
         const input = JSON.parse(raw);
         const fs = require('node:fs');
@@ -58,15 +59,28 @@ if (require.main === module) {
         );
         if (result) {
           savedTokens = result.savedTokens;
-          if (result.crossed.length) {
-            update((s) => {
-              s.buddy.milestoneAt = new Date(nowMs).toISOString();
-              return s;
-            });
-          }
+          crossedMilestone = result.crossed.length > 0;
         }
       } catch {
         // no/garbage stdin or unreadable transcript — render without savings
+      }
+      // each host refresh advances the animation one frame — the frame
+      // counter, not wall clock, is the buddy's clock (see lib/buddy.js).
+      // buddy.stepSeconds (set via /eridian:buddy) throttles the advance to
+      // at most once per that many seconds; 0/absent/invalid = every refresh.
+      if (state.current && state.current !== 'off') {
+        state = update((s) => {
+          s.buddy = s.buddy || {};
+          const secs = Number(s.buddy.stepSeconds);
+          const stepMs = Number.isFinite(secs) && secs > 0 ? secs * 1000 : 0;
+          const last = Date.parse(s.buddy.lastStepAt);
+          if (!stepMs || !Number.isFinite(last) || nowMs - last >= stepMs) {
+            s.buddy.frame = (s.buddy.frame || 0) + 1;
+            s.buddy.lastStepAt = new Date(nowMs).toISOString();
+          }
+          if (crossedMilestone) s.buddy.milestoneAt = new Date(nowMs).toISOString();
+          return s;
+        });
       }
       process.stdout.write(renderLines(state, nowMs, savedTokens).join('\n'));
     } catch {

@@ -66,9 +66,8 @@ test('sleeping tucks the legs and drops arms; dome shows through plain', () => {
 
 test('celebrating dances: two synced beats, whole figure shifts one column together', () => {
   const buddy = { milestoneAt: secsAgo(5) };
-  const t0 = Math.floor(NOW / 1000) * 1000; // aligned so beat index is 0 (celebrate, shift 0)
-  const beat0 = renderBuddy(buddy, t0).rows;
-  const beat1 = renderBuddy(buddy, t0 + 500).rows; // beat index 1 (five, shift 1)
+  const beat0 = renderBuddy({ ...buddy, frame: 0 }, NOW).rows;
+  const beat1 = renderBuddy({ ...buddy, frame: 1 }, NOW).rows; // beat index 1 (five, shift 1)
   assert.notDeepStrictEqual(beat0, beat1, 'beats differ (different arm pose + leg frame)');
   // body row content doesn't depend on pose, so it isolates the shift
   assert.strictEqual(beat1[1], ` ${beat0[1]}`, 'beat 1 shifts the whole figure one column right');
@@ -85,19 +84,34 @@ test('celebrating dances: two synced beats, whole figure shifts one column toget
   );
 });
 
-test('alarmed is held still across ticks; humming animates', () => {
-  const alarmed = { lastErrorAt: secsAgo(5) };
-  assert.deepStrictEqual(
-    renderBuddy(alarmed, NOW).rows,
-    renderBuddy(alarmed, NOW + 3000).rows,
-    'alarmed frozen (stillness reads as alarm)'
-  );
+test('alarmed is held still across frames; sleeping too', () => {
+  for (const mood of ['alarmed', 'sleeping']) {
+    assert.deepStrictEqual(
+      renderBuddy({ ...MOODS[mood], frame: 0 }, NOW).rows,
+      renderBuddy({ ...MOODS[mood], frame: 1 }, NOW).rows,
+      `${mood} frozen`
+    );
+  }
+});
 
-  const t0 = Math.floor(NOW / 4000) * 4000; // arms & legs both flip within 2s
-  assert.notDeepStrictEqual(
-    renderBuddy({}, t0).rows,
-    renderBuddy({}, t0 + 2000).rows,
-    'humming moves'
+// the original bug: poses were keyed to wall clock, but the host only
+// re-runs the statusline every ~10s, so sub-2s ticks never showed. Poses
+// must advance with the per-invocation frame counter instead.
+test('every moving mood steps a visibly different frame each refresh', () => {
+  for (const mood of ['humming', 'reacting', 'working', 'celebrating']) {
+    assert.notDeepStrictEqual(
+      renderBuddy({ ...MOODS[mood], frame: 0 }, NOW).rows,
+      renderBuddy({ ...MOODS[mood], frame: 1 }, NOW).rows,
+      `${mood} moves between consecutive frames`
+    );
+  }
+});
+
+test('pose is keyed to frame, not wall clock', () => {
+  assert.deepStrictEqual(
+    renderBuddy({ frame: 4 }, NOW).rows,
+    renderBuddy({ frame: 4 }, NOW + 3000).rows,
+    'same frame renders the same pose regardless of clock'
   );
 });
 
@@ -106,12 +120,11 @@ test('reacting quip follows prompt class', () => {
   assert.strictEqual(renderBuddy(buddy, NOW).quip, 'bad bad. I fix.');
 });
 
-test('working legs step faster than humming', () => {
-  const t0 = Math.floor(NOW / 2000) * 2000;
+test('legs alternate gait frames with the frame counter', () => {
   const work = { lastToolAt: secsAgo(1) };
   assert.notStrictEqual(
-    renderBuddy(work, t0).rows[2],
-    renderBuddy(work, t0 + 1000).rows[2],
-    'working gait alternates every second'
+    renderBuddy({ ...work, frame: 0 }, NOW).rows[2],
+    renderBuddy({ ...work, frame: 1 }, NOW).rows[2],
+    'gait alternates every frame'
   );
 });

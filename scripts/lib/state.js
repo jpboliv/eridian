@@ -31,13 +31,19 @@ const DEFAULT_STATE = {
   promptsSinceReinject: 0,
 };
 
+// state fields written by old versions but no longer read by anything;
+// dropped on read so the next write cleans the file
+const RETIRED_KEYS = ['buddyStyle'];
+
 function readState() {
   try {
     const parsed = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
     if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
       return structuredClone(DEFAULT_STATE);
     }
-    return { ...structuredClone(DEFAULT_STATE), ...parsed };
+    const state = { ...structuredClone(DEFAULT_STATE), ...parsed };
+    for (const key of RETIRED_KEYS) delete state[key];
+    return state;
   } catch {
     return structuredClone(DEFAULT_STATE);
   }

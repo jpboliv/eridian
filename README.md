@@ -20,14 +20,15 @@ see [Credits](#credits).
 
 ## Use
 
-| Command                           | What it does                                         |
-| --------------------------------- | ---------------------------------------------------- |
-| `/eridian:mode`                   | toggle eridian mode (full) on/off                    |
-| `/eridian:mode lite\|full\|ultra` | set intensity (`eridian` = `ultra`)                  |
-| `/eridian:stats`                  | estimated token savings + statusline setup           |
-| `/eridian:commit`                 | terse conventional commit from staged diff           |
-| `/eridian:review`                 | one-line-per-finding review. `not ship. fix first.`  |
-| `/eridian:compress`               | compress CLAUDE.md to cut input tokens (backup kept) |
+| Command                           | What it does                                                  |
+| --------------------------------- | ------------------------------------------------------------- |
+| `/eridian:mode`                   | toggle eridian mode (full) on/off                             |
+| `/eridian:mode lite\|full\|ultra` | set intensity (`eridian` = `ultra`)                           |
+| `/eridian:stats`                  | estimated token savings + statusline setup                    |
+| `/eridian:buddy <seconds>`        | slow the buddy: min seconds between steps (0 = every refresh) |
+| `/eridian:commit`                 | terse conventional commit from staged diff                    |
+| `/eridian:review`                 | one-line-per-finding review. `not ship. fix first.`           |
+| `/eridian:compress`               | compress CLAUDE.md to cut input tokens (backup kept)          |
 
 Or just say "talk like Rocky". Mode persists across sessions until
 `/eridian:mode off`.
@@ -56,9 +57,15 @@ from the session transcript on every statusline refresh. Rocky dances when
 the session crosses a savings milestone (5k/10k/25k/50k/100k). Lifetime
 totals live in `/eridian:stats`.
 
-Rocky animates whenever Claude Code refreshes the statusline (i.e. while
-the conversation is active); when you idle, the last frame stays put until
-the next refresh — that cadence is the host's, not Rocky's.
+Rocky steps one animation frame per statusline refresh: every time Claude
+Code re-runs the statusline (a handful of seconds apart while the
+conversation is active), the pose visibly changes. When you idle, the last
+frame stays put until the next refresh — that cadence is the host's, not
+Rocky's.
+
+Too jumpy? `/eridian:buddy 2` slows him to at most one step every 2
+seconds; `/eridian:buddy 0` restores per-refresh stepping. He can never
+step _faster_ than the host refreshes — physics.
 
 Using your own statusline script instead of the generated one? Forward the
 JSON that Claude Code pipes on stdin, or the savings segment is omitted:
