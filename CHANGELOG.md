@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.4.0...eridian-plugin-v0.5.0) (2026-07-16)
+
+
+### Features
+
+* canon Rocky dialect (statement marker, no+verb negation, copula drop) ([#17](https://github.com/jpboliv/eridian/issues/17)) ([9ce1e7b](https://github.com/jpboliv/eridian/commit/9ce1e7b7d0715fce4fe4e39c57d5a2888955ed82))
+
 ## [0.4.0](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.3.0...eridian-plugin-v0.4.0) (2026-07-10)
 
 
