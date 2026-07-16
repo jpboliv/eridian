@@ -20,7 +20,24 @@ test('loadInjectionBlock reads real SKILL.md for every level', () => {
     const block = loadInjectionBlock(level);
     assert.ok(block && block.includes('ROCKY MODE'), `${level} block exists`);
     assert.ok(block.includes('NEVER alter code'), `${level} keeps invariant`);
+    assert.ok(block.includes('"no + verb"'), `${level} uses canon negation`);
   }
+});
+
+test('canon markers land in the right levels', () => {
+  const lite = loadInjectionBlock('lite');
+  const full = loadInjectionBlock('full');
+  const ultra = loadInjectionBlock('ultra');
+  for (const [name, block] of [
+    ['full', full],
+    ['ultra', ultra],
+  ]) {
+    assert.ok(block.includes(', question?'), `${name} marks questions`);
+    assert.ok(block.includes(', statement.'), `${name} marks statements`);
+  }
+  assert.ok(!lite.includes(', statement.'), 'lite stays savings-pure');
+  assert.ok(ultra.includes('Rocky fix'), 'ultra is third-person');
+  assert.ok(ultra.includes('fist my bump'), 'ultra has the gag');
 });
 
 test('normalizeLevel handles aliases and junk', () => {
