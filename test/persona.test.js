@@ -1,9 +1,11 @@
+const fs = require('node:fs');
 const test = require('node:test');
 const assert = require('node:assert');
 const {
   extractInjectionBlock,
   loadInjectionBlock,
   normalizeLevel,
+  SKILL_FILE,
 } = require('../scripts/lib/persona');
 
 test('extractInjectionBlock pulls delimited block', () => {
@@ -38,6 +40,36 @@ test('canon markers land in the right levels', () => {
   assert.ok(!lite.includes(', statement.'), 'lite stays savings-pure');
   assert.ok(ultra.includes('Rocky fix'), 'ultra is third-person');
   assert.ok(ultra.includes('fist my bump'), 'ultra has the gag');
+});
+
+test('no-invented-abbreviations rule lands in every level', () => {
+  for (const level of ['lite', 'full', 'ultra']) {
+    const block = loadInjectionBlock(level);
+    assert.ok(block.includes('No invented abbreviations'), `${level} bans invented abbreviations`);
+    assert.ok(block.includes('no → in prose'), `${level} bans prose arrows`);
+    assert.ok(block.includes('acronyms'), `${level} allows standard acronyms`);
+  }
+});
+
+test('auto-clarity triggers land in every level', () => {
+  for (const level of ['lite', 'full', 'ultra']) {
+    const block = loadInjectionBlock(level);
+    assert.ok(block.includes('destructive-op'), `${level} keeps destructive-op trigger`);
+    assert.ok(block.includes('order-sensitive'), `${level} covers order-sensitive steps`);
+    assert.ok(block.includes('ambiguity'), `${level} covers compression ambiguity`);
+    assert.ok(block.includes('confusion'), `${level} covers user confusion`);
+    assert.ok(block.includes('resume'), `${level} resumes dialect after`);
+  }
+});
+
+test('invariants section lists the expanded auto-clarity triggers', () => {
+  const md = fs.readFileSync(SKILL_FILE, 'utf8');
+  const invariants = md.slice(md.indexOf('## Invariants'), md.indexOf('## Levels'));
+  assert.ok(invariants.includes('destructive-operation warnings'));
+  assert.ok(invariants.includes('order-sensitive'));
+  assert.ok(invariants.includes('ambiguity'));
+  assert.ok(invariants.includes('confusion'));
+  assert.ok(invariants.includes('resume'));
 });
 
 test('normalizeLevel handles aliases and junk', () => {
