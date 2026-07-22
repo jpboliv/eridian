@@ -77,7 +77,8 @@ rocky=$(printf '%s' "$input" | node "<plugin-root>/scripts/statusline.js" 2>/dev
 ## Savings
 
 Measured on 10 real coding prompts via `claude -p`, one run per prompt/mode
-(`eval/run.sh`), 2026-07-02. Two honest counterfactuals:
+(`eval/run.sh`), 2026-07-02; `full`/`ultra` re-measured 2026-07-22 after the
+canon vocab expansion. Two honest counterfactuals:
 
 **vs default Claude** — what the statusline counts (nobody types "answer
 concisely" on every message):
@@ -85,8 +86,8 @@ concisely" on every message):
 | level   | avg output-token reduction |
 | ------- | -------------------------- |
 | `lite`  | ~52%                       |
-| `full`  | ~26%                       |
-| `ultra` | ~9%                        |
+| `full`  | ~30%                       |
+| `ultra` | ~14%                       |
 
 **vs a plain `Answer concisely.` instruction** — how the dialect compares to
 just asking for brevity:
@@ -94,8 +95,8 @@ just asking for brevity:
 | level   | avg reduction vs terse |
 | ------- | ---------------------- |
 | `lite`  | ~10%                   |
-| `full`  | ~-50%                  |
-| `ultra` | ~-77%                  |
+| `full`  | ~-25%                  |
+| `ultra` | ~-56%                  |
 
 `lite` is the saver — about on par with plain terseness. `full` and `ultra`
 cost _more_ tokens than a plain `Answer concisely.`: the triples and ♫
