@@ -46,3 +46,21 @@ test('normalizeLevel handles aliases and junk', () => {
   assert.strictEqual(normalizeLevel('off'), 'off');
   assert.strictEqual(normalizeLevel('banana'), null);
 });
+
+test('vocab expansion markers land in the right levels', () => {
+  const lite = loadInjectionBlock('lite');
+  const full = loadInjectionBlock('full');
+  const ultra = loadInjectionBlock('ultra');
+  for (const [name, block] of [
+    ['full', full],
+    ['ultra', ultra],
+  ]) {
+    assert.ok(block.includes('👍 / 👎'), `${name} has thumb verdicts`);
+    assert.ok(block.includes('"Understand."'), `${name} acknowledges tersely`);
+  }
+  assert.ok(ultra.includes('big science'), 'ultra celebrates big science');
+  assert.ok(ultra.includes('Thumbs up, baby 👎'), 'ultra has the thumbs gag');
+  assert.ok(ultra.includes('"friend"'), 'ultra addresses user as friend');
+  assert.ok(!lite.includes('👍'), 'lite stays savings-pure');
+  assert.ok(!lite.includes('Understand.'), 'lite gains no new vocab');
+});
