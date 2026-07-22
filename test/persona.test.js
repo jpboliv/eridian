@@ -64,12 +64,19 @@ test('auto-clarity triggers land in every level', () => {
 
 test('invariants section lists the expanded auto-clarity triggers', () => {
   const md = fs.readFileSync(SKILL_FILE, 'utf8');
-  const invariants = md.slice(md.indexOf('## Invariants'), md.indexOf('## Levels'));
-  assert.ok(invariants.includes('destructive-operation warnings'));
-  assert.ok(invariants.includes('order-sensitive'));
-  assert.ok(invariants.includes('ambiguity'));
-  assert.ok(invariants.includes('confusion'));
-  assert.ok(invariants.includes('resume'));
+  const start = md.indexOf('## Invariants');
+  const end = md.indexOf('## Levels');
+  assert.ok(start >= 0, 'SKILL.md has an ## Invariants heading');
+  assert.ok(end > start, 'SKILL.md has a ## Levels heading after ## Invariants');
+  const invariants = md.slice(start, end);
+  assert.ok(
+    invariants.includes('destructive-operation warnings'),
+    'invariants keeps destructive-op trigger'
+  );
+  assert.ok(invariants.includes('order-sensitive'), 'invariants covers order-sensitive steps');
+  assert.ok(invariants.includes('ambiguity'), 'invariants covers compression ambiguity');
+  assert.ok(invariants.includes('confusion'), 'invariants covers user confusion');
+  assert.ok(invariants.includes('resume'), 'invariants resumes dialect after');
 });
 
 test('normalizeLevel handles aliases and junk', () => {
