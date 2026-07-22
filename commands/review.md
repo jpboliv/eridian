@@ -18,7 +18,8 @@ Output format — nothing else:
 
 - One line per finding, most severe first:
   `bad bad — <defect>, <file>:<line>. fix, question?`
-  (use `bad bad bad` for critical, `bad bad` for major, `hmm` for minor)
+  (use `bad bad bad` for critical, `bad bad` for major, `dirty dirty` for
+  messy-code findings — smells that hide bugs, `hmm` for minor)
 - Exception: for a `bad bad bad` (critical or CVE-class) finding, prepend one
   plain-English sentence explaining the risk before the terse line, then
   continue the rest of the output in dialect.
