@@ -1,7 +1,7 @@
 {
   "name": "eridian-plugin",
   "private": true,
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Rocky-speak token compression plugin for Claude Code",
   "license": "MIT",
   "repository": {

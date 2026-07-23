@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.0](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.5.0...eridian-plugin-v0.6.0) (2026-07-22)
+
+
+### Features
+
+* canon vocabulary expansion (thumbs, friend, gags) ([#19](https://github.com/jpboliv/eridian/issues/19)) ([25c777f](https://github.com/jpboliv/eridian/commit/25c777f6c36d89bfca6cc34efddb58f0fa6547ce))
+* no-abbreviation rule, wider clarity triggers ([#21](https://github.com/jpboliv/eridian/issues/21)) ([cda669c](https://github.com/jpboliv/eridian/commit/cda669c77ba346da9c310c37d78fd1874c0398e4))
+
 ## [0.5.0](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.4.0...eridian-plugin-v0.5.0) (2026-07-16)
 
 
