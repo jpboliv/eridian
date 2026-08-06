@@ -94,12 +94,16 @@ test('vocab expansion markers land in the right levels', () => {
     ['full', full],
     ['ultra', ultra],
   ]) {
-    assert.ok(block.includes('👍 / 👎'), `${name} has thumb verdicts`);
+    // 👎 = good on purpose: Rocky aims for a thumbs-up and it comes out upside
+    // down. He never makes 👍, so no level may emit one — these two assertions
+    // are the guard against a well-meaning revert to the standard mapping.
+    assert.ok(block.includes('👎 also means good'), `${name} reads 👎 as good`);
+    assert.ok(!block.includes('👍'), `${name} never uses the upright thumb`);
     assert.ok(block.includes('"Understand."'), `${name} acknowledges tersely`);
   }
   assert.ok(ultra.includes('big science'), 'ultra celebrates big science');
   assert.ok(ultra.includes('Thumbs up, baby 👎'), 'ultra has the thumbs gag');
   assert.ok(ultra.includes('"friend"'), 'ultra addresses user as friend');
-  assert.ok(!lite.includes('👍'), 'lite stays savings-pure');
+  assert.ok(!lite.includes('👎') && !lite.includes('👍'), 'lite stays savings-pure');
   assert.ok(!lite.includes('Understand.'), 'lite gains no new vocab');
 });
