@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.6.0...eridian-plugin-v0.6.1) (2026-08-11)
+
+
+### Bug Fixes
+
+* 👎 means good — Rocky's only thumb ([#22](https://github.com/jpboliv/eridian/issues/22)) ([d728ac9](https://github.com/jpboliv/eridian/commit/d728ac93cf30831c32004dc08893d3aa28dd3f88))
+
 ## [0.6.0](https://github.com/jpboliv/eridian/compare/eridian-plugin-v0.5.0...eridian-plugin-v0.6.0) (2026-07-22)
 
 
