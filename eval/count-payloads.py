@@ -23,6 +23,10 @@ for name, text in re.findall(r'<!-- eridian:inject:([\w-]+) -->(.*?)<!-- /eridia
 frontmatter = re.match(r'^---\n(.*?)\n---', source, re.S)
 if frontmatter:
     payloads['skill-frontmatter'] = frontmatter.group(1)
+for command in sorted((root / 'commands').glob('*.md')):
+    metadata = re.match(r'^---\n(.*?)\n---', command.read_text(), re.S)
+    if metadata:
+        payloads[f'command-frontmatter:{command.stem}'] = metadata.group(1)
 
 # Capture actual command/hook wrappers using only a disposable state store.
 probe = r'''
