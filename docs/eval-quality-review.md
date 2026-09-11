@@ -75,3 +75,9 @@ the source manifest/raw/input hashes, new reviewer hash, copied raw evidence, an
 new validated records. Original records are untouched; malformed or contradictory
 judgments still fail. Provider usage is carried forward as original-call evidence,
 not additional consumption. Human review remains pending.
+
+A successful structured-output envelope may end with `stop_reason: "tool_use"`
+because the schema tool supplied the result. It is accepted only with explicit
+`terminal_reason: "completed"`, a successful provider envelope, valid usage and a
+valid judgment. Original stop/terminal reasons remain in the record. Pending tool
+calls, unstructured tool results, provider errors and truncation remain failures.
