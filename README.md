@@ -174,6 +174,23 @@ Run `bash eval/run.sh` for all five arms (costs provider tokens), then
 `node eval/compute-factors.js <run-directory>` for distributions and paired output
 comparisons. Human quality review remains required before accepting new rules.
 
+## Reinforcement cadence
+
+Eridian retains a full reminder after 20 active prompts since the latest
+startup/resume/compaction or mode change. Each session has its own countdown;
+off and `ERIDIAN_OFF=1` suppress injection. Full payloads remain available on
+activation and lifecycle events. A concurrent disable cannot commit before an
+already-selected reminder is emitted.
+
+The [three-policy cadence experiment](eval/snapshots/reinforcement-cadence/README.md)
+retains 262 complete replies, 18 provider spend-limit failures and 116 skipped
+turns from 396 planned cells. It stopped before interval20 reached its first
+periodic refresh, so it cannot establish an optimal cadence. Brief reminders
+added context without resolving observed quality defects. The current default
+stays unchanged pending complete evidence and human acceptance; experimental
+34/34/30-token reminders are not enabled. Emitted characters and replayed input
+are not billed session input or monetary savings.
+
 ## Accounting limitations and storage
 
 State schema 2 separates saved mode/buddy-speed preferences from session mode,
