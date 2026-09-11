@@ -116,3 +116,11 @@ recognition check remain **pending**. No model judge was run for this candidate.
 Held-out results are reporting evidence only, not tuning input. Tests, token
 counts, and marker observations cannot clear those release gates, and required
 facts must never be removed to meet a cost target. The PR remains a draft.
+
+An [offline assistant audit of six tuning replies](design/008-quality-audit.md)
+found remaining required-fact omissions and factual imprecision: the ultra Git
+reply omits the pushed-history caveat; the full pagination reply omits a bounded
+limit/unique tie-breaker and overstates seek complexity. Four inspected ordinary
+full replies largely read as plain technical prose. This small self-audit does
+not replace paired human review or establish comparative arm effects. The
+candidate remains a draft; no payload changes followed these observations.
