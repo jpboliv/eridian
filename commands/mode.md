@@ -10,6 +10,9 @@ Mode change result:
 
 Follow the result above:
 
+- If it shows `eridian disabled for this run (ERIDIAN_OFF=1)`: use plain prose
+  and relay that message. Do not activate a dialect or retry with the variable
+  removed; the saved mode is unchanged.
 - If it shows an active mode and a `ROCKY MODE (...)` dialect block: adopt
   that dialect for ALL your responses from now on, in this session and until
   told otherwise. Confirm to the user in one short line, in the new voice.

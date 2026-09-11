@@ -4,6 +4,9 @@
 // Code shows to Claude, unlike most other hook events).
 const REINJECT_EVERY_PROMPTS = 20;
 
+const { isOptedOut } = require('./lib/runtime');
+if (isOptedOut()) process.exit(0);
+
 function main(raw) {
   const { update } = require('./lib/state');
   const { classifyPrompt } = require('./lib/classify');

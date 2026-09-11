@@ -33,6 +33,39 @@ see [Credits](#credits).
 Or just say "talk like Rocky". Mode persists across sessions until
 `/eridian:mode off`.
 
+### Interactive and unattended runs
+
+An unconfigured installation is off. In interactive sessions, `/eridian:mode`
+activates full by default. For scripts, scheduled tasks, or any session that should
+ignore the saved mode, set the opt-out before launching Claude Code:
+
+```sh
+ERIDIAN_OFF=1 claude -p "Summarize the build results"
+ERIDIAN_OFF=1 claude
+```
+
+Only the exact value `1` enables the override. SessionStart and prompt reminders
+emit no persona, and automatic hooks leave Eridian state untouched. All
+`/eridian:mode` arguments (including `off` and the no-argument toggle) report the
+override without changing saved settings. Launch a new session without the
+variable to use the saved mode again. Setting it after launch cannot remove
+instructions already in the conversation, including a resumed transcript.
+
+This suppresses Eridian's automatic injections; it does not disable other plugins,
+project instructions, explicit style requests, or explicitly invoked style skills
+and commands. `eval/run.sh` sets it for every arm, including baseline, while still
+adding each dialect arm's explicit prefix. It records the start time, arms, and
+override in `eval/results-isolation.jsonl` alongside `eval/results.csv`; both reset
+on a full run and append on a partial run. No manual global mode change is needed.
+This is Eridian isolation, not a fully isolated evaluation environment.
+
+Host support checked against the [Claude Code hook reference](https://code.claude.com/docs/en/hooks)
+on 2026-09-11: SessionStart's documented `source` describes lifecycle events
+(`startup`, `resume`, `clear`, `compact`, `fork`), not interactive versus unattended
+execution. The documented hook inputs provide no general unattended flag.
+Eridian therefore requires the explicit opt-out; prompt text such as
+`<scheduled-task` is not a trusted execution-mode signal.
+
 ## Levels
 
 - **lite** — max savings, light flavor. `Inline object prop = new ref each render. Wrap in useMemo.`

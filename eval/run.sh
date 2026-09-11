@@ -15,19 +15,22 @@ for m in "${MODES[@]}"; do
   esac
 done
 
-# Runs must be clean: if eridian mode is on, the SessionStart hook injects
-# the dialect into every run and corrupts the measurements.
-current=$(node -e "console.log(require('./scripts/lib/state').readState().current)")
-if [ "$current" != "off" ]; then
-  echo "eridian mode is '$current' — run 'node scripts/mode.js off' first." >&2
-  exit 1
-fi
+# Suppress automatic persona hooks without changing the user's saved mode.
+# Explicit prefixes below remain enabled for the dialect arms.
+export ERIDIAN_OFF=1
 
 OUT=eval/results.csv
+ISOLATION=eval/results-isolation.jsonl
 # No args: fresh measurement, rewrite. With args: append to existing cells.
 if [ "$#" -eq 0 ] || [ ! -f "$OUT" ]; then
   echo "prompt_id,mode,output_tokens" > "$OUT"
+  : > "$ISOLATION"
 fi
+node -e 'console.log(JSON.stringify({
+  startedAt: new Date().toISOString(),
+  modes: process.argv.slice(1),
+  isolation: { ERIDIAN_OFF: process.env.ERIDIAN_OFF, scope: "Eridian automatic hooks and mode command only" }
+}))' "${MODES[@]}" >> "$ISOLATION"
 
 run_one() { # $1=id $2=mode $3=full-prompt
   # </dev/null: claude -p reads stdin, which would drain the while-read pipe
