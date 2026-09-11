@@ -1,6 +1,8 @@
 # Clarity-first level candidate (ticket 008)
 
-This is a draft candidate. Human correctness/completeness/readability review and
+The current revision (008-r2) is an **unvalidated draft**. The earlier candidate
+failed the preliminary quality screen and both output-cost targets. Its retained
+results below do not validate the changed rules. Human correctness/completeness/readability review and
 an independent check that full remains recognizably Rocky are pending. Existing
 persisted level names and the default activated level (`full`) remain compatible.
 The buddy carries persistent expression; reply decoration is optional.
@@ -13,18 +15,33 @@ engineer phrasing, with grammar restored whenever a fragment obscures meaning.
 Ultra offers additional personality within a single-marker budget. Shared clarity
 and persisted-output rules override all three levels.
 
-Measured with tiktoken 0.12.0, `cl100k_base`, against base commit
-`76282a5dc6584b95169e3aab2e39e1ffa74b9de6`. These are tokenizer approximations for
-Claude, not provider billing counts. The unchanged shared block adds 145 tokens.
-The level-specific blocks are all shorter than their predecessors.
+Revision 2 addresses general failures seen in the tuning Git/API replies: a short
+answer must keep conditions attached to the actions they limit, and clear Rocky
+voice should come from concrete observation, causal explanation and cooperative
+problem-solving. Full and ultra now guide that reasoning explicitly, using normal
+grammar whenever fragments obscure meaning. Checks are appropriate when uncertainty
+affects the next action; these rules impose no fixed sections or routine extra tests.
+The integrated shared rules preserve necessary facts and evidence-backed claims.
+No held-out content informed this revision. This is a prompt-design hypothesis,
+not evidence that the quality failures are fixed.
 
-| Level | Prior block | Candidate block | Shared + candidate |
-| ----- | ----------: | --------------: | -----------------: |
-| lite  |         181 |              93 |                238 |
-| full  |         242 |             156 |                301 |
-| ultra |         288 |             245 |                390 |
+Current counts use tiktoken 0.12.0; these are named-tokenizer approximations for
+Claude, not provider billing counts. Shared rules add 253 `cl100k_base` tokens
+or 249 `o200k_base` tokens.
 
-Machine-readable measurement: [payload token counts](design/008-payload-tokens.json).
+| Level | Prior failed block, cl100k | Current block, cl100k | Current combined, cl100k | Current combined, o200k |
+| ----- | -------------------------: | --------------------: | -----------------------: | ----------------------: |
+| lite  |                         93 |                   105 |                      358 |                     351 |
+| full  |                        156 |                   204 |                      457 |                     451 |
+| ultra |                        245 |                   281 |                      534 |                     528 |
+
+The extra guidance deliberately increases input cost relative to the failed
+candidate. Level blocks remain below the original pre-ticket sizes of 181/242/288
+`cl100k_base` tokens; the expanded shared rules make total input larger.
+[Current hashes and both encodings](design/008-revision-2.json) identify this
+integrated revision. [Initial payload counts](design/008-payload-tokens.json) and
+[007-stage combined counts](design/shared-clarity-tokens.json) are historical;
+neither describes current combined level input.
 
 ## Decorative marker policy
 
@@ -70,8 +87,9 @@ command-specific exception, not evidence that the ordinary reply budget passed.
 Its contract is tested separately from ordinary response measurements; a model
 behavior check for that command remains pending with the review-contract ticket.
 
-## Captured evaluation and release gates
+## Historical first-candidate evaluation and release gates
 
+The following results apply only to the frozen first candidate, not revision 2.
 Run `2026-09-11T16-07-28.095Z-07dd213e` completed **285/285** responses with no
 failed cells: 19 cases × five arms × three repetitions, including held-out cases.
 It used `claude-haiku-4-5-20251001`, Claude CLI 2.1.268, isolated prompts, and
@@ -130,3 +148,24 @@ also failed, including unprovided artifact details in a held-out Portuguese PR
 and an unsupported memory-write claim. Human approval remains pending. The
 [raw archive and checksums](../eval/snapshots/clarity-levels/README.md) deliver all
 285 replies with the PR, alongside the partial assessment's explicit coverage.
+
+## Revision 2 rerun plan
+
+No provider calls were made for this revision. Freeze the integrated source before
+rerunning, verify `ruleIdentity()` equals the hash in `008-revision-2.json`, and
+retain the new raw run separately from the failed first candidate. After provider
+quota and authorization permit paid calls:
+
+```sh
+node eval/run.js --concurrency 10
+node eval/compute-factors.js eval/runs/<new-run-id>
+node eval/sample-review.js eval/runs/<new-run-id>
+node eval/review.js --run eval/runs/<new-run-id>/review-sample-<id> --execute --concurrency 4
+```
+
+Capture all cells and usage, review required facts and clarity on anonymized pairs,
+and report held-out findings without tuning to them. Model-assisted review does
+not supply human approval or the independent full/Rocky recognition check. New
+output measurements and those quality gates are required before release or runtime
+factor replacement. Executable composition/marker tests and input counts cannot
+establish behavior quality.
