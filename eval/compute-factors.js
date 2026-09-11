@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const fs = require('node:fs');
 const path = require('node:path');
-const { summarize } = require('./lib');
+const { summarize, validateCollection } = require('./lib');
 
 // Read one immutable run; report all observations without silently repricing history.
 const dir = process.argv[2];
@@ -12,8 +12,17 @@ if (!dir) {
 try {
   const manifest = JSON.parse(fs.readFileSync(path.join(dir, 'manifest.json'), 'utf8'));
   const records = JSON.parse(fs.readFileSync(path.join(dir, 'records.json'), 'utf8'));
-  if (records.some((r) => r.runId !== manifest.runId || r.ruleHash !== manifest.ruleHash)) {
-    throw new Error('Mixed run identities or rule versions');
+  const prompts = JSON.parse(fs.readFileSync(path.join(dir, 'prompts.json'), 'utf8'));
+  const completion = JSON.parse(fs.readFileSync(path.join(dir, 'completion.json'), 'utf8'));
+  validateCollection(manifest, prompts, records, completion);
+  for (const record of records) {
+    if (
+      !fs.existsSync(
+        path.join(dir, `${record.promptId}--${record.arm}--${record.repetition}.raw.json`)
+      )
+    ) {
+      throw new Error('Missing raw evidence for a result cell');
+    }
   }
   const summary = summarize(records);
   console.log(

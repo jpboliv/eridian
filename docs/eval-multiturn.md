@@ -25,7 +25,8 @@ Run all policies with the same rule/scenario/model hashes for a valid comparison
 
 Each call sends a JSON-encoded conversation replay as one user prompt to `-p`.
 Historical user/assistant roles and injected payloads are explicit data fields;
-they are not native provider roles. Complete replies are replayed on later turns.
+they are not native provider roles. Current mode is stored only in result metadata;
+ordinary replay turns contain no repeated mode label or implicit mode reminder. Complete replies are replayed on later turns.
 Simulated resume retains context and inserts the full current-mode rules.
 Simulated compaction replaces replay context with a fixed summary, retaining the
 full transcript separately; it does not exercise real host summarization.

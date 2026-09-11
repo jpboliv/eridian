@@ -60,7 +60,6 @@ async function run(options = {}) {
     '--system-prompt',
     systemPrompt,
   ];
-  const isolatedCwd = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-style-eval-'));
   const prefixes = Object.fromEntries(
     arms.map((arm) => [
       arm,
@@ -180,6 +179,7 @@ async function run(options = {}) {
     console.log(`${records.length}/${tasks.length} ${id} ${record.status}`);
   }
   let next = 0;
+  const isolatedCwd = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-style-eval-'));
   try {
     await Promise.all(
       Array.from({ length: Math.min(concurrency, tasks.length) }, async () => {
