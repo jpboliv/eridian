@@ -183,6 +183,11 @@ npm test          # unit tests (node:test, zero deps)
 bash eval/run.sh  # calibrate savings factors (manual, costs tokens)
 ```
 
+For deterministic English phrase counts and language-aware structural observations,
+see [style diagnostics](docs/style-diagnostics.md). Run
+`node scripts/readcost.js reply.md` or pipe text on stdin. These diagnostics do not
+measure clarity, completeness, or reading time.
+
 Rules of the dialect live in one place: `skills/speak/SKILL.md`.
 
 ## Credits
