@@ -32,7 +32,10 @@ there — don't re-derive or duplicate rules in commands or scripts.
 
   ```bash
   bash eval/run.sh
-  node eval/compute-factors.js
+  node eval/compute-factors.js <run-directory>
   ```
 
-  then update the README savings table and `eval/factors.json` if they moved.
+  then retain the immutable run and paired quality review, and update the README
+  with distributions and limitations. Runtime factors require compatible model,
+  rule provenance and prose-only applicability; do not overwrite historical
+  calibration using unreviewed all-output comparisons. See `docs/evaluation.md`.
