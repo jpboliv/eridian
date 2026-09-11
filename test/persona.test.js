@@ -36,7 +36,7 @@ test('lite keeps grammar while full/ultra make decoration optional', () => {
     const block = loadInjectionBlock(level);
     assert.ok(block.includes(', question?'));
     assert.ok(block.includes(', statement.'));
-    assert.match(block, /[Oo]ptional/);
+    assert.match(block, /[Oo]ptional|Choose none or one/);
     assert.match(block, /[Aa]t most (?:one|ONE) decorative marker/);
     assert.ok(block.includes('not evidence or certainty'));
   }

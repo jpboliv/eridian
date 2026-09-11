@@ -11,5 +11,6 @@
     "full": 486,
     "ultra": 534
   },
-  "rule_sha256": "a7e29c02beff4ecd0895711cb1ad4442ac169792033e8f5aef5c64e287b233cf"
+  "rule_sha256": "a7e29c02beff4ecd0895711cb1ad4442ac169792033e8f5aef5c64e287b233cf",
+  "sourceStage": "007 shared-rules revision with legacy level blocks; combined_tokens and rule_sha256 are historical stage measurements. Current integrated008 values:008-revision-2.json."
 }
