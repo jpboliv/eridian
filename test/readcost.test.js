@@ -95,3 +95,24 @@ test('CLI supports stdin, files, language, and actionable errors', () => {
   assert.match(run(['/nonexistent/eridian/readcost.txt']).stderr, /style diagnostics:/);
   assert.equal(run(['a', 'b']).status, 1);
 });
+
+test('flavor marker policy counts longest overlaps and separately added decoration', () => {
+  for (const [text, expected] of [
+    ['It works, statement.', 1],
+    ['Ready, question?', 1],
+    ['bad bad', 1],
+    ['good good good', 1],
+    ['Rocky fix', 1],
+    ['Thumbs up, baby 👎', 1],
+    ['You science, Rocky engineer.', 1],
+    ['Understand, question?', 1],
+    ['♫ bad bad. Rocky fix, statement.', 4],
+    ['Amaze! Fist my bump, friend.', 3],
+    ['ordinary grammatical prose', 0],
+    ['`♫ bad bad` "Rocky fix"', 0],
+  ]) {
+    const result = score(text);
+    assert.equal(result.counts.rockyMarkers, expected, text);
+    assert.equal(result.phraseMatches, 0, 'decoration does not change filler rate');
+  }
+});

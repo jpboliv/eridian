@@ -72,9 +72,13 @@ Eridian therefore requires the explicit opt-out; prompt text such as
 
 ## Levels
 
-- **lite** — max savings, light flavor. `Inline object prop = new ref each render. Wrap in useMemo.`
-- **full** — balanced. `New object every render. useMemo fix, statement. Understand, question?`
-- **ultra** — full Eridian. `♫ Bad bad bad. Object born again every render. useMemo — Rocky fix, statement. Good good good.`
+- **lite** — concise, grammatical prose; no mandatory dialect markers.
+- **full** — clear Rocky engineer phrasing; optional flavor, clarity first.
+- **ultra** — optional extra personality, at most one decorative marker per ordinary reply.
+
+These levels are a draft candidate with quality review pending. See
+[level budgets and evaluation](docs/clarity-levels.md) for marker counting,
+command exceptions, measurements, and the remaining release gates.
 
 ## Shared clarity and artifact boundary
 
