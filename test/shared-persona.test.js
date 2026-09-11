@@ -34,33 +34,12 @@ test('missing, empty and duplicate shared regions cannot emit an unprotected dia
   assert.equal(composeInjectionBlock(region('shared', 'A') + full + full, 'full'), null);
 });
 
-test('real skill has one shared block with precedence and clarity/artifact safeguards', () => {
+test('real skill composes its single shared block into every active level', () => {
   const markdown = fs.readFileSync(SKILL_FILE, 'utf8');
   assert.equal(markdown.split('<!-- eridian:inject:shared -->').length - 1, 1);
   const shared = extractInjectionBlock(markdown, 'shared');
-  for (const term of [
-    'override dialect',
-    'when known',
-    'needed progress updates',
-    'clarification',
-    'host communication',
-    'user language',
-    'requested detail/format',
-    'Prefer',
-    '~20 words',
-    'uncertainty',
-    'negation',
-    'exceptions',
-    'numbers',
-    'units',
-    'decisive errors',
-    'Complete meaning and clarity',
-    'Files, comments, commits, PRs, issues, memory',
-    'requested language',
-    'audience/template',
-    'Compress',
-  ])
-    assert.ok(shared.includes(term), term);
+  // Behavioral acceptance uses captured replies, not matches against prompt wording.
+  assert.ok(shared.trim());
   for (const level of ['lite', 'full', 'ultra'])
     assert.equal(
       loadInjectionBlock(level),
