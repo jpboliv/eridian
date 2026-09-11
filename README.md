@@ -22,6 +22,7 @@ see [Credits](#credits).
 
 | Command                           | What it does                                                  |
 | --------------------------------- | ------------------------------------------------------------- |
+| `/eridian:help`                   | levels, commands, defaults and how to turn off                |
 | `/eridian:mode`                   | toggle eridian mode (full) on/off                             |
 | `/eridian:mode lite\|full\|ultra` | set intensity (`eridian` = `ultra`)                           |
 | `/eridian:stats`                  | session output reduction estimates + statusline setup         |
