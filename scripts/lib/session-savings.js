@@ -19,13 +19,14 @@ function readCache(id) {
     return null;
   }
 }
-function calibrationFor(factors, model) {
+function calibrationFor(factors, model, rule) {
   const c = factors._calibration;
   return c &&
     typeof c.id === 'string' &&
     c.id &&
     typeof c.rule === 'string' &&
     c.rule &&
+    c.rule === rule &&
     c.model === model &&
     typeof model === 'string' &&
     c.scope === 'prose-only'
@@ -36,7 +37,9 @@ function category(content) {
   if (!Array.isArray(content) || !content.length) return 'unknown';
   return content.every(
     (block) =>
-      block.type === 'text' && typeof block.text === 'string' && !/[`]|^ {4}\S/m.test(block.text)
+      block?.type === 'text' &&
+      typeof block.text === 'string' &&
+      !/[`]|^[ \t]*~{3,}|^ {4}\S/m.test(block.text)
   )
     ? 'prose'
     : 'protected-or-mixed';
@@ -73,14 +76,17 @@ function sessionSavings({ sessionId, transcriptPath }, state, factors, nowMs) {
         const existing = records[key];
         const old = previous?.records?.[key];
         const window = windows.find((w) => tsMs >= w.startMs && tsMs < w.endMs);
-        const observedCategory = category(message.content);
+        const observedCategory =
+          message.usage.output_tokens_details?.thinking_tokens > 0
+            ? 'protected-or-mixed'
+            : category(message.content);
         const record = existing || {
           tsMs,
           model: message.model || null,
           level: window?.level || null,
           outputTokens: 0,
           category: observedCategory,
-          calibration: old ? old.calibration : calibrationFor(factors, message.model),
+          calibration: old ? old.calibration : calibrationFor(factors, message.model, window?.rule),
         };
         record.outputTokens = Math.max(record.outputTokens, tokens);
         if (observedCategory !== 'prose') record.category = observedCategory;
@@ -88,6 +94,7 @@ function sessionSavings({ sessionId, transcriptPath }, state, factors, nowMs) {
       }
       let outputTokens = 0;
       let eligibleOutputTokens = 0;
+      let calibratedOutputTokens = 0;
       let reduction = 0;
       let calibratedMessages = 0;
       for (const record of Object.values(records)) {
@@ -98,6 +105,7 @@ function sessionSavings({ sessionId, transcriptPath }, state, factors, nowMs) {
         const factor = record.calibration?.factors?.[record.level];
         if (typeof factor !== 'number' || !Number.isFinite(factor) || factor >= 1) continue;
         calibratedMessages++;
+        calibratedOutputTokens += record.outputTokens;
         reduction += record.outputTokens / (1 - factor) - record.outputTokens;
       }
       const savedTokens = calibratedMessages ? Math.round(reduction) : null;
@@ -113,6 +121,7 @@ function sessionSavings({ sessionId, transcriptPath }, state, factors, nowMs) {
         records,
         outputTokens,
         eligibleOutputTokens,
+        calibratedOutputTokens,
         unidentifiedOutputTokens,
         savedTokens,
         estimateLabel: 'estimated prose output reduction',

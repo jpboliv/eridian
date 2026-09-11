@@ -86,6 +86,13 @@ test('calibration snapshots prevent repricing; incompatible model and scope unav
     }).savedTokens,
     null
   );
+  assert.equal(
+    scan('wrong-rule', file, {
+      ...factors,
+      _calibration: { ...factors._calibration, rule: 'different' },
+    }).savedTokens,
+    null
+  );
   assert.equal(scan('legacy-factor', file, { full: 0.5 }).savedTokens, null);
   assert.equal(scan('legacy-factor', file, factors).savedTokens, null);
 });
@@ -119,4 +126,17 @@ test('invalid IDs, missing transcript, and corrupt caches fail safely', () => {
   fs.writeFileSync(path.join(SESSIONS_DIR, 'corrupt.json'), '{');
   assert.equal(scan('corrupt', file).savedTokens, 100);
   assert.ok(!fs.existsSync(path.join(SESSIONS_DIR, 'missing.json.lock')));
+});
+
+test('tilde-fenced code and text-only records with thinking usage are protected output', () => {
+  const thinking = message('thinking', 100);
+  thinking.message.usage.output_tokens_details = { thinking_tokens: 50 };
+  const file = transcript([
+    message('tilde', 100, 15, [{ type: 'text', text: '~~~js\nx()\n~~~' }]),
+    thinking,
+  ]);
+  const result = scan('thinking-and-tilde', file);
+  assert.equal(result.outputTokens, 200);
+  assert.equal(result.eligibleOutputTokens, 0);
+  assert.equal(result.savedTokens, null);
 });

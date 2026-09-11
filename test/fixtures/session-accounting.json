@@ -14,11 +14,32 @@
     "alpha": {
       "current": "ultra",
       "events": [
-        { "ts": "2026-07-08T10:10:00Z", "level": "full" },
-        { "ts": "2026-07-08T10:20:00Z", "level": "off" },
-        { "ts": "2026-07-08T10:30:00Z", "level": "ultra" }
+        {
+          "ts": "2026-07-08T10:10:00Z",
+          "level": "full",
+          "rule": "fixture-rules-v1"
+        },
+        {
+          "ts": "2026-07-08T10:20:00Z",
+          "level": "off",
+          "rule": "fixture-rules-v1"
+        },
+        {
+          "ts": "2026-07-08T10:30:00Z",
+          "level": "ultra",
+          "rule": "fixture-rules-v1"
+        }
       ]
     },
-    "beta": { "current": "off", "events": [{ "ts": "2026-07-08T10:00:00Z", "level": "off" }] }
+    "beta": {
+      "current": "off",
+      "events": [
+        {
+          "ts": "2026-07-08T10:00:00Z",
+          "level": "off",
+          "rule": "fixture-rules-v1"
+        }
+      ]
+    }
   }
 }

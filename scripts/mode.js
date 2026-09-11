@@ -5,7 +5,13 @@ if (isOptedOut()) {
   process.exit(0);
 }
 
-const { readState, update, updateSession, commandSessionId } = require('./lib/state');
+const {
+  readState,
+  update,
+  updateSession,
+  commandSessionId,
+  recordActivation,
+} = require('./lib/state');
 const { normalizeLevel, loadInjectionBlock } = require('./lib/persona');
 
 const id = commandSessionId();
@@ -26,7 +32,7 @@ const change = (s, store) => {
   if (!arg) target = s.current === 'off' ? 'full' : 'off';
   if (store) store.preferences.current = target;
   s.current = target;
-  if (id) s.events.push({ ts: new Date().toISOString(), level: target });
+  if (id) recordActivation(s, target);
   s.promptsSinceReinject = 0;
   return s;
 };

@@ -153,3 +153,21 @@ test('stats CLI no longer writes a lifetime cache or milestone into state', () =
     !execFileSync('node', [STATS_SCRIPT], { env }).toString().includes('milestone crossed')
   );
 });
+
+test('stats selects the exact caller cache even when another cache is newer', () => {
+  const { stateDir, env } = statsEnv();
+  const dir = path.join(stateDir, 'sessions');
+  fs.mkdirSync(dir);
+  for (const [sessionId, savedTokens] of [
+    ['caller', 2100],
+    ['newer', 9000],
+  ]) {
+    fs.writeFileSync(
+      path.join(dir, `${sessionId}.json`),
+      JSON.stringify({ version: 2, sessionId, records: {}, outputTokens: 100, savedTokens })
+    );
+  }
+  const out = execFileSync('node', [STATS_SCRIPT, '--session-id', 'caller'], { env }).toString();
+  assert.match(out, /this session: ~2\.1k tokens estimated prose output reduction/);
+  assert.doesNotMatch(out, /this session: ~9/);
+});

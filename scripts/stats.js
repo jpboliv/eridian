@@ -25,3 +25,7 @@ console.log(
 console.log(`sessions without applicable calibration: ${caches.length - estimates.length}`);
 if (readStore().legacy.events.length)
   console.log('legacy history: unknown session attribution; excluded from estimates');
+
+console.log(
+  `calibrated prose output covered: ${caches.reduce((sum, c) => sum + (c.calibratedOutputTokens || 0), 0)} tokens (other output excluded from reduction estimates)`
+);

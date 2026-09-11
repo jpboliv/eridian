@@ -31,4 +31,21 @@ function loadInjectionBlock(level) {
   }
 }
 
-module.exports = { extractInjectionBlock, loadInjectionBlock, normalizeLevel, SKILL_FILE };
+function ruleIdentity() {
+  try {
+    return require('node:crypto')
+      .createHash('sha256')
+      .update(fs.readFileSync(SKILL_FILE))
+      .digest('hex');
+  } catch {
+    return null;
+  }
+}
+
+module.exports = {
+  ruleIdentity,
+  extractInjectionBlock,
+  loadInjectionBlock,
+  normalizeLevel,
+  SKILL_FILE,
+};

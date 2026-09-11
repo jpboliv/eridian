@@ -28,7 +28,8 @@ the calibration snapshot at first observation. Content without an identity is
 excluded. Only text-only output without code markup can qualify as prose; tool,
 thinking, mixed and unknown output remain observed output, never measured prose
 savings. Calibration must explicitly identify model, rule provenance, identity and
-`prose-only` scope; existing unscoped factors are not applicable. Estimates are output
+`prose-only` scope; its rule must match the SHA256 of the active skill source,
+recorded at activation (and renewed on reinjection after a rule change); existing unscoped factors are not applicable. Estimates are output
 reduction, may be zero or negative, and are never money saved. Historical records
 retain their original calibration even after factors change. A full rescan handles
 transcript replacement and streaming correction; retention is intentionally unbounded

@@ -2,7 +2,7 @@ const MILESTONES = [5_000, 10_000, 25_000, 50_000, 100_000];
 
 function buildWindows(events, nowMs) {
   const sorted = [...events]
-    .map((e) => ({ tsMs: Date.parse(e.ts), level: e.level }))
+    .map((e) => ({ tsMs: Date.parse(e.ts), level: e.level, rule: e.rule }))
     .filter((e) => Number.isFinite(e.tsMs))
     .sort((a, b) => a.tsMs - b.tsMs);
 
@@ -10,7 +10,12 @@ function buildWindows(events, nowMs) {
   for (let i = 0; i < sorted.length; i++) {
     if (sorted[i].level === 'off') continue;
     const end = i + 1 < sorted.length ? sorted[i + 1].tsMs : nowMs;
-    windows.push({ startMs: sorted[i].tsMs, endMs: end, level: sorted[i].level });
+    windows.push({
+      startMs: sorted[i].tsMs,
+      endMs: end,
+      level: sorted[i].level,
+      ...(sorted[i].rule ? { rule: sorted[i].rule } : {}),
+    });
   }
   return windows;
 }

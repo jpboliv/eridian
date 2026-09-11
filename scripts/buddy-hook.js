@@ -8,7 +8,7 @@ const { isOptedOut } = require('./lib/runtime');
 if (isOptedOut()) process.exit(0);
 
 function main(raw) {
-  const { updateSession, sessionId } = require('./lib/state');
+  const { updateSession, sessionId, recordActivation } = require('./lib/state');
   const { classifyPrompt } = require('./lib/classify');
 
   const kind = process.argv[2];
@@ -33,6 +33,7 @@ function main(raw) {
         if (s.promptsSinceReinject >= REINJECT_EVERY_PROMPTS) {
           s.promptsSinceReinject = 0;
           reinjectLevel = s.current;
+          recordActivation(s, s.current, false);
         }
       }
       return s;
