@@ -58,3 +58,22 @@ test('refuses hard-linked aliases of sensitive files', (t) => {
     }
   );
 });
+
+test('refuses directory and device targets before reading them', (t) => {
+  const fs = require('node:fs');
+  const os = require('node:os');
+  const dir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-nonregular-')));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const targets = [dir];
+  if (process.platform !== 'win32') targets.push('/dev/null', '/dev/zero');
+  for (const target of targets) {
+    assert.throws(
+      () => execFileSync('node', [SCRIPT, target]),
+      (error) => {
+        assert.match(error.stdout.toString(), /not a regular file/);
+        return error.status === 1;
+      }
+    );
+  }
+  assert.match(execFileSync('node', [SCRIPT, path.join(dir, 'new-draft.tmp')]).toString(), /^ok/);
+});

@@ -70,6 +70,9 @@ function isSensitivePath(filePath) {
       if (stat.isSymbolicLink()) {
         return { ok: false, reason: 'refuse: target or parent directory is a symlink' };
       }
+      if (current === absolute && !stat.isFile()) {
+        return { ok: false, reason: 'refuse: target is not a regular file' };
+      }
     } catch (error) {
       if (error.code === 'ENOENT') return { ok: true };
       return { ok: false, reason: 'refuse: cannot inspect target path' };

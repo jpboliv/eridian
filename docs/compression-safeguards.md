@@ -12,7 +12,8 @@ existing path component, and checks the resolved name. It refuses `.env` and
 (case insensitive). Symlinks are refused, including safe Markdown aliases and
 symlinked parent directories. Files with multiple hard links are also refused,
 preventing sensitive files from acquiring an innocent alias. Parent traversal (`..`) is refused: supply the
-explicit path instead. Missing targets pass the name check but fail the command's
+explicit path instead. Existing targets must be regular files; directories,
+devices, and FIFOs are refused before reading. Missing targets pass the name check but fail the command's
 subsequent read. Permission and resolution errors fail closed. Normal Markdown
 files such as `CLAUDE.md` and `docs/notes.md` are allowed.
 
