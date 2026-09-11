@@ -12,6 +12,8 @@ test('replay injection distinguishes interval policies and suppresses off refres
   for (const policy of ['start-only', 'interval20', 'brief']) {
     const state = { mode: 'full', index: 0 };
     assert.equal(injection(policy, {}, state, prefixes, brief), 'FULL');
+    state.index = 1;
+    assert.equal(injection(policy, {}, state, prefixes, brief), policy === 'brief' ? 'f' : '');
     state.index = 19;
     assert.equal(
       injection(policy, {}, state, prefixes, brief),

@@ -32,8 +32,8 @@ full transcript separately; it does not exercise real host summarization.
 
 All policies send full rules at start and active mode changes/resume/compaction.
 `start-only` has no periodic refresh. `interval20` sends full rules on absolute
-prompts 20, 40, etc.; `brief` sends the supplied current-mode reminder at those
-points. Off emits one explicit disable instruction, then suppresses injections.
+prompts 20, 40, etc.; `brief` sends the supplied current-mode reminder on every
+active prompt that does not already receive a full lifecycle injection. Off emits one explicit disable instruction, then suppresses injections.
 This fixed absolute schedule is an experimental policy, not a claim about the
 runtime's current counters. Compare drift separately from lifecycle responses.
 

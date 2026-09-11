@@ -44,10 +44,8 @@ function injection(policy, turn, state, prefixes, brief) {
   }
   const lifecycle = ['mode', 'resume', 'compact'].includes(event);
   if (state.index === 0 || lifecycle) return prefixes[state.mode];
-  if ((state.index + 1) % 20 === 0) {
-    if (policy === 'interval20') return prefixes[state.mode];
-    if (policy === 'brief') return brief[state.mode];
-  }
+  if (policy === 'brief') return brief[state.mode];
+  if ((state.index + 1) % 20 === 0 && policy === 'interval20') return prefixes[state.mode];
   return '';
 }
 
@@ -173,7 +171,7 @@ async function run(options = {}) {
     usageScope:
       'provider-reported output can include thinking; replay input includes retained context; not prose-only calibration',
     lifecyclePolicy:
-      'full injection on start, mode activation/change, simulated resume and compaction; interval policies refresh on absolute prompt 20,40,...; off suppresses all dialect refreshes',
+      'full injection on start, mode activation/change, simulated resume and compaction; interval20 refreshes on absolute prompt 20,40,...; brief refreshes every active prompt; off suppresses all dialect refreshes',
     qualityGate: 'pending semantic review; diagnostics do not establish quality',
   };
   write('manifest.json', manifest);
