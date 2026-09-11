@@ -40,7 +40,8 @@ Files are created exclusively; reruns do not modify prior artifacts:
   usage/model usage, and actual model identifiers when available.
 - `records.json` and `completion.json`: retained records and completion counts.
 
-Malformed JSON, incomplete dimensions, missing fact assessments, contradictory
+Bare JSON or one enclosing Markdown JSON fence is accepted; additional commentary
+is rejected. Malformed JSON, incomplete dimensions, missing fact assessments, contradictory
 loss flags, failed/truncated completions, nonzero exits, and timeouts fail closed.
 They produce failed records and a nonzero CLI exit; they never become successful
 reviews or approval. Provider-reported usage is retained even for invalid
@@ -54,3 +55,19 @@ style cues or prompt-injection risk from judged text. This optional assistance
 cannot clear the human quality gate, approve release, or establish that token
 reductions preserve correctness. Keep human findings and approval separately
 attributed; do not relabel model output as human review.
+
+## Offline revalidation
+
+If a parser correction is needed, retain the original collection and revalidate
+its raw responses without making another provider call:
+
+```sh
+node eval/review.js --revalidate eval/runs/<run-id>/quality-reviews/<review-id>
+```
+
+This requires the original collection to be complete. It checks each anonymous
+input against its recorded prompt hash and creates a new sibling directory with
+the source manifest/raw/input hashes, new reviewer hash, copied raw evidence, and
+new validated records. Original records are untouched; malformed or contradictory
+judgments still fail. Provider usage is carried forward as original-call evidence,
+not additional consumption. Human review remains pending.

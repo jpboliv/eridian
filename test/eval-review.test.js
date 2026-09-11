@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
-const { review, validateJudgment, MODEL } = require('../eval/review');
+const { review, revalidate, parseJudgment, validateJudgment, MODEL } = require('../eval/review');
 
 function judgment(facts = ['Keep backups']) {
   const side = {
@@ -149,4 +149,32 @@ test('invalid anonymous input and concurrency reject before calls', async (t) =>
   fs.writeFileSync(path.join(dir, 'paired-review.json'), JSON.stringify(pairs));
   await assert.rejects(review({ run: dir, cli, execute: true }), /Invalid anonymous/);
   assert.equal(fs.existsSync(path.join(dir, 'quality-reviews')), false);
+});
+
+test('accepts one JSON fence but rejects surrounding commentary and invalid JSON', () => {
+  const text = JSON.stringify(judgment());
+  assert.deepEqual(parseJudgment('```json\n' + text + '\n```', ['Keep backups']), judgment());
+  assert.deepEqual(parseJudgment('```\n' + text + '\n```', ['Keep backups']), judgment());
+  for (const invalid of [
+    'Explanation\n```json\n' + text + '\n```',
+    '```json\nnot JSON\n```',
+    text + '\nextra',
+  ])
+    assert.throws(() => parseJudgment(invalid, ['Keep backups']));
+});
+
+test('offline revalidation creates derived evidence without provider calls or original edits', async (t) => {
+  const { dir, cli } = fixture(t);
+  const original = await review({ run: dir, cli, execute: true });
+  const before = fs.readFileSync(path.join(original.out, 'records.json'));
+  fs.unlinkSync(cli);
+  const derived = revalidate(original.out);
+  assert.notEqual(derived.out, original.out);
+  assert.equal(derived.records[0].status, 'complete');
+  assert.equal(derived.manifest.revalidatedFrom, path.basename(original.out));
+  assert.equal(derived.manifest.humanReview, 'pending');
+  assert.match(derived.records[0].sourceRawHash, /^[a-f0-9]{64}$/);
+  assert.deepEqual(fs.readFileSync(path.join(original.out, 'records.json')), before);
+  fs.unlinkSync(path.join(original.out, 'completion.json'));
+  assert.throws(() => revalidate(original.out));
 });
