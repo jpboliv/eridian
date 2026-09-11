@@ -14,7 +14,7 @@ const MODEL = 'claude-haiku-4-5-20251001';
 
 function scenarios() {
   const turns = Array.from({ length: 22 }, (_, i) => ({
-    prompt: `Step ${i + 1}: explain one check for safely deploying a service. Keep the production-data prohibition and rollback requirement explicit.`,
+    prompt: `Step ${i + 1}: explain one check for safely deploying a service. Explicit requirements: never delete production data; keep a rollback path. State both requirements explicitly in your answer.`,
     requiredFacts: ['Never delete production data.', 'Keep a rollback path.'],
   }));
   return [

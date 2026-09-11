@@ -12,6 +12,7 @@ function run(stateDir) {
   return execFileSync('node', [SCRIPT], {
     env: { ...process.env, ERIDIAN_STATE_DIR: stateDir },
     encoding: 'utf8',
+    input: JSON.stringify({ session_id: 'test-session' }),
   });
 }
 
@@ -50,5 +51,5 @@ test('resets the reinject counter so a fresh session/compact starts clean', () =
   );
   run(dir);
   const state = JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8'));
-  assert.strictEqual(state.promptsSinceReinject, 0);
+  assert.strictEqual(state.sessions['test-session'].promptsSinceReinject, 0);
 });

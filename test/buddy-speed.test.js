@@ -20,7 +20,7 @@ function freshDir() {
 }
 
 function readBuddy(dir) {
-  return JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8')).buddy;
+  return JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8')).preferences.buddy;
 }
 
 test('sets stepSeconds', () => {
@@ -58,7 +58,7 @@ test('rejects garbage and negatives, state untouched', () => {
   assert.ok(!fs.existsSync(path.join(dir, 'state.json')));
 });
 
-test('preserves other buddy fields', () => {
+test('migration discards global ephemeral buddy fields', () => {
   const dir = freshDir();
   fs.writeFileSync(
     path.join(dir, 'state.json'),
@@ -66,6 +66,6 @@ test('preserves other buddy fields', () => {
   );
   run(['2'], dir);
   const buddy = readBuddy(dir);
-  assert.strictEqual(buddy.frame, 7);
+  assert.strictEqual(buddy.frame, undefined);
   assert.strictEqual(buddy.stepSeconds, 2);
 });
