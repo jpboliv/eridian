@@ -16,3 +16,38 @@ Source: candidate run `2026-09-11T16-07-28.095Z-07dd213e`, frozen rule hash `76f
 The inspected full replies for Docker, pagination, CSS and closures largely read as ordinary technical prose. I did not identify distinctive Rocky phrasing in these four replies. This agrees with sparse lexicon observations (only one marker across 51 supported English full replies), but marker absence alone does not establish loss of character. This is an author's assistant self-audit of a small sample, not the independent human Rocky-recognition acceptance check.
 
 The draft remains gated: full/terse and ultra/baseline cost targets were missed; required-fact omissions and factual imprecision remain in the inspected tuning sample; complete paired correctness/readability review and independent human recognition review are pending. No payload was tuned after evaluation.
+
+## Broader anonymous paired screen
+
+**The preliminary quality screen failed.** A deterministic 57-pair representative
+sample was prepared from the full 342 pairs. The assistant inspected one pair
+for each of the 19 cases, rotating the selected dialect arm across sorted case
+groups. Both sides were assessed anonymously before arm-key lookup. This covers
+38 replies, including all four held-out cases; 38 representative pairs and 323
+full-run pairs remain unreviewed. It is a partial author's assistant screen,
+not a complete paired evaluation, independent human review, or causal arm ranking.
+
+[Exact per-fact assessments](design/008-quality-assessments.json) retain input
+hashes, anonymous evidence, post-assessment attribution, and scope. Seventeen of
+38 side assessments lost or contradicted at least one rubric-required fact;
+eight of those were baseline sides. A missing rubric item does not automatically
+have equal operational severity in every user context.
+
+Held-out observations are **reporting only**, never tuning input:
+
+- `memory-constraints`, full, repetition 3: the fenced entry preserves the port,
+  credentials restriction, backup sequence and exception. The response then
+  falsely claims “Entry added to MEMORY.md” despite no tool execution, and adds
+  a dialect closing offer outside the artifact.
+- `pt-pr-body`, ultra, repetition 2: the requested Portuguese titles and
+  concurrency validation are present, but the reply invents creation endpoints,
+  a cache window, configurable TTL and cached-return implementation details.
+- `persisted-comment`, lite, repetition 1: both compared comments preserve
+  `requestId` and timeout uncertainty in plain artifact prose.
+- `detail-required`, lite, repetition 1: both compared answers preserve the
+  transfer, rollback and external-email caveat in three explanatory paragraphs.
+
+The entire 285-response raw run and the anonymous selection/assessment artifacts
+are in the [committed raw archive](../eval/snapshots/clarity-levels/README.md).
+No payload was tuned after these observations. Human acceptance and independent
+Rocky recognition remain pending; known failures keep this candidate in draft.

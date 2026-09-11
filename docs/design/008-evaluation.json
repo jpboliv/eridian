@@ -3730,6 +3730,9 @@
     "humanReview": "pending",
     "modelPairedReview": "not run for this candidate",
     "fullRockyRecognition": "pending independent review",
-    "heldOutPolicy": "reporting only, never tuning input"
+    "heldOutPolicy": "reporting only, never tuning input",
+    "preliminaryAssistantScreen": "failed;19anonymous pairs,all19cases;human acceptance pending",
+    "assistantAssessmentFile": "docs/design/008-quality-assessments.json",
+    "archive": "eval/snapshots/clarity-levels/raw-run.tar.gz"
   }
 }

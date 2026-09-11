@@ -76,7 +76,8 @@ Eridian therefore requires the explicit opt-out; prompt text such as
 - **full** — clear Rocky engineer phrasing; optional flavor, clarity first.
 - **ultra** — optional extra personality, at most one decorative marker per ordinary reply.
 
-These levels are a draft candidate with quality review pending. See
+These levels are a draft candidate that failed the preliminary offline quality
+screen; human review remains pending. See
 [level budgets and evaluation](docs/clarity-levels.md) for marker counting,
 command exceptions, measurements, and the remaining release gates. In the captured
 285-response candidate run, full used 8.65% more output than terse and ultra used

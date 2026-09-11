@@ -102,8 +102,22 @@ function interpretRaw(raw, requiredFacts) {
     if (raw.error || raw.exitCode !== 0 || raw.timedOut)
       throw new Error(raw.error || `CLI exit ${raw.exitCode}; timedOut=${raw.timedOut}`);
     const structured = envelope.structured_output;
+    record.providerStopReason = envelope.stop_reason || null;
+    record.providerTerminalReason = envelope.terminal_reason || null;
+    // The schema tool can be the final successful turn. Accept only an explicit
+    // completed terminal envelope; ordinary tool calls and truncation still fail.
+    const completedSchemaTool =
+      structured !== undefined &&
+      envelope.stop_reason === 'tool_use' &&
+      envelope.terminal_reason === 'completed';
     const parsed = validateResult(
-      structured === undefined ? envelope : { ...envelope, result: JSON.stringify(structured) }
+      structured === undefined
+        ? envelope
+        : {
+            ...envelope,
+            result: JSON.stringify(structured),
+            ...(completedSchemaTool ? { stop_reason: 'end_turn' } : {}),
+          }
     );
     record.judgment =
       structured === undefined
