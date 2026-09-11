@@ -223,6 +223,19 @@ nearest repository root; unversioned directories inspect only the current folder
 See [session lifecycle design](docs/team-defaults-design.md) for reset and migration
 semantics. This draft remains dependent on ticket 010's cadence decision.
 
+## Optional session diagnostics
+
+Use `/eridian:stats --diagnostics --language en` to inspect English phrase counts
+and structural observations for the identified current session. The report uses
+that session's accounting transcript path; `--transcript PATH` supplies it directly
+when needed. Without a language, lexical support is unknown (`und`), not a zero.
+
+The optional report excludes tool/thinking/artifact blocks and marked quotes/code,
+deduplicates cumulative reply snapshots, and divides total phrase matches by total
+observed prose words. Its separate versioned cache reads appended transcript data.
+These are observations, not quality or reading time. Statusline/buddy feedback is
+deferred; see [scope, exclusions and the go/no-go decision](docs/session-diagnostics.md).
+
 ## Development
 
 ```
