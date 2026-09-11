@@ -22,31 +22,34 @@ test('loadInjectionBlock reads real SKILL.md for every level', () => {
     const block = loadInjectionBlock(level);
     assert.ok(block && block.includes('ROCKY MODE'), `${level} block exists`);
     assert.ok(block.includes('NEVER alter code'), `${level} keeps invariant`);
-    assert.ok(block.includes('"no + verb"'), `${level} uses canon negation`);
+    assert.ok(!block.includes('Negate with'), `${level} does not force ungrammatical negation`);
   }
 });
 
-test('canon markers land in the right levels', () => {
+test('lite keeps grammar while full/ultra make decoration optional', () => {
   const lite = loadInjectionBlock('lite');
-  const full = loadInjectionBlock('full');
-  const ultra = loadInjectionBlock('ultra');
-  for (const [name, block] of [
-    ['full', full],
-    ['ultra', ultra],
-  ]) {
-    assert.ok(block.includes(', question?'), `${name} marks questions`);
-    assert.ok(block.includes(', statement.'), `${name} marks statements`);
+  assert.ok(lite.includes('grammatical prose'));
+  assert.ok(lite.includes('normal articles, verbs and negation'));
+  assert.ok(lite.includes('No mandatory dialect markers'));
+  assert.ok(!lite.includes(', statement.') && !lite.includes(', question?'));
+  for (const level of ['full', 'ultra']) {
+    const block = loadInjectionBlock(level);
+    assert.ok(block.includes(', question?'));
+    assert.ok(block.includes(', statement.'));
+    assert.match(block, /[Oo]ptional/);
+    assert.match(block, /[Aa]t most (?:one|ONE) decorative marker/);
+    assert.ok(block.includes('not evidence or certainty'));
   }
-  assert.ok(!lite.includes(', statement.'), 'lite stays savings-pure');
-  assert.ok(ultra.includes('Rocky fix'), 'ultra is third-person');
-  assert.ok(ultra.includes('fist my bump'), 'ultra has the gag');
 });
 
 test('no-invented-abbreviations rule lands in every level', () => {
   for (const level of ['lite', 'full', 'ultra']) {
     const block = loadInjectionBlock(level);
     assert.ok(block.includes('No invented abbreviations'), `${level} bans invented abbreviations`);
-    assert.ok(block.includes('no → in prose'), `${level} bans prose arrows`);
+    assert.ok(
+      block.includes('No invented abbreviations or prose arrows'),
+      `${level} bans prose arrows`
+    );
     assert.ok(block.includes('acronyms'), `${level} allows standard acronyms`);
   }
 });
@@ -86,24 +89,21 @@ test('normalizeLevel handles aliases and junk', () => {
   assert.strictEqual(normalizeLevel('banana'), null);
 });
 
-test('vocab expansion markers land in the right levels', () => {
-  const lite = loadInjectionBlock('lite');
-  const full = loadInjectionBlock('full');
-  const ultra = loadInjectionBlock('ultra');
-  for (const [name, block] of [
-    ['full', full],
-    ['ultra', ultra],
-  ]) {
-    // 👎 = good on purpose: Rocky aims for a thumbs-up and it comes out upside
-    // down. He never makes 👍, so no level may emit one — these two assertions
-    // are the guard against a well-meaning revert to the standard mapping.
-    assert.ok(block.includes('👎 also means good'), `${name} reads 👎 as good`);
-    assert.ok(!block.includes('👍'), `${name} never uses the upright thumb`);
-    assert.ok(block.includes('"Understand."'), `${name} acknowledges tersely`);
-  }
-  assert.ok(ultra.includes('big science'), 'ultra celebrates big science');
-  assert.ok(ultra.includes('Thumbs up, baby 👎'), 'ultra has the thumbs gag');
-  assert.ok(ultra.includes('"friend"'), 'ultra addresses user as friend');
-  assert.ok(!lite.includes('👎') && !lite.includes('👍'), 'lite stays savings-pure');
-  assert.ok(!lite.includes('Understand.'), 'lite gains no new vocab');
+test('ultra budget counts gags, triples, suffixes, third person and glyphs', () => {
+  const block = loadInjectionBlock('ultra');
+  for (const marker of [
+    'Rocky fix',
+    'fist my bump',
+    'big science',
+    'Thumbs up, baby 👎',
+    'friend',
+    'good good good',
+    '♫',
+  ])
+    assert.ok(block.includes(marker));
+  assert.ok(block.includes('👎 means good'));
+  assert.ok(!block.includes('👍'));
+  assert.ok(block.includes('overlapping markers count longest once'));
+  assert.ok(block.includes('Separate markers add up'));
+  assert.ok(block.includes('Never require a greeting'));
 });

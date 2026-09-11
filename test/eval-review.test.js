@@ -60,7 +60,9 @@ else {
   const result = ${JSON.stringify(judgment())};
   if (payload.prompt === 'critical') { result.a.requiredFacts[0].status = 'missing'; result.a.criticalConstraintLoss = true; }
   if (payload.prompt === 'contradictory') result.a.requiredFacts[0].status = 'missing';
-  if (payload.prompt === 'incomplete') delete result.a.readability;
+  if (payload.prompt === 'incomplete' || payload.prompt === 'structured-invalid') delete result.a.readability;
+  if (!args.includes('--json-schema')) throw new Error('missing schema');
+  if (payload.prompt.startsWith('structured')) { console.log(JSON.stringify({subtype:'success',result:'',structured_output:result,usage:{input_tokens:23,output_tokens:17}})); process.exit(0); }
   console.log(JSON.stringify({subtype:'success', result: payload.prompt === 'malformed' ? 'not JSON' : JSON.stringify(result), usage:{input_tokens:23,output_tokens:17},modelUsage:{'${MODEL}':{inputTokens:23,outputTokens:17}}}));
   if (payload.prompt === 'failed') process.exitCode = 1;
 }
@@ -177,4 +179,35 @@ test('offline revalidation creates derived evidence without provider calls or or
   assert.deepEqual(fs.readFileSync(path.join(original.out, 'records.json')), before);
   fs.unlinkSync(path.join(original.out, 'completion.json'));
   assert.throws(() => revalidate(original.out));
+});
+
+test('structured-only provider output is validated without requiring prose result', async (t) => {
+  const { dir, cli } = fixture(t, ['structured', 'structured-invalid']);
+  const result = await review({ run: dir, cli, execute: true });
+  assert.equal(result.records[0].status, 'complete');
+  assert.deepEqual(result.records[0].judgment, judgment());
+  assert.equal(result.records[1].status, 'failed');
+  assert.match(result.manifest.judgmentSchemaHash, /^[a-f0-9]{64}$/);
+});
+
+test('offline revalidation preserves explicit early-stop coverage', async (t) => {
+  const { dir, cli } = fixture(t);
+  const original = await review({ run: dir, cli, execute: true });
+  const manifestPath = path.join(original.out, 'manifest.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath));
+  manifest.pairCount = 3;
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest));
+  const completionPath = path.join(original.out, 'completion.json');
+  const completion = JSON.parse(fs.readFileSync(completionPath));
+  completion.skipped = 2;
+  fs.writeFileSync(completionPath, JSON.stringify(completion));
+  assert.throws(() => revalidate(original.out), /Incomplete/);
+  Object.assign(completion, { aborted: true, reason: 'explicit early stop' });
+  fs.writeFileSync(completionPath, JSON.stringify(completion));
+  const derived = revalidate(original.out);
+  const result = JSON.parse(fs.readFileSync(path.join(derived.out, 'completion.json')));
+  assert.equal(result.aborted, true);
+  assert.equal(result.skipped, 2);
+  assert.equal(result.planned, 3);
+  assert.equal(result.complete, 1);
 });

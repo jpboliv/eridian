@@ -78,6 +78,14 @@ console.log(JSON.stringify({subtype:'success', result:'Never delete production d
   const compacted = JSON.parse(request.prompt).messages;
   assert.equal(compacted.length, 2);
   assert.equal(compacted[0].role, 'context-summary');
+  assert.ok(compacted.every((message) => !('mode' in message)));
+  const ordinary = JSON.parse(
+    JSON.parse(fs.readFileSync(path.join(first.out, 'lifecycle--interval20--1--2.request.json')))
+      .prompt
+  );
+  assert.ok(ordinary.messages.every((message) => !('mode' in message)));
+  assert.equal(ordinary.messages.at(-1).injection, '');
+  assert.ok(!first.manifest.invocation.some((arg) => arg.includes('current simulated mode')));
   const transcript = JSON.parse(
     fs.readFileSync(path.join(first.out, 'lifecycle--interval20--1.transcript.json'))
   );
