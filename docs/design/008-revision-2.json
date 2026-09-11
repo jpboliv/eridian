@@ -1,0 +1,59 @@
+{
+  "revision": "008-r2",
+  "status": "unvalidated; no provider calls",
+  "baseCommit": "41046d70be864c0c4ecb1b47b5b5ab3f59130ebd",
+  "priorRuleHash": "76f382716132ea7a378237ec6ed58183d757a80aa41d1e09b1188a72debf48a3",
+  "candidateRuleHash": "6dc03cf623a66ee5763b182a8e3815bb8bb8ee820d7470d6ba5e12ed978aa047",
+  "sharedBlockHash": "4a0907b25384213e674fb24d8b4e719cfae80f1aff991d2cb4a924d1595b08c3",
+  "sharedIntegration": "Integrated shared007 99a6b7e through009 8bc75ff; level revision9fb7d55",
+  "tokenizer": "tiktoken 0.12.0",
+  "encodings": {
+    "cl100k_base": {
+      "lite": {
+        "priorLevel": 93,
+        "candidateLevel": 105,
+        "candidateCombined": 358,
+        "levelHash": "ef7eb43a5da5dcd8b53e9ada1f9bcd93790aa943027906d09b0c00f8356846c8",
+        "candidateShared": 253
+      },
+      "full": {
+        "priorLevel": 156,
+        "candidateLevel": 204,
+        "candidateCombined": 457,
+        "levelHash": "3a14e631c31f265ddae3f6fb144e2c0c0e225fd4adffb1de2b173113ad676f2b",
+        "candidateShared": 253
+      },
+      "ultra": {
+        "priorLevel": 245,
+        "candidateLevel": 281,
+        "candidateCombined": 534,
+        "levelHash": "579958efe962c1de4c189ef1ff3a79d70fafc6fdc7a7ec39e2fa4aa671a77992",
+        "candidateShared": 253
+      }
+    },
+    "o200k_base": {
+      "lite": {
+        "priorLevel": 90,
+        "candidateLevel": 102,
+        "candidateCombined": 351,
+        "levelHash": "ef7eb43a5da5dcd8b53e9ada1f9bcd93790aa943027906d09b0c00f8356846c8",
+        "candidateShared": 249
+      },
+      "full": {
+        "priorLevel": 154,
+        "candidateLevel": 202,
+        "candidateCombined": 451,
+        "levelHash": "3a14e631c31f265ddae3f6fb144e2c0c0e225fd4adffb1de2b173113ad676f2b",
+        "candidateShared": 249
+      },
+      "ultra": {
+        "priorLevel": 243,
+        "candidateLevel": 279,
+        "candidateCombined": 528,
+        "levelHash": "579958efe962c1de4c189ef1ff3a79d70fafc6fdc7a7ec39e2fa4aa671a77992",
+        "candidateShared": 249
+      }
+    }
+  },
+  "measurementScope": "Current integrated 008 revision2 input payload; historical output evidence does not validate this revision"
+}
