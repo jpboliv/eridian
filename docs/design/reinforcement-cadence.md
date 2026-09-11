@@ -43,9 +43,12 @@ After provider access resumes, run each command from this ticket's worktree and
 retain the distinct output directories printed by the harness:
 
 ```sh
+eridian_reminders=$(mktemp)
+node -e 'const {loadReminderBlock} = require("./scripts/lib/persona"); console.log(JSON.stringify(Object.fromEntries(["lite", "full", "ultra"].map(level => [level, loadReminderBlock(level)]))))' > "$eridian_reminders"
 node eval/multiturn.js --allow-paid --policy start-only --repetitions 3
 node eval/multiturn.js --allow-paid --policy interval20 --repetitions 3
-node eval/multiturn.js --allow-paid --policy brief --repetitions 3
+node eval/multiturn.js --allow-paid --policy brief --repetitions 3 --brief-file "$eridian_reminders"
+rm "$eridian_reminders"
 ```
 
 Use `eval/compare-multiturn.js` with the three resulting run directories in that
