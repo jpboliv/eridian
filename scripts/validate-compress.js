@@ -35,7 +35,7 @@ if (result.ok) {
   const { headings, codeBlocks, urls, chars } = result.summary;
   const pct = chars[0] > 0 ? (((chars[0] - chars[1]) / chars[0]) * 100).toFixed(1) : '0.0';
   console.log(
-    `PASS headings ${headings[1]}/${headings[0]}, ` +
+    `PASS structural checks passed; meaning NOT verified; headings ${headings[1]}/${headings[0]}, ` +
       `code-blocks ${codeBlocks[1]}/${codeBlocks[0]}, ` +
       `urls ${urls[1]}/${urls[0]}, ` +
       `${chars[0]} -> ${chars[1]} chars (-${pct}%)`

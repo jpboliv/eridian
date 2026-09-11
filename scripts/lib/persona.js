@@ -19,16 +19,58 @@ function extractInjectionBlock(markdown, level) {
   const end = `<!-- /eridian:inject:${level} -->`;
   const si = markdown.indexOf(start);
   const ei = markdown.indexOf(end);
-  if (si === -1 || ei === -1 || ei < si) return null;
+  if (
+    si === -1 ||
+    ei === -1 ||
+    ei < si ||
+    markdown.indexOf(start, si + start.length) !== -1 ||
+    markdown.indexOf(end, ei + end.length) !== -1
+  )
+    return null;
   return markdown.slice(si + start.length, ei).trim();
+}
+
+function composeInjectionBlock(markdown, level) {
+  if (!LEVELS.includes(level) || level === 'off') return null;
+  const shared = extractInjectionBlock(markdown, 'shared');
+  const dialect = extractInjectionBlock(markdown, level);
+  return shared && dialect ? `${shared}\n\n${dialect}` : null;
 }
 
 function loadInjectionBlock(level) {
   try {
-    return extractInjectionBlock(fs.readFileSync(SKILL_FILE, 'utf8'), level);
+    return composeInjectionBlock(fs.readFileSync(SKILL_FILE, 'utf8'), level);
   } catch {
     return null;
   }
 }
 
-module.exports = { extractInjectionBlock, loadInjectionBlock, normalizeLevel, SKILL_FILE };
+function loadReminderBlock(level) {
+  if (!LEVELS.includes(level) || level === 'off') return null;
+  try {
+    return extractInjectionBlock(fs.readFileSync(SKILL_FILE, 'utf8'), `reminder-${level}`);
+  } catch {
+    return null;
+  }
+}
+
+function ruleIdentity() {
+  try {
+    return require('node:crypto')
+      .createHash('sha256')
+      .update(fs.readFileSync(SKILL_FILE))
+      .digest('hex');
+  } catch {
+    return null;
+  }
+}
+
+module.exports = {
+  loadReminderBlock,
+  composeInjectionBlock,
+  ruleIdentity,
+  extractInjectionBlock,
+  loadInjectionBlock,
+  normalizeLevel,
+  SKILL_FILE,
+};

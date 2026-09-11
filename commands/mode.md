@@ -6,7 +6,7 @@ allowed-tools: Bash(node:*)
 
 Mode change result:
 
-!`node "${CLAUDE_PLUGIN_ROOT}/scripts/mode.js" $ARGUMENTS`
+!`node "${CLAUDE_PLUGIN_ROOT}/scripts/mode.js" $ARGUMENTS --session-id "${CLAUDE_SESSION_ID}"`
 
 Follow the result above:
 

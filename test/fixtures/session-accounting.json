@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "factors": {
+    "_calibration": {
+      "id": "fixture-v1",
+      "model": "fixture-model",
+      "rule": "fixture-rules-v1",
+      "scope": "prose-only"
+    },
+    "full": 0.5,
+    "ultra": 0.8
+  },
+  "sessions": {
+    "alpha": {
+      "current": "ultra",
+      "events": [
+        {
+          "ts": "2026-07-08T10:10:00Z",
+          "level": "full",
+          "rule": "fixture-rules-v1"
+        },
+        {
+          "ts": "2026-07-08T10:20:00Z",
+          "level": "off",
+          "rule": "fixture-rules-v1"
+        },
+        {
+          "ts": "2026-07-08T10:30:00Z",
+          "level": "ultra",
+          "rule": "fixture-rules-v1"
+        }
+      ]
+    },
+    "beta": {
+      "current": "off",
+      "events": [
+        {
+          "ts": "2026-07-08T10:00:00Z",
+          "level": "off",
+          "rule": "fixture-rules-v1"
+        }
+      ]
+    }
+  }
+}

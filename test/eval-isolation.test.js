@@ -1,105 +1,143 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { execFileSync } = require('node:child_process');
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const { run } = require('../eval/run');
+const { validateResult, summarize, anonymize, validateCollection } = require('../eval/lib');
 
-const ROOT = path.join(__dirname, '..');
+test('rejects failed, truncated, empty and invalid usage results', () => {
+  const good = {
+    subtype: 'success',
+    result: 'answer',
+    stop_reason: 'end_turn',
+    usage: { input_tokens: 1, output_tokens: 2 },
+  };
+  assert.equal(validateResult(good), good);
+  for (const change of [
+    { is_error: true },
+    { stop_reason: 'max_tokens' },
+    { result: '' },
+    { usage: { output_tokens: 2 } },
+  ]) {
+    assert.throws(() => validateResult({ ...good, ...change }));
+  }
+});
 
-test('eval forces opt-out in all arms and records isolation on fresh and partial runs', (t) => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-eval-isolation-'));
+test('aggregation retains repetitions and separates mean relative from aggregate reduction', () => {
+  const records = [];
+  for (const [repetition, reference, arm] of [
+    [1, 10, 20],
+    [2, 100, 50],
+    [3, 100, 50],
+  ]) {
+    for (const [mode, tokens] of [
+      ['baseline', reference],
+      ['terse', reference],
+      ['lite', arm],
+      ['full', arm],
+      ['ultra', arm],
+    ]) {
+      records.push({
+        promptId: 'p',
+        repetition,
+        arm: mode,
+        status: 'complete',
+        usage: { output_tokens: tokens },
+        reply: 'answer',
+      });
+    }
+  }
+  const summary = summarize(records);
+  assert.equal(summary.complete, 15);
+  assert.equal(summary.repeatedCoverageComplete, true);
+  assert.equal(summary.comparisons.baseline.full.sampleCount, 3);
+  assert.equal(summary.comparisons.baseline.full.relativeReduction.mean, 0);
+  assert.ok(summary.comparisons.baseline.full.aggregateTokenReduction > 0.4);
+  assert.equal(summarize(records.slice(1)).repeatedCoverageComplete, false);
+  assert.throws(() => summarize([...records, records[0]]), /Duplicate/);
+  const { pairs } = anonymize(records, [{ id: 'p', prompt: 'Question', requiredFacts: ['fact'] }]);
+  assert.equal(pairs.length, 18);
+  assert.equal(pairs[0].review.correctness, null);
+  assert.equal(pairs[0].arm, undefined);
+});
+
+test('harness retains immutable raw replies, failures and isolation without changing state', async (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-eval-test-'));
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
-  for (const name of ['eval', 'scripts', 'skills']) {
-    fs.cpSync(path.join(ROOT, name), path.join(dir, name), { recursive: true });
-  }
+  const cli = path.join(dir, 'fake-claude');
   fs.writeFileSync(
-    path.join(dir, 'eval/prompts.json'),
-    JSON.stringify([{ id: 'p1', prompt: 'Explain a lock.' }])
-  );
-  const stateDir = path.join(dir, 'state');
-  fs.mkdirSync(stateDir);
-  const stateFile = path.join(stateDir, 'state.json');
-  const state = JSON.stringify({
-    current: 'ultra',
-    events: [],
-    buddy: {},
-    promptsSinceReinject: 999,
-  });
-  fs.writeFileSync(stateFile, state);
-  const bin = path.join(dir, 'bin');
-  fs.mkdirSync(bin);
-  function executable(name, body) {
-    fs.writeFileSync(path.join(bin, name), `#!${process.execPath}\n${body}`, { mode: 0o755 });
-  }
-  // Substitute only the external services: exercise the real harness and hooks.
-  executable(
-    'claude',
-    `
-    const fs = require('node:fs');
-    const { execFileSync } = require('node:child_process');
+    cli,
+    `#!${process.execPath}\n
+    if (process.argv.includes('--version')) { console.log('fake-1'); process.exit(0); }
     const assert = require('node:assert/strict');
     assert.equal(process.env.ERIDIAN_OFF, '1');
-    for (const args of [['scripts/session-start.js'], ['scripts/buddy-hook.js', 'prompt']]) {
-      assert.equal(execFileSync(process.execPath, args, {
-        input: JSON.stringify({ prompt: 'Explain a lock.' }), encoding: 'utf8'
-      }), '');
-    }
-    fs.appendFileSync('calls.jsonl', JSON.stringify(process.argv.slice(2)) + '\\n');
-    console.log(JSON.stringify({ usage: { output_tokens: 7 } }));
-  `
+    assert.ok(process.argv.includes('--safe-mode'));
+    assert.ok(process.argv.includes('--no-session-persistence'));
+    console.log(JSON.stringify({ subtype: 'success', result: 'Answer.', stop_reason: 'end_turn', usage: {input_tokens: 10, output_tokens: 3}, modelUsage: {'fake-model': {outputTokens: 3}} }));
+  `,
+    { mode: 0o755 }
   );
-  // The test suite needs only Node; the production harness uses real jq.
-  executable(
-    'jq',
-    `
-    const fs = require('node:fs');
-    const [flag, query, file] = process.argv.slice(2);
-    const data = JSON.parse(fs.readFileSync(file || 0, 'utf8'));
-    if (flag === '-c' && query === '.[]') {
-      for (const row of data) console.log(JSON.stringify(row));
-    } else if (flag === '-r' && ['.id', '.prompt', '.usage.output_tokens'].includes(query)) {
-      console.log(query.slice(1).split('.').reduce((value, key) => value[key], data));
-    } else {
-      throw new Error('Unexpected jq invocation');
-    }
-  `
+  const prompts = path.join(dir, 'prompts.json');
+  fs.writeFileSync(
+    prompts,
+    JSON.stringify([
+      {
+        id: 'case',
+        prompt: 'Question?',
+        language: 'en',
+        split: 'held-out',
+        requiredFacts: ['Answer'],
+      },
+    ])
   );
-  const env = {
-    ...process.env,
-    PATH: `${bin}:${process.env.PATH}`,
-    ERIDIAN_OFF: '0',
-    ERIDIAN_STATE_DIR: stateDir,
-  };
-  function run(args) {
-    execFileSync('bash', ['eval/run.sh', ...args], { cwd: dir, env, encoding: 'utf8' });
-    assert.equal(fs.readFileSync(stateFile, 'utf8'), state);
-  }
-  function records(name) {
-    return fs.readFileSync(path.join(dir, name), 'utf8').trim().split('\n');
-  }
-  const modes = ['baseline', 'terse', 'lite', 'full', 'ultra'];
-  run([]);
-  const calls = records('calls.jsonl').map(JSON.parse);
-  assert.equal(calls.length, 5);
-  assert.equal(calls[0][1], 'Explain a lock.');
-  assert.equal(calls[1][1], 'Answer concisely.\n\nExplain a lock.');
-  for (let i = 2; i < 5; i++) assert.ok(calls[i][1].includes(`ROCKY MODE (${modes[i]})`));
-  assert.deepEqual(records('eval/results.csv'), [
-    'prompt_id,mode,output_tokens',
-    ...modes.map((mode) => `p1,${mode},7`),
-  ]);
-  let metadata = records('eval/results-isolation.jsonl').map(JSON.parse);
-  assert.equal(metadata.length, 1);
-  assert.deepEqual(metadata[0].modes, modes);
-  assert.equal(metadata[0].isolation.ERIDIAN_OFF, '1');
-  assert.ok(Number.isFinite(Date.parse(metadata[0].startedAt)));
-  run(['terse']);
-  metadata = records('eval/results-isolation.jsonl').map(JSON.parse);
-  assert.equal(metadata.length, 2);
-  assert.deepEqual(metadata[1].modes, ['terse']);
-  assert.equal(records('eval/results.csv').length, 7);
-  run([]);
-  assert.equal(records('eval/results-isolation.jsonl').length, 1);
-  assert.equal(records('eval/results.csv').length, 6);
+  const opts = { cli, prompts, out: dir, repetitions: 3, concurrency: 2 };
+  const first = await run(opts);
+  assert.equal(first.records.length, 15);
+  assert.ok(first.records.every((r) => r.status === 'complete'));
+  const saved = fs.readFileSync(path.join(first.out, 'manifest.json'), 'utf8');
+  assert.equal(JSON.parse(saved).isolation.ERIDIAN_OFF, '1');
+  assert.equal(fs.readdirSync(first.out).filter((f) => f.endsWith('.raw.json')).length, 15);
+  fs.writeFileSync(
+    cli,
+    `#!${process.execPath}\nif(process.argv.includes('--version')) { console.log('fake-2'); } else { console.log('broken'); process.exitCode=1; }`,
+    { mode: 0o755 }
+  );
+  const second = await run({ ...opts, repetitions: 1, arms: ['baseline'] });
+  assert.notEqual(first.out, second.out);
+  assert.equal(second.records[0].status, 'failed');
+  assert.equal(fs.readFileSync(path.join(first.out, 'manifest.json'), 'utf8'), saved);
+  assert.ok(fs.existsSync(path.join(second.out, 'case--baseline--1.raw.json')));
+});
+
+test('completed collection requires all declared prompts and consistent completion counts', () => {
+  const manifest = { runId: 'run', ruleHash: 'rules', arms: ['baseline'], repetitions: 1 };
+  const prompts = [{ id: 'one' }, { id: 'two' }];
+  const records = prompts.map(({ id }) => ({
+    runId: 'run',
+    ruleHash: 'rules',
+    promptId: id,
+    arm: 'baseline',
+    repetition: 1,
+    status: 'complete',
+    usage: { output_tokens: 3 },
+  }));
+  const completion = { finishedAt: '2026-09-11', successful: 2, failed: 0 };
+  assert.deepEqual(validateCollection(manifest, prompts, records, completion), {
+    successful: 2,
+    failed: 0,
+  });
+  assert.throws(() => validateCollection(manifest, prompts, records, undefined), /metadata/);
+  assert.throws(
+    () => validateCollection(manifest, prompts, records.slice(1), { ...completion, successful: 1 }),
+    /coverage/
+  );
+  assert.throws(
+    () => validateCollection(manifest, prompts, records, { ...completion, successful: 1 }),
+    /counts/
+  );
+  assert.throws(
+    () => validateCollection(manifest, prompts, [...records, records[0]], completion),
+    /duplicate/
+  );
 });
