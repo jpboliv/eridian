@@ -63,7 +63,9 @@ function lexicalCounts(text) {
         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         .replace(/ /g, '\\s+')
         .replace(/'/g, "['’]");
-      const pattern = new RegExp(`(?<![\\p{L}\\p{N}_])${escaped}(?![\\p{L}\\p{N}_])`, 'giu');
+      const before = /^[\p{L}\p{N}_]/u.test(phrase) ? '(?<![\\p{L}\\p{N}_])' : '';
+      const after = /[\p{L}\p{N}_]$/u.test(phrase) ? '(?![\\p{L}\\p{N}_])' : '';
+      const pattern = new RegExp(`${before}${escaped}${after}`, 'giu');
       for (const match of text.matchAll(pattern))
         candidates.push({ category, start: match.index, end: match.index + match[0].length });
     }

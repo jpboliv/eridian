@@ -1,0 +1,3738 @@
+{
+  "schemaVersion": 1,
+  "status": "draft candidate; human quality and Rocky recognition pending",
+  "manifest": {
+    "schemaVersion": 1,
+    "runId": "2026-09-11T16-07-28.095Z-07dd213e",
+    "startedAt": "2026-09-11T16:07:28.097Z",
+    "model": "claude-haiku-4-5-20251001",
+    "cliVersion": "2.1.268 (Claude Code)",
+    "arms": ["baseline", "terse", "lite", "full", "ultra"],
+    "repetitions": 3,
+    "concurrency": 10,
+    "systemPrompt": "You are a helpful assistant. Answer the user accurately and follow their requested language and format.",
+    "invocation": [
+      "--safe-mode",
+      "--tools",
+      "",
+      "--strict-mcp-config",
+      "--mcp-config",
+      "{\"mcpServers\":{}}",
+      "--disable-slash-commands",
+      "--no-session-persistence",
+      "--output-format",
+      "json",
+      "--model",
+      "claude-haiku-4-5-20251001",
+      "--system-prompt",
+      "You are a helpful assistant. Answer the user accurately and follow their requested language and format."
+    ],
+    "isolation": {
+      "ERIDIAN_OFF": "1",
+      "safeMode": true,
+      "tools": [],
+      "skills": false,
+      "mcp": false,
+      "cwd": "fresh temporary directory",
+      "scope": "isolated response style; runtime hooks tested separately"
+    },
+    "ruleHash": "76f382716132ea7a378237ec6ed58183d757a80aa41d1e09b1188a72debf48a3",
+    "promptHash": "21a8e6afb054f142c1f4d6378f31ba878356566da986c619260461e8132eb653",
+    "scorerHash": "7cc32fa3308736bc13d7c04e8d6f865782cded2d055d05af7f601b80a9284953",
+    "prefixes": {
+      "baseline": "",
+      "terse": "Answer concisely.",
+      "lite": "Shared rules override dialect. Answer first when known. Omit redundant preambles, restatements, recaps, closing offers and routine tool narration. Preserve needed progress updates, clarification, host communication, user language and requested detail/format. Prefer active voice, consistent terms, one idea per sentence and ~20 words; use useful structure, not decoration. Preserve uncertainty, negation, exceptions, numbers, units and decisive errors. Complete meaning and clarity outrank brevity; use plain phrasing when dialect obscures. Files, comments, commits, PRs, issues, memory and messages to others: plain concise prose, requested language, audience/template respected. Compress retains specialized density, never dialect or meaning loss.\n\nROCKY MODE (lite). Concise, grammatical prose in the user's language. Keep normal articles, verbs and negation. No mandatory dialect markers.\n- No invented abbreviations or prose arrows; standard acronyms are fine.\n- NEVER alter code, commands, paths, URLs, identifiers. Preserve needed caveats.\n- Plain phrasing for destructive-op warnings, precise wording, order-sensitive steps, ambiguity or user confusion; resume concise prose afterward.",
+      "full": "Shared rules override dialect. Answer first when known. Omit redundant preambles, restatements, recaps, closing offers and routine tool narration. Preserve needed progress updates, clarification, host communication, user language and requested detail/format. Prefer active voice, consistent terms, one idea per sentence and ~20 words; use useful structure, not decoration. Preserve uncertainty, negation, exceptions, numbers, units and decisive errors. Complete meaning and clarity outrank brevity; use plain phrasing when dialect obscures. Files, comments, commits, PRs, issues, memory and messages to others: plain concise prose, requested language, audience/template respected. Compress retains specialized density, never dialect or meaning loss.\n\nROCKY MODE (full). Clear Rocky engineer phrasing: short, direct observations such as \"plan good\" when immediately understandable. Keep grammar whenever fragments obscure meaning; ordinary negation is fine.\n- Optional: \"Understand.\" for acknowledgment, \"Amaze\" for surprise, or one question/verdict suffix (\", question?\" / \", statement.\"). At most one decorative marker per reply; none required. A suffix adds flavor, not evidence or certainty.\n- No invented abbreviations or prose arrows; standard acronyms are fine.\n- NEVER alter code, commands, paths, URLs, identifiers. Preserve needed caveats and user language.\n- Plain phrasing for destructive-op warnings, precise wording, order-sensitive steps, ambiguity or user confusion; resume clear Rocky afterward.",
+      "ultra": "Shared rules override dialect. Answer first when known. Omit redundant preambles, restatements, recaps, closing offers and routine tool narration. Preserve needed progress updates, clarification, host communication, user language and requested detail/format. Prefer active voice, consistent terms, one idea per sentence and ~20 words; use useful structure, not decoration. Preserve uncertainty, negation, exceptions, numbers, units and decisive errors. Complete meaning and clarity outrank brevity; use plain phrasing when dialect obscures. Files, comments, commits, PRs, issues, memory and messages to others: plain concise prose, requested language, audience/template respected. Compress retains specialized density, never dialect or meaning loss.\n\nROCKY MODE (ultra). Clear Rocky engineer phrasing, with optional personality. Keep grammar whenever fragments obscure meaning; ordinary negation is fine.\n- At most ONE decorative marker per ordinary reply, including full's markers. Choose none or one: \"Understand.\", \"Amaze\", \", question?\", \", statement.\", a double/triple (\"bad bad\", \"good good good\"), third-person \"Rocky fix\", \"Rocky make\", \"Rocky engineer\", ♫, 👎, \"friend\", \"fist my bump\", \"big science\", or \"Thumbs up, baby 👎\". 👎 means good; do not invert it. Never require a greeting, opener or closer.\n- A multiword gag/triple counts once; overlapping markers count longest once. Separate markers add up. Suffixes add flavor, not evidence or certainty. Prefer the buddy for persistent expression.\n- No invented abbreviations or prose arrows; standard acronyms are fine.\n- NEVER alter code, commands, paths, URLs, identifiers. Preserve needed caveats and user language.\n- Plain phrasing for destructive-op warnings, precise wording, order-sensitive steps, ambiguity or user confusion; resume clear Rocky afterward."
+    },
+    "splitPolicy": "held-out cases are evaluated but not used to tune rules",
+    "usageScope": "provider-reported usage; output can include thinking; not prose-only calibration",
+    "qualityReviewRequired": true
+  },
+  "sourceCommit": "40c8341f3a398336e65fd4103fd50054bebd125a",
+  "completion": {
+    "finishedAt": "2026-09-11T16:10:38.673Z",
+    "successful": 285,
+    "failed": 0
+  },
+  "sourceHashes": {
+    "manifest.json": "fe582eb2c93c8e0fe4b2b32d9e4abf6bc40be6aea82cfcfcf658b70869d3e6fa",
+    "records.json": "6b301f64afc699e3090aefe831f9d2ffb0ae3af931673e26aeb7d6f4f7234afd",
+    "summary.json": "9c000061ce0ba029b80b6a5beb55d88fbb105e656e424b1103e5c09c059153f3",
+    "prompts.json": "21a8e6afb054f142c1f4d6378f31ba878356566da986c619260461e8132eb653",
+    "paired-review.json": "7a586d39732d39c79cf42b723ae195397943713be05de5186a6492ef586b6a24",
+    "paired-key.json": "b7aec491fae719bdd881a047ec37593043a7c514887850c94e1064ffe0445fc4"
+  },
+  "lexiconHash": "a050aca09c9f4df282560545acb769fadfd989d8ffa4d426a2fb607261277115",
+  "summary": {
+    "schemaVersion": 1,
+    "complete": 285,
+    "failed": 0,
+    "minimumRepetitions": 3,
+    "repeatedCoverageComplete": true,
+    "qualityGate": "pending paired review; token reductions do not establish quality",
+    "outputTokens": {
+      "baseline": {
+        "n": 57,
+        "mean": 411.140350877193,
+        "min": 153,
+        "p25": 333,
+        "median": 426,
+        "p75": 498,
+        "max": 754
+      },
+      "terse": {
+        "n": 57,
+        "mean": 383.4561403508772,
+        "min": 158,
+        "p25": 310,
+        "median": 359,
+        "p75": 438,
+        "max": 1205
+      },
+      "lite": {
+        "n": 57,
+        "mean": 412.719298245614,
+        "min": 149,
+        "p25": 331,
+        "median": 410,
+        "p75": 502,
+        "max": 678
+      },
+      "full": {
+        "n": 57,
+        "mean": 416.6140350877193,
+        "min": 125,
+        "p25": 337,
+        "median": 411,
+        "p75": 493,
+        "max": 816
+      },
+      "ultra": {
+        "n": 57,
+        "mean": 441.29824561403507,
+        "min": 161,
+        "p25": 350,
+        "median": 425,
+        "p75": 510,
+        "max": 1013
+      }
+    },
+    "comparisons": {
+      "baseline": {
+        "lite": {
+          "sampleCount": 57,
+          "relativeReduction": {
+            "n": 57,
+            "mean": -0.024831636416832645,
+            "min": -0.8018575851393188,
+            "p25": -0.135831381733021,
+            "median": -0.006012024048096087,
+            "p75": 0.10880829015544047,
+            "max": 0.47645429362880887
+          },
+          "aggregateTokenReduction": -0.003840409643695253,
+          "perPrompt": {
+            "ambiguous-target": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.033198955654317706,
+                "min": -0.3374485596707819,
+                "p25": -0.3374485596707819,
+                "median": -0.039408866995073843,
+                "p75": -0.039408866995073843,
+                "max": 0.47645429362880887
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 241.66666666666666,
+                "min": 189,
+                "p25": 189,
+                "median": 211,
+                "p75": 211,
+                "max": 325
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 269,
+                "min": 203,
+                "p25": 203,
+                "median": 243,
+                "p75": 243,
+                "max": 361
+              }
+            },
+            "api-pagination": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.02069319261238785,
+                "min": -0.0748560460652592,
+                "p25": -0.0748560460652592,
+                "median": -0.0748031496062993,
+                "p75": -0.0748031496062993,
+                "max": 0.08757961783439494
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 559.6666666666666,
+                "min": 546,
+                "p25": 546,
+                "median": 560,
+                "p75": 560,
+                "max": 573
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 552.3333333333334,
+                "min": 508,
+                "p25": 508,
+                "median": 521,
+                "p75": 521,
+                "max": 628
+              }
+            },
+            "css-center": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.1851580319322255,
+                "min": 0.11021505376344087,
+                "p25": 0.11021505376344087,
+                "median": 0.1341991341991342,
+                "p75": 0.1341991341991342,
+                "max": 0.3110599078341014
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 343.3333333333333,
+                "min": 299,
+                "p25": 299,
+                "median": 331,
+                "p75": 331,
+                "max": 400
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 422.6666666666667,
+                "min": 372,
+                "p25": 372,
+                "median": 434,
+                "p75": 434,
+                "max": 462
+              }
+            },
+            "detail-required": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.07033638601115884,
+                "min": 0.04694835680751175,
+                "p25": 0.04694835680751175,
+                "median": 0.06108597285067874,
+                "p75": 0.06108597285067874,
+                "max": 0.10297482837528604
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 404.3333333333333,
+                "min": 392,
+                "p25": 392,
+                "median": 406,
+                "p75": 406,
+                "max": 415
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 435,
+                "min": 426,
+                "p25": 426,
+                "median": 437,
+                "p75": 437,
+                "max": 442
+              }
+            },
+            "docker-cache": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.12345093928896234,
+                "min": 0.009216589861751112,
+                "p25": 0.009216589861751112,
+                "median": 0.14669421487603307,
+                "p75": 0.14669421487603307,
+                "max": 0.21444201312910283
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 400.6666666666667,
+                "min": 359,
+                "p25": 359,
+                "median": 413,
+                "p75": 413,
+                "max": 430
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 458.3333333333333,
+                "min": 434,
+                "p25": 434,
+                "median": 457,
+                "p75": 457,
+                "max": 484
+              }
+            },
+            "git-revert": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.13620747444276857,
+                "min": 0.02614379084967322,
+                "p25": 0.02614379084967322,
+                "median": 0.13888888888888884,
+                "p75": 0.13888888888888884,
+                "max": 0.2435897435897436
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 170.66666666666666,
+                "min": 149,
+                "p25": 149,
+                "median": 177,
+                "p75": 177,
+                "max": 186
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 201,
+                "min": 153,
+                "p25": 153,
+                "median": 216,
+                "p75": 216,
+                "max": 234
+              }
+            },
+            "js-closure": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.055948961517174066,
+                "min": -0.06382978723404253,
+                "p25": -0.06382978723404253,
+                "median": 0.052631578947368474,
+                "p75": 0.052631578947368474,
+                "max": 0.17904509283819625
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 598.3333333333334,
+                "min": 576,
+                "p25": 576,
+                "median": 600,
+                "p75": 600,
+                "max": 619
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 642,
+                "min": 564,
+                "p25": 564,
+                "median": 608,
+                "p75": 608,
+                "max": 754
+              }
+            },
+            "memory-constraints": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.017167167167167152,
+                "min": -0.21621621621621623,
+                "p25": -0.21621621621621623,
+                "median": 0.061111111111111116,
+                "p75": 0.061111111111111116,
+                "max": 0.10360360360360366
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 197.66666666666666,
+                "min": 169,
+                "p25": 169,
+                "median": 199,
+                "p75": 199,
+                "max": 225
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 195.66666666666666,
+                "min": 180,
+                "p25": 180,
+                "median": 185,
+                "p75": 185,
+                "max": 222
+              }
+            },
+            "ordered-restore": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.24233811353359966,
+                "min": -0.8018575851393188,
+                "p25": -0.8018575851393188,
+                "median": -0.2128279883381925,
+                "p75": -0.2128279883381925,
+                "max": 0.28767123287671237
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 436.6666666666667,
+                "min": 312,
+                "p25": 312,
+                "median": 416,
+                "p75": 416,
+                "max": 582
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 368,
+                "min": 323,
+                "p25": 323,
+                "median": 343,
+                "p75": 343,
+                "max": 438
+              }
+            },
+            "persisted-comment": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.3659685116107135,
+                "min": -0.6057692307692308,
+                "p25": -0.6057692307692308,
+                "median": -0.2857142857142858,
+                "p75": -0.2857142857142858,
+                "max": -0.20642201834862384
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 398.6666666666667,
+                "min": 263,
+                "p25": 263,
+                "median": 432,
+                "p75": 432,
+                "max": 501
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 288.6666666666667,
+                "min": 218,
+                "p25": 218,
+                "median": 312,
+                "p75": 312,
+                "max": 336
+              }
+            },
+            "plain-commit-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.18583004230039768,
+                "min": 0.1048951048951049,
+                "p25": 0.1048951048951049,
+                "median": 0.10914454277286134,
+                "p75": 0.10914454277286134,
+                "max": 0.3434504792332268
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 408.3333333333333,
+                "min": 302,
+                "p25": 302,
+                "median": 411,
+                "p75": 411,
+                "max": 512
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 512.3333333333334,
+                "min": 339,
+                "p25": 339,
+                "median": 572,
+                "p75": 572,
+                "max": 626
+              }
+            },
+            "pt-pr-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.11662498354825868,
+                "min": -0.1651651651651651,
+                "p25": -0.1651651651651651,
+                "median": -0.09883720930232553,
+                "p75": -0.09883720930232553,
+                "max": -0.08587257617728539
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 386,
+                "min": 378,
+                "p25": 378,
+                "median": 388,
+                "p75": 388,
+                "max": 392
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 346,
+                "min": 333,
+                "p25": 333,
+                "median": 344,
+                "p75": 344,
+                "max": 361
+              }
+            },
+            "pt-uncertainty": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.13466832552291988,
+                "min": -0.27066115702479343,
+                "p25": -0.27066115702479343,
+                "median": -0.135831381733021,
+                "p75": -0.135831381733021,
+                "max": 0.0024875621890547706
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 500.3333333333333,
+                "min": 401,
+                "p25": 401,
+                "median": 485,
+                "p75": 485,
+                "max": 615
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 437.6666666666667,
+                "min": 402,
+                "p25": 402,
+                "median": 427,
+                "p75": 427,
+                "max": 484
+              }
+            },
+            "rails-n1": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.02882324516503317,
+                "min": -0.01632653061224487,
+                "p25": -0.01632653061224487,
+                "median": -0.006012024048096087,
+                "p75": -0.006012024048096087,
+                "max": 0.10880829015544047
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 505.3333333333333,
+                "min": 498,
+                "p25": 498,
+                "median": 502,
+                "p75": 502,
+                "max": 516
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 522.6666666666666,
+                "min": 490,
+                "p25": 490,
+                "median": 499,
+                "p75": 499,
+                "max": 579
+              }
+            },
+            "react-rerender": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.0439641552300352,
+                "min": -0.13606911447084236,
+                "p25": -0.13606911447084236,
+                "median": 0.09125475285171103,
+                "p75": 0.09125475285171103,
+                "max": 0.17670682730923692
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 471.3333333333333,
+                "min": 410,
+                "p25": 410,
+                "median": 478,
+                "p75": 478,
+                "max": 526
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 495.6666666666667,
+                "min": 463,
+                "p25": 463,
+                "median": 498,
+                "p75": 498,
+                "max": 526
+              }
+            },
+            "regex-email": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.00561284808728731,
+                "min": -0.09510086455331401,
+                "p25": -0.09510086455331401,
+                "median": -0.07088607594936702,
+                "p75": -0.07088607594936702,
+                "max": 0.18282548476454297
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 366,
+                "min": 295,
+                "p25": 295,
+                "median": 380,
+                "p75": 380,
+                "max": 423
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 367.6666666666667,
+                "min": 347,
+                "p25": 347,
+                "median": 361,
+                "p75": 361,
+                "max": 395
+              }
+            },
+            "requested-table": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.09451663971491071,
+                "min": -0.16161616161616155,
+                "p25": -0.16161616161616155,
+                "median": -0.06442577030812324,
+                "p75": -0.06442577030812324,
+                "max": -0.057507987220447365
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 352,
+                "min": 331,
+                "p25": 331,
+                "median": 345,
+                "p75": 345,
+                "max": 380
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 322.3333333333333,
+                "min": 297,
+                "p25": 297,
+                "median": 313,
+                "p75": 313,
+                "max": 357
+              }
+            },
+            "sql-index": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.2199463187975681,
+                "min": -0.553030303030303,
+                "p25": -0.553030303030303,
+                "median": -0.08208955223880587,
+                "p75": -0.08208955223880587,
+                "max": -0.024719101123595433
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 433.6666666666667,
+                "min": 410,
+                "p25": 410,
+                "median": 435,
+                "p75": 435,
+                "max": 456
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 370.3333333333333,
+                "min": 264,
+                "p25": 264,
+                "median": 402,
+                "p75": 402,
+                "max": 445
+              }
+            },
+            "ts-generics": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.1284088790416551,
+                "min": -0.28652751423149914,
+                "p25": -0.28652751423149914,
+                "median": -0.2014388489208634,
+                "p75": -0.2014388489208634,
+                "max": 0.10273972602739723
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 667,
+                "min": 655,
+                "p25": 655,
+                "median": 668,
+                "p75": 668,
+                "max": 678
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 604.3333333333334,
+                "min": 527,
+                "p25": 527,
+                "median": 556,
+                "p75": 556,
+                "max": 730
+              }
+            }
+          }
+        },
+        "full": {
+          "sampleCount": 57,
+          "relativeReduction": {
+            "n": 57,
+            "mean": -0.061227661376929074,
+            "min": -1.2333333333333334,
+            "p25": -0.17974683544303804,
+            "median": 0.017110266159695797,
+            "p75": 0.16611842105263153,
+            "max": 0.4658119658119658
+          },
+          "aggregateTokenReduction": -0.013313420098143736,
+          "perPrompt": {
+            "ambiguous-target": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.018130363962680234,
+                "min": -0.7536945812807883,
+                "p25": -0.7536945812807883,
+                "median": 0.3004115226337448,
+                "p75": 0.3004115226337448,
+                "max": 0.39889196675900274
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 247.66666666666666,
+                "min": 170,
+                "p25": 170,
+                "median": 217,
+                "p75": 217,
+                "max": 356
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 269,
+                "min": 203,
+                "p25": 203,
+                "median": 243,
+                "p75": 243,
+                "max": 361
+              }
+            },
+            "api-pagination": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.21851792721479335,
+                "min": -0.5662188099808061,
+                "p25": -0.5662188099808061,
+                "median": -0.09251968503937014,
+                "p75": -0.09251968503937014,
+                "max": 0.0031847133757961776
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 665.6666666666666,
+                "min": 555,
+                "p25": 555,
+                "median": 626,
+                "p75": 626,
+                "max": 816
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 552.3333333333334,
+                "min": 508,
+                "p25": 508,
+                "median": 521,
+                "p75": 521,
+                "max": 628
+              }
+            },
+            "css-center": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.016501419727226147,
+                "min": -0.07526881720430101,
+                "p25": -0.07526881720430101,
+                "median": -0.03917050691244239,
+                "p75": -0.03917050691244239,
+                "max": 0.06493506493506496
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 427.6666666666667,
+                "min": 400,
+                "p25": 400,
+                "median": 432,
+                "p75": 432,
+                "max": 451
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 422.6666666666667,
+                "min": 372,
+                "p25": 372,
+                "median": 434,
+                "p75": 434,
+                "max": 462
+              }
+            },
+            "detail-required": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.10666296694215453,
+                "min": 0.06636155606407323,
+                "p25": 0.06636155606407323,
+                "median": 0.12217194570135748,
+                "p75": 0.12217194570135748,
+                "max": 0.13145539906103287
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 388.6666666666667,
+                "min": 370,
+                "p25": 370,
+                "median": 388,
+                "p75": 388,
+                "max": 408
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 435,
+                "min": 426,
+                "p25": 426,
+                "median": 437,
+                "p75": 437,
+                "max": 442
+              }
+            },
+            "docker-cache": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.1254031261490979,
+                "min": 0,
+                "p25": 0,
+                "median": 0.15082644628099173,
+                "p75": 0.15082644628099173,
+                "max": 0.225382932166302
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 399.6666666666667,
+                "min": 354,
+                "p25": 354,
+                "median": 411,
+                "p75": 411,
+                "max": 434
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 458.3333333333333,
+                "min": 434,
+                "p25": 434,
+                "median": 457,
+                "p75": 457,
+                "max": 484
+              }
+            },
+            "git-revert": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.20084073515446066,
+                "min": -0.261437908496732,
+                "p25": -0.261437908496732,
+                "median": 0.39814814814814814,
+                "p75": 0.39814814814814814,
+                "max": 0.4658119658119658
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 149.33333333333334,
+                "min": 125,
+                "p25": 125,
+                "median": 130,
+                "p75": 130,
+                "max": 193
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 201,
+                "min": 153,
+                "p25": 153,
+                "median": 216,
+                "p75": 216,
+                "max": 234
+              }
+            },
+            "js-closure": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.14522770226495554,
+                "min": -0.04078014184397172,
+                "p25": -0.04078014184397172,
+                "median": 0.16611842105263153,
+                "p75": 0.16611842105263153,
+                "max": 0.31034482758620685
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 538,
+                "min": 507,
+                "p25": 507,
+                "median": 520,
+                "p75": 520,
+                "max": 587
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 642,
+                "min": 564,
+                "p25": 564,
+                "median": 608,
+                "p75": 608,
+                "max": 754
+              }
+            },
+            "memory-constraints": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.41201201201201204,
+                "min": -1.2333333333333334,
+                "p25": -1.2333333333333334,
+                "median": -0.17837837837837833,
+                "p75": -0.17837837837837833,
+                "max": 0.17567567567567566
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 267.6666666666667,
+                "min": 183,
+                "p25": 183,
+                "median": 218,
+                "p75": 218,
+                "max": 402
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 195.66666666666666,
+                "min": 180,
+                "p25": 180,
+                "median": 185,
+                "p75": 185,
+                "max": 222
+              }
+            },
+            "ordered-restore": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.23019078885030167,
+                "min": -1.0371517027863777,
+                "p25": -1.0371517027863777,
+                "median": 0.11370262390670549,
+                "p75": 0.11370262390670549,
+                "max": 0.23287671232876717
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 432.6666666666667,
+                "min": 304,
+                "p25": 304,
+                "median": 336,
+                "p75": 336,
+                "max": 658
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 368,
+                "min": 323,
+                "p25": 323,
+                "median": 343,
+                "p75": 343,
+                "max": 438
+              }
+            },
+            "persisted-comment": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.3983614499669545,
+                "min": -1.173076923076923,
+                "p25": -1.173076923076923,
+                "median": -0.2660550458715596,
+                "p75": -0.2660550458715596,
+                "max": 0.24404761904761907
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 402.6666666666667,
+                "min": 254,
+                "p25": 254,
+                "median": 276,
+                "p75": 276,
+                "max": 678
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 288.6666666666667,
+                "min": 218,
+                "p25": 218,
+                "median": 312,
+                "p75": 312,
+                "max": 336
+              }
+            },
+            "plain-commit-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.20983976503640614,
+                "min": -0.2359882005899705,
+                "p25": -0.2359882005899705,
+                "median": 0.40384615384615385,
+                "p75": 0.40384615384615385,
+                "max": 0.4616613418530351
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 365.6666666666667,
+                "min": 337,
+                "p25": 337,
+                "median": 341,
+                "p75": 341,
+                "max": 419
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 512.3333333333334,
+                "min": 339,
+                "p25": 339,
+                "median": 572,
+                "p75": 572,
+                "max": 626
+              }
+            },
+            "pt-pr-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.5977952038877762,
+                "min": -1.0480480480480479,
+                "p25": -1.0480480480480479,
+                "median": -0.4156976744186047,
+                "p75": -0.4156976744186047,
+                "max": -0.32963988919667586
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 549.6666666666666,
+                "min": 480,
+                "p25": 480,
+                "median": 487,
+                "p75": 487,
+                "max": 682
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 346,
+                "min": 333,
+                "p25": 333,
+                "median": 344,
+                "p75": 344,
+                "max": 361
+              }
+            },
+            "pt-uncertainty": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.04784002998407877,
+                "min": -0.04975124378109452,
+                "p25": -0.04975124378109452,
+                "median": 0.04338842975206614,
+                "p75": 0.04338842975206614,
+                "max": 0.1498829039812647
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 416,
+                "min": 363,
+                "p25": 363,
+                "median": 422,
+                "p75": 422,
+                "max": 463
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 437.6666666666667,
+                "min": 402,
+                "p25": 402,
+                "median": 427,
+                "p75": 427,
+                "max": 484
+              }
+            },
+            "rails-n1": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.04872676986037683,
+                "min": -0.094188376753507,
+                "p25": -0.094188376753507,
+                "median": 0.09183673469387754,
+                "p75": 0.09183673469387754,
+                "max": 0.14853195164075994
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 494.6666666666667,
+                "min": 445,
+                "p25": 445,
+                "median": 493,
+                "p75": 493,
+                "max": 546
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 522.6666666666666,
+                "min": 490,
+                "p25": 490,
+                "median": 499,
+                "p75": 499,
+                "max": 579
+              }
+            },
+            "react-rerender": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.1372577169867457,
+                "min": 0.017110266159695797,
+                "p25": 0.017110266159695797,
+                "median": 0.1506024096385542,
+                "p75": 0.1506024096385542,
+                "max": 0.24406047516198703
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 430,
+                "min": 350,
+                "p25": 350,
+                "median": 423,
+                "p75": 423,
+                "max": 517
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 495.6666666666667,
+                "min": 463,
+                "p25": 463,
+                "median": 498,
+                "p75": 498,
+                "max": 526
+              }
+            },
+            "regex-email": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.3227408837002644,
+                "min": -0.4570637119113574,
+                "p25": -0.4570637119113574,
+                "median": -0.33141210374639773,
+                "p75": -0.33141210374639773,
+                "max": -0.17974683544303804
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 484.6666666666667,
+                "min": 462,
+                "p25": 462,
+                "median": 466,
+                "p75": 466,
+                "max": 526
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 367.6666666666667,
+                "min": 347,
+                "p25": 347,
+                "median": 361,
+                "p75": 361,
+                "max": 395
+              }
+            },
+            "requested-table": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.023929013091451196,
+                "min": -0.03703703703703698,
+                "p25": -0.03703703703703698,
+                "median": -0.03194888178913735,
+                "p75": -0.03194888178913735,
+                "max": -0.0028011204481792618
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 329.6666666666667,
+                "min": 308,
+                "p25": 308,
+                "median": 323,
+                "p75": 323,
+                "max": 358
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 322.3333333333333,
+                "min": 297,
+                "p25": 297,
+                "median": 313,
+                "p75": 313,
+                "max": 357
+              }
+            },
+            "sql-index": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.020430237305132454,
+                "min": -0.3068181818181819,
+                "p25": -0.3068181818181819,
+                "median": 0.18159203980099503,
+                "p75": 0.18159203980099503,
+                "max": 0.18651685393258421
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 345.3333333333333,
+                "min": 329,
+                "p25": 329,
+                "median": 345,
+                "p75": 345,
+                "max": 362
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 370.3333333333333,
+                "min": 264,
+                "p25": 264,
+                "median": 402,
+                "p75": 402,
+                "max": 445
+              }
+            },
+            "ts-generics": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.03262444656839836,
+                "min": -0.09172661870503607,
+                "p25": -0.09172661870503607,
+                "median": 0.0759013282732448,
+                "p75": 0.0759013282732448,
+                "max": 0.11369863013698633
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 580.3333333333334,
+                "min": 487,
+                "p25": 487,
+                "median": 607,
+                "p75": 607,
+                "max": 647
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 604.3333333333334,
+                "min": 527,
+                "p25": 527,
+                "median": 556,
+                "p75": 556,
+                "max": 730
+              }
+            }
+          }
+        },
+        "ultra": {
+          "sampleCount": 57,
+          "relativeReduction": {
+            "n": 57,
+            "mean": -0.11446667827937455,
+            "min": -1.4954128440366974,
+            "p25": -0.18595825426944979,
+            "median": -0.03797468354430378,
+            "p75": 0.1002004008016032,
+            "max": 0.28099173553719003
+          },
+          "aggregateTokenReduction": -0.07335182419458075,
+          "perPrompt": {
+            "ambiguous-target": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.05734074081187072,
+                "min": -0.41871921182266014,
+                "p25": -0.41871921182266014,
+                "median": -0.016460905349794164,
+                "p75": -0.016460905349794164,
+                "max": 0.26315789473684215
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 267,
+                "min": 247,
+                "p25": 247,
+                "median": 266,
+                "p75": 266,
+                "max": 288
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 269,
+                "min": 203,
+                "p25": 203,
+                "median": 243,
+                "p75": 243,
+                "max": 361
+              }
+            },
+            "api-pagination": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.0921855164329259,
+                "min": 0.055118110236220486,
+                "p25": 0.055118110236220486,
+                "median": 0.09404990403071012,
+                "p75": 0.09404990403071012,
+                "max": 0.1273885350318471
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 500,
+                "min": 472,
+                "p25": 472,
+                "median": 480,
+                "p75": 480,
+                "max": 548
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 552.3333333333334,
+                "min": 508,
+                "p25": 508,
+                "median": 521,
+                "p75": 521,
+                "max": 628
+              }
+            },
+            "css-center": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.3445398687334172,
+                "min": -0.8419913419913421,
+                "p25": -0.8419913419913421,
+                "median": -0.228494623655914,
+                "p75": -0.228494623655914,
+                "max": 0.03686635944700456
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 575.3333333333334,
+                "min": 418,
+                "p25": 418,
+                "median": 457,
+                "p75": 457,
+                "max": 851
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 422.6666666666667,
+                "min": 372,
+                "p25": 372,
+                "median": 434,
+                "p75": 434,
+                "max": 462
+              }
+            },
+            "detail-required": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.02256372565628832,
+                "min": -0.10328638497652576,
+                "p25": -0.10328638497652576,
+                "median": 0.0565610859728507,
+                "p75": 0.0565610859728507,
+                "max": 0.11441647597254001
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 424.6666666666667,
+                "min": 387,
+                "p25": 387,
+                "median": 417,
+                "p75": 417,
+                "max": 470
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 435,
+                "min": 426,
+                "p25": 426,
+                "median": 437,
+                "p75": 437,
+                "max": 442
+              }
+            },
+            "docker-cache": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.14408457421669943,
+                "min": 0.015317286652078765,
+                "p25": 0.015317286652078765,
+                "median": 0.13594470046082952,
+                "p75": 0.13594470046082952,
+                "max": 0.28099173553719003
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 391,
+                "min": 348,
+                "p25": 348,
+                "median": 375,
+                "p75": 375,
+                "max": 450
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 458.3333333333333,
+                "min": 434,
+                "p25": 434,
+                "median": 457,
+                "p75": 457,
+                "max": 484
+              }
+            },
+            "git-revert": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.08580526227585057,
+                "min": -0.16666666666666674,
+                "p25": -0.16666666666666674,
+                "median": -0.05228758169934644,
+                "p75": -0.05228758169934644,
+                "max": -0.03846153846153855
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 218.66666666666666,
+                "min": 161,
+                "p25": 161,
+                "median": 243,
+                "p75": 243,
+                "max": 252
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 201,
+                "min": 153,
+                "p25": 153,
+                "median": 216,
+                "p75": 216,
+                "max": 234
+              }
+            },
+            "js-closure": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.11146129233528353,
+                "min": -0.03125,
+                "p25": -0.03125,
+                "median": 0.17730496453900713,
+                "p75": 0.17730496453900713,
+                "max": 0.18832891246684347
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 567.6666666666666,
+                "min": 464,
+                "p25": 464,
+                "median": 612,
+                "p75": 612,
+                "max": 627
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 642,
+                "min": 564,
+                "p25": 564,
+                "median": 608,
+                "p75": 608,
+                "max": 754
+              }
+            },
+            "memory-constraints": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.17852852852852852,
+                "min": -0.3833333333333333,
+                "p25": -0.3833333333333333,
+                "median": -0.10360360360360366,
+                "p75": -0.10360360360360366,
+                "max": -0.048648648648648596
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 229.33333333333334,
+                "min": 194,
+                "p25": 194,
+                "median": 245,
+                "p75": 245,
+                "max": 249
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 195.66666666666666,
+                "min": 180,
+                "p25": 180,
+                "median": 185,
+                "p75": 185,
+                "max": 222
+              }
+            },
+            "ordered-restore": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.2379689473207486,
+                "min": -0.6687306501547987,
+                "p25": -0.6687306501547987,
+                "median": -0.16618075801749277,
+                "p75": -0.16618075801749277,
+                "max": 0.12100456621004563
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 441.3333333333333,
+                "min": 385,
+                "p25": 385,
+                "median": 400,
+                "p75": 400,
+                "max": 539
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 368,
+                "min": 323,
+                "p25": 323,
+                "median": 343,
+                "p75": 343,
+                "max": 438
+              }
+            },
+            "persisted-comment": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.49145019099147547,
+                "min": -1.4954128440366974,
+                "p25": -1.4954128440366974,
+                "median": -0.1217948717948718,
+                "p75": -0.1217948717948718,
+                "max": 0.1428571428571429
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 394,
+                "min": 288,
+                "p25": 288,
+                "median": 350,
+                "p75": 350,
+                "max": 544
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 288.6666666666667,
+                "min": 218,
+                "p25": 218,
+                "median": 312,
+                "p75": 312,
+                "max": 336
+              }
+            },
+            "plain-commit-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.2897130459614556,
+                "min": -0.6182108626198084,
+                "p25": -0.6182108626198084,
+                "median": -0.5044247787610618,
+                "p75": -0.5044247787610618,
+                "max": 0.25349650349650354
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 650,
+                "min": 427,
+                "p25": 427,
+                "median": 510,
+                "p75": 510,
+                "max": 1013
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 512.3333333333334,
+                "min": 339,
+                "p25": 339,
+                "median": 572,
+                "p75": 572,
+                "max": 626
+              }
+            },
+            "pt-pr-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.11389301109393875,
+                "min": -0.23723723723723733,
+                "p25": -0.23723723723723733,
+                "median": -0.12188365650969524,
+                "p75": -0.12188365650969524,
+                "max": 0.01744186046511631
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 385,
+                "min": 338,
+                "p25": 338,
+                "median": 405,
+                "p75": 405,
+                "max": 412
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 346,
+                "min": 333,
+                "p25": 333,
+                "median": 344,
+                "p75": 344,
+                "max": 361
+              }
+            },
+            "pt-uncertainty": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.0045746374738523015,
+                "min": -0.14051522248243553,
+                "p25": -0.14051522248243553,
+                "median": 0.03233830845771146,
+                "p75": 0.03233830845771146,
+                "max": 0.12190082644628097
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 433.6666666666667,
+                "min": 389,
+                "p25": 389,
+                "median": 425,
+                "p75": 425,
+                "max": 487
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 437.6666666666667,
+                "min": 402,
+                "p25": 402,
+                "median": 427,
+                "p75": 427,
+                "max": 484
+              }
+            },
+            "rails-n1": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.024525212703790416,
+                "min": -0.2204081632653061,
+                "p25": -0.2204081632653061,
+                "median": 0.04663212435233166,
+                "p75": 0.04663212435233166,
+                "max": 0.1002004008016032
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 533,
+                "min": 449,
+                "p25": 449,
+                "median": 552,
+                "p75": 552,
+                "max": 598
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 522.6666666666666,
+                "min": 490,
+                "p25": 490,
+                "median": 499,
+                "p75": 499,
+                "max": 579
+              }
+            },
+            "react-rerender": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.1612530157420656,
+                "min": -0.6025917926565876,
+                "p25": -0.6025917926565876,
+                "median": 0.01807228915662651,
+                "p75": 0.01807228915662651,
+                "max": 0.10076045627376429
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 568,
+                "min": 473,
+                "p25": 473,
+                "median": 489,
+                "p75": 489,
+                "max": 742
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 495.6666666666667,
+                "min": 463,
+                "p25": 463,
+                "median": 498,
+                "p75": 498,
+                "max": 526
+              }
+            },
+            "regex-email": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.24851443898112113,
+                "min": -0.6023054755043227,
+                "p25": -0.6023054755043227,
+                "median": -0.10526315789473695,
+                "p75": -0.10526315789473695,
+                "max": -0.03797468354430378
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 455,
+                "min": 399,
+                "p25": 399,
+                "median": 410,
+                "p75": 410,
+                "max": 556
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 367.6666666666667,
+                "min": 347,
+                "p25": 347,
+                "median": 361,
+                "p75": 361,
+                "max": 395
+              }
+            },
+            "requested-table": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.10502099958968969,
+                "min": -0.2587859424920127,
+                "p25": -0.2587859424920127,
+                "median": -0.1515151515151516,
+                "p75": -0.1515151515151516,
+                "max": 0.09523809523809523
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 353,
+                "min": 323,
+                "p25": 323,
+                "median": 342,
+                "p75": 342,
+                "max": 394
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 322.3333333333333,
+                "min": 297,
+                "p25": 297,
+                "median": 313,
+                "p75": 313,
+                "max": 357
+              }
+            },
+            "sql-index": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.24694538882028397,
+                "min": -0.7727272727272727,
+                "p25": -0.7727272727272727,
+                "median": -0.18159203980099492,
+                "p75": -0.18159203980099492,
+                "max": 0.2134831460674157
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 431,
+                "min": 350,
+                "p25": 350,
+                "median": 468,
+                "p75": 468,
+                "max": 475
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 370.3333333333333,
+                "min": 264,
+                "p25": 264,
+                "median": 402,
+                "p75": 402,
+                "max": 445
+              }
+            },
+            "ts-generics": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.03576201813106968,
+                "min": -0.18595825426944979,
+                "p25": -0.18595825426944979,
+                "median": 0.023381294964028743,
+                "p75": 0.023381294964028743,
+                "max": 0.2698630136986301
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 567,
+                "min": 533,
+                "p25": 533,
+                "median": 543,
+                "p75": 543,
+                "max": 625
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 604.3333333333334,
+                "min": 527,
+                "p25": 527,
+                "median": 556,
+                "p75": 556,
+                "max": 730
+              }
+            }
+          }
+        }
+      },
+      "terse": {
+        "lite": {
+          "sampleCount": 57,
+          "relativeReduction": {
+            "n": 57,
+            "mean": -0.12599000313298914,
+            "min": -0.9081967213114754,
+            "p25": -0.27680311890838216,
+            "median": -0.1032608695652173,
+            "p75": 0.046511627906976716,
+            "max": 0.5219917012448132
+          },
+          "aggregateTokenReduction": -0.07631422427597556,
+          "perPrompt": {
+            "ambiguous-target": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.01750591294322686,
+                "min": -0.4192139737991267,
+                "p25": -0.4192139737991267,
+                "median": 0.07456140350877194,
+                "p75": 0.07456140350877194,
+                "max": 0.2921348314606742
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 241.66666666666666,
+                "min": 189,
+                "p25": 189,
+                "median": 211,
+                "p75": 211,
+                "max": 325
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 241.33333333333334,
+                "min": 228,
+                "p25": 228,
+                "median": 229,
+                "p75": 229,
+                "max": 267
+              }
+            },
+            "api-pagination": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.05423565790310384,
+                "min": -0.2139830508474576,
+                "p25": -0.2139830508474576,
+                "median": -0.1642411642411643,
+                "p75": -0.1642411642411643,
+                "max": 0.2155172413793104
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 559.6666666666666,
+                "min": 546,
+                "p25": 546,
+                "median": 560,
+                "p75": 560,
+                "max": 573
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 549.6666666666666,
+                "min": 472,
+                "p25": 472,
+                "median": 481,
+                "p75": 481,
+                "max": 696
+              }
+            },
+            "css-center": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.06063365091480429,
+                "min": 0.03548387096774197,
+                "p25": 0.03548387096774197,
+                "median": 0.05965909090909094,
+                "p75": 0.05965909090909094,
+                "max": 0.08675799086757996
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 343.3333333333333,
+                "min": 299,
+                "p25": 299,
+                "median": 331,
+                "p75": 331,
+                "max": 400
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 366.6666666666667,
+                "min": 310,
+                "p25": 310,
+                "median": 352,
+                "p75": 352,
+                "max": 438
+              }
+            },
+            "detail-required": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.11838262741635168,
+                "min": -0.16901408450704225,
+                "p25": -0.16901408450704225,
+                "median": -0.1032608695652173,
+                "p75": -0.1032608695652173,
+                "max": -0.08287292817679548
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 404.3333333333333,
+                "min": 392,
+                "p25": 392,
+                "median": 406,
+                "p75": 406,
+                "max": 415
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 361.6666666666667,
+                "min": 355,
+                "p25": 355,
+                "median": 362,
+                "p75": 362,
+                "max": 368
+              }
+            },
+            "docker-cache": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.049677864365488156,
+                "min": -0.26843657817109134,
+                "p25": -0.26843657817109134,
+                "median": 0,
+                "p75": 0,
+                "max": 0.11940298507462688
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 400.6666666666667,
+                "min": 359,
+                "p25": 359,
+                "median": 413,
+                "p75": 413,
+                "max": 430
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 389,
+                "min": 339,
+                "p25": 339,
+                "median": 359,
+                "p75": 359,
+                "max": 469
+              }
+            },
+            "git-revert": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.08035189758590222,
+                "min": 0.015873015873015928,
+                "p25": 0.015873015873015928,
+                "median": 0.048387096774193505,
+                "p75": 0.048387096774193505,
+                "max": 0.17679558011049723
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 170.66666666666666,
+                "min": 149,
+                "p25": 149,
+                "median": 177,
+                "p75": 177,
+                "max": 186
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 185.33333333333334,
+                "min": 181,
+                "p25": 181,
+                "median": 186,
+                "p75": 186,
+                "max": 189
+              }
+            },
+            "js-closure": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.20445382570285656,
+                "min": 0.0016638935108153063,
+                "p25": 0.0016638935108153063,
+                "median": 0.08970588235294119,
+                "p75": 0.08970588235294119,
+                "max": 0.5219917012448132
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 598.3333333333334,
+                "min": 576,
+                "p25": 576,
+                "median": 600,
+                "p75": 600,
+                "max": 619
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 828.6666666666666,
+                "min": 601,
+                "p25": 601,
+                "median": 680,
+                "p75": 680,
+                "max": 1205
+              }
+            },
+            "memory-constraints": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.17935736759033757,
+                "min": -0.42405063291139244,
+                "p25": -0.42405063291139244,
+                "median": -0.13714285714285723,
+                "p75": -0.13714285714285723,
+                "max": 0.023121387283236983
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 197.66666666666666,
+                "min": 169,
+                "p25": 169,
+                "median": 199,
+                "p75": 199,
+                "max": 225
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 168.66666666666666,
+                "min": 158,
+                "p25": 158,
+                "median": 173,
+                "p75": 173,
+                "max": 175
+              }
+            },
+            "ordered-restore": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.2803958908814399,
+                "min": -0.9081967213114754,
+                "p25": -0.9081967213114754,
+                "median": -0.1954022988505748,
+                "p75": -0.1954022988505748,
+                "max": 0.26241134751773054
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 436.6666666666667,
+                "min": 312,
+                "p25": 312,
+                "median": 416,
+                "p75": 416,
+                "max": 582
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 358.6666666666667,
+                "min": 305,
+                "p25": 305,
+                "median": 348,
+                "p75": 348,
+                "max": 423
+              }
+            },
+            "persisted-comment": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.535894387261915,
+                "min": -0.6488549618320612,
+                "p25": -0.6488549618320612,
+                "median": -0.5748502994011977,
+                "p75": -0.5748502994011977,
+                "max": -0.38397790055248615
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 398.6666666666667,
+                "min": 263,
+                "p25": 263,
+                "median": 432,
+                "p75": 432,
+                "max": 501
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 263.6666666666667,
+                "min": 167,
+                "p25": 167,
+                "median": 262,
+                "p75": 262,
+                "max": 362
+              }
+            },
+            "plain-commit-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.007912830008465358,
+                "min": -0.3989071038251366,
+                "p25": -0.3989071038251366,
+                "median": 0.20502901353965186,
+                "p75": 0.20502901353965186,
+                "max": 0.21761658031088082
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 408.3333333333333,
+                "min": 302,
+                "p25": 302,
+                "median": 411,
+                "p75": 411,
+                "max": 512
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 423,
+                "min": 366,
+                "p25": 366,
+                "median": 386,
+                "p75": 386,
+                "max": 517
+              }
+            },
+            "pt-pr-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.32577529682792844,
+                "min": -0.5555555555555556,
+                "p25": -0.5555555555555556,
+                "median": -0.2763157894736843,
+                "p75": -0.2763157894736843,
+                "max": -0.1454545454545455
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 386,
+                "min": 378,
+                "p25": 378,
+                "median": 388,
+                "p75": 388,
+                "max": 392
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 295.3333333333333,
+                "min": 252,
+                "p25": 252,
+                "median": 304,
+                "p75": 304,
+                "max": 330
+              }
+            },
+            "pt-uncertainty": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.32804007308403477,
+                "min": -0.7723342939481268,
+                "p25": -0.7723342939481268,
+                "median": -0.22166246851385396,
+                "p75": -0.22166246851385396,
+                "max": 0.00987654320987652
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 500.3333333333333,
+                "min": 401,
+                "p25": 401,
+                "median": 485,
+                "p75": 485,
+                "max": 615
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 383,
+                "min": 347,
+                "p25": 347,
+                "median": 397,
+                "p75": 397,
+                "max": 405
+              }
+            },
+            "rails-n1": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.1103342708784754,
+                "min": -0.22660098522167482,
+                "p25": -0.22660098522167482,
+                "median": -0.14350797266514803,
+                "p75": -0.14350797266514803,
+                "max": 0.03910614525139666
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 505.3333333333333,
+                "min": 498,
+                "p25": 498,
+                "median": 502,
+                "p75": 502,
+                "max": 516
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 460.6666666666667,
+                "min": 406,
+                "p25": 406,
+                "median": 439,
+                "p75": 439,
+                "max": 537
+              }
+            },
+            "react-rerender": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.17157404610892987,
+                "min": -0.36623376623376624,
+                "p25": -0.36623376623376624,
+                "median": -0.19500000000000006,
+                "p75": -0.19500000000000006,
+                "max": 0.046511627906976716
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 471.3333333333333,
+                "min": 410,
+                "p25": 410,
+                "median": 478,
+                "p75": 478,
+                "max": 526
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 405,
+                "min": 385,
+                "p25": 385,
+                "median": 400,
+                "p75": 400,
+                "max": 430
+              }
+            },
+            "regex-email": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.013005015535753247,
+                "min": -0.3514376996805111,
+                "p25": -0.3514376996805111,
+                "median": -0.07042253521126751,
+                "p75": -0.07042253521126751,
+                "max": 0.38284518828451886
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 366,
+                "min": 295,
+                "p25": 295,
+                "median": 380,
+                "p75": 380,
+                "max": 423
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 382,
+                "min": 313,
+                "p25": 313,
+                "median": 355,
+                "p75": 355,
+                "max": 478
+              }
+            },
+            "requested-table": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.06382544736783295,
+                "min": -0.19122257053291536,
+                "p25": -0.19122257053291536,
+                "median": -0.031152647975077885,
+                "p75": -0.031152647975077885,
+                "max": 0.030898876404494402
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 352,
+                "min": 331,
+                "p25": 331,
+                "median": 345,
+                "p75": 345,
+                "max": 380
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 332,
+                "min": 319,
+                "p25": 319,
+                "median": 321,
+                "p75": 321,
+                "max": 356
+              }
+            },
+            "sql-index": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.22989734465144304,
+                "min": -0.36936936936936937,
+                "p25": -0.36936936936936937,
+                "median": -0.3015873015873016,
+                "p75": -0.3015873015873016,
+                "max": -0.0187353629976581
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 433.6666666666667,
+                "min": 410,
+                "p25": 410,
+                "median": 435,
+                "p75": 435,
+                "max": 456
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 358.3333333333333,
+                "min": 315,
+                "p25": 315,
+                "median": 333,
+                "p75": 333,
+                "max": 427
+              }
+            },
+            "ts-generics": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.2692610609225614,
+                "min": -0.45182012847965747,
+                "p25": -0.45182012847965747,
+                "median": -0.27680311890838216,
+                "p75": -0.27680311890838216,
+                "max": -0.07915993537964461
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 667,
+                "min": 655,
+                "p25": 655,
+                "median": 668,
+                "p75": 668,
+                "max": 678
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 533,
+                "min": 467,
+                "p25": 467,
+                "median": 513,
+                "p75": 513,
+                "max": 619
+              }
+            }
+          }
+        },
+        "full": {
+          "sampleCount": 57,
+          "relativeReduction": {
+            "n": 57,
+            "mean": -0.15243209413513026,
+            "min": -1.3236994219653178,
+            "p25": -0.3014084507042254,
+            "median": -0.06629834254143652,
+            "p75": 0.08564231738035266,
+            "max": 0.579253112033195
+          },
+          "aggregateTokenReduction": -0.08647115340623146,
+          "perPrompt": {
+            "ambiguous-target": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.03883188992385119,
+                "min": -0.5614035087719298,
+                "p25": -0.5614035087719298,
+                "median": 0.18726591760299627,
+                "p75": 0.18726591760299627,
+                "max": 0.25764192139737996
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 247.66666666666666,
+                "min": 170,
+                "p25": 170,
+                "median": 217,
+                "p75": 217,
+                "max": 356
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 241.33333333333334,
+                "min": 228,
+                "p25": 228,
+                "median": 229,
+                "p75": 229,
+                "max": 267
+              }
+            },
+            "api-pagination": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.27338355866994096,
+                "min": -0.6964656964656966,
+                "p25": -0.6964656964656966,
+                "median": -0.326271186440678,
+                "p75": -0.326271186440678,
+                "max": 0.2025862068965517
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 665.6666666666666,
+                "min": 555,
+                "p25": 555,
+                "median": 626,
+                "p75": 626,
+                "max": 816
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 549.6666666666666,
+                "min": 472,
+                "p25": 472,
+                "median": 481,
+                "p75": 481,
+                "max": 696
+              }
+            },
+            "css-center": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.19250123863468982,
+                "min": -0.45483870967741935,
+                "p25": -0.45483870967741935,
+                "median": -0.13636363636363646,
+                "p75": -0.13636363636363646,
+                "max": 0.013698630136986356
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 427.6666666666667,
+                "min": 400,
+                "p25": 400,
+                "median": 432,
+                "p75": 432,
+                "max": 451
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 366.6666666666667,
+                "min": 310,
+                "p25": 310,
+                "median": 352,
+                "p75": 352,
+                "max": 438
+              }
+            },
+            "detail-required": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.0751547840973296,
+                "min": -0.1270718232044199,
+                "p25": -0.1270718232044199,
+                "median": -0.09295774647887334,
+                "p75": -0.09295774647887334,
+                "max": -0.005434782608695565
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 388.6666666666667,
+                "min": 370,
+                "p25": 370,
+                "median": 388,
+                "p75": 388,
+                "max": 408
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 361.6666666666667,
+                "min": 355,
+                "p25": 355,
+                "median": 362,
+                "p75": 362,
+                "max": 368
+              }
+            },
+            "docker-cache": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.04754701140006601,
+                "min": -0.28023598820059004,
+                "p25": -0.28023598820059004,
+                "median": 0.013927576601671321,
+                "p75": 0.013927576601671321,
+                "max": 0.12366737739872069
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 399.6666666666667,
+                "min": 354,
+                "p25": 354,
+                "median": 411,
+                "p75": 411,
+                "max": 434
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 389,
+                "min": 339,
+                "p25": 339,
+                "median": 359,
+                "p75": 359,
+                "max": 469
+              }
+            },
+            "git-revert": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.19127598629172918,
+                "min": -0.06629834254143652,
+                "p25": -0.06629834254143652,
+                "median": 0.3121693121693122,
+                "p75": 0.3121693121693122,
+                "max": 0.32795698924731187
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 149.33333333333334,
+                "min": 125,
+                "p25": 125,
+                "median": 130,
+                "p75": 130,
+                "max": 193
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 185.33333333333334,
+                "min": 181,
+                "p25": 181,
+                "median": 186,
+                "p75": 186,
+                "max": 189
+              }
+            },
+            "js-closure": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.279280579610556,
+                "min": 0.02329450915141429,
+                "p25": 0.02329450915141429,
+                "median": 0.23529411764705888,
+                "p75": 0.23529411764705888,
+                "max": 0.579253112033195
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 538,
+                "min": 507,
+                "p25": 507,
+                "median": 520,
+                "p75": 520,
+                "max": 587
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 828.6666666666666,
+                "min": 601,
+                "p25": 601,
+                "median": 680,
+                "p75": 680,
+                "max": 1205
+              }
+            },
+            "memory-constraints": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.5830535143742138,
+                "min": -1.3236994219653178,
+                "p25": -1.3236994219653178,
+                "median": -0.379746835443038,
+                "p75": -0.379746835443038,
+                "max": -0.04571428571428582
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 267.6666666666667,
+                "min": 183,
+                "p25": 183,
+                "median": 218,
+                "p75": 218,
+                "max": 402
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 168.66666666666666,
+                "min": 158,
+                "p25": 158,
+                "median": 173,
+                "p75": 173,
+                "max": 175
+              }
+            },
+            "ordered-restore": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.27508883623529473,
+                "min": -1.1573770491803277,
+                "p25": -1.1573770491803277,
+                "median": 0.12643678160919536,
+                "p75": 0.12643678160919536,
+                "max": 0.2056737588652482
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 432.6666666666667,
+                "min": 304,
+                "p25": 304,
+                "median": 336,
+                "p75": 336,
+                "max": 658
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 358.6666666666667,
+                "min": 305,
+                "p25": 305,
+                "median": 348,
+                "p75": 348,
+                "max": 423
+              }
+            },
+            "persisted-comment": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.498362812142995,
+                "min": -0.8729281767955801,
+                "p25": -0.8729281767955801,
+                "median": -0.652694610778443,
+                "p75": -0.652694610778443,
+                "max": 0.03053435114503822
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 402.6666666666667,
+                "min": 254,
+                "p25": 254,
+                "median": 276,
+                "p75": 276,
+                "max": 678
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 263.6666666666667,
+                "min": 167,
+                "p25": 167,
+                "median": 262,
+                "p75": 262,
+                "max": 362
+              }
+            },
+            "plain-commit-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.11032541959057911,
+                "min": -0.0854922279792747,
+                "p25": -0.0854922279792747,
+                "median": 0.06830601092896171,
+                "p75": 0.06830601092896171,
+                "max": 0.3481624758220503
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 365.6666666666667,
+                "min": 337,
+                "p25": 337,
+                "median": 341,
+                "p75": 341,
+                "max": 419
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 423,
+                "min": 366,
+                "p25": 366,
+                "median": 386,
+                "p75": 386,
+                "max": 517
+              }
+            },
+            "pt-pr-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.8746468443836865,
+                "min": -1.2434210526315788,
+                "p25": -1.2434210526315788,
+                "median": -0.9047619047619047,
+                "p75": -0.9047619047619047,
+                "max": -0.4757575757575758
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 549.6666666666666,
+                "min": 480,
+                "p25": 480,
+                "median": 487,
+                "p75": 487,
+                "max": 682
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 295.3333333333333,
+                "min": 252,
+                "p25": 252,
+                "median": 304,
+                "p75": 304,
+                "max": 330
+              }
+            },
+            "pt-uncertainty": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.096875646462808,
+                "min": -0.33429394812680124,
+                "p25": -0.33429394812680124,
+                "median": -0.041975308641975406,
+                "p75": -0.041975308641975406,
+                "max": 0.08564231738035266
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 416,
+                "min": 363,
+                "p25": 363,
+                "median": 422,
+                "p75": 422,
+                "max": 463
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 383,
+                "min": 347,
+                "p25": 347,
+                "median": 397,
+                "p75": 397,
+                "max": 405
+              }
+            },
+            "rails-n1": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.085952730369934,
+                "min": -0.24373576309794998,
+                "p25": -0.24373576309794998,
+                "median": -0.09605911330049266,
+                "p75": -0.09605911330049266,
+                "max": 0.08193668528864062
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 494.6666666666667,
+                "min": 445,
+                "p25": 445,
+                "median": 493,
+                "p75": 493,
+                "max": 546
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 460.6666666666667,
+                "min": 406,
+                "p25": 406,
+                "median": 439,
+                "p75": 439,
+                "max": 537
+              }
+            },
+            "react-rerender": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.06177061310782239,
+                "min": -0.2925,
+                "p25": -0.2925,
+                "median": 0.016279069767441867,
+                "p75": 0.016279069767441867,
+                "max": 0.09090909090909094
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 430,
+                "min": 350,
+                "p25": 350,
+                "median": 423,
+                "p75": 423,
+                "max": 517
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 405,
+                "min": 385,
+                "p25": 385,
+                "median": 400,
+                "p75": 400,
+                "max": 430
+              }
+            },
+            "regex-email": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.2968815840399561,
+                "min": -0.48881789137380194,
+                "p25": -0.48881789137380194,
+                "median": -0.3014084507042254,
+                "p75": -0.3014084507042254,
+                "max": -0.10041841004184104
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 484.6666666666667,
+                "min": 462,
+                "p25": 462,
+                "median": 466,
+                "p75": 466,
+                "max": 526
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 382,
+                "min": 313,
+                "p25": 313,
+                "median": 355,
+                "p75": 355,
+                "max": 478
+              }
+            },
+            "requested-table": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.002114625929201863,
+                "min": -0.12225705329153613,
+                "p25": -0.12225705329153613,
+                "median": -0.006230529595015577,
+                "p75": -0.006230529595015577,
+                "max": 0.1348314606741573
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 329.6666666666667,
+                "min": 308,
+                "p25": 308,
+                "median": 323,
+                "p75": 323,
+                "max": 358
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 332,
+                "min": 319,
+                "p25": 319,
+                "median": 321,
+                "p75": 321,
+                "max": 356
+              }
+            },
+            "sql-index": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.015727671465376385,
+                "min": -0.09523809523809534,
+                "p25": -0.09523809523809534,
+                "median": -0.08708708708708701,
+                "p75": -0.08708708708708701,
+                "max": 0.2295081967213115
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 345.3333333333333,
+                "min": 329,
+                "p25": 329,
+                "median": 345,
+                "p75": 345,
+                "max": 362
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 358.3333333333333,
+                "min": 315,
+                "p25": 315,
+                "median": 333,
+                "p75": 333,
+                "max": 427
+              }
+            },
+            "ts-generics": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.09488300761233041,
+                "min": -0.2612085769980508,
+                "p25": -0.2612085769980508,
+                "median": -0.04282655246252687,
+                "p75": -0.04282655246252687,
+                "max": 0.01938610662358642
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 580.3333333333334,
+                "min": 487,
+                "p25": 487,
+                "median": 607,
+                "p75": 607,
+                "max": 647
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 533,
+                "min": 467,
+                "p25": 467,
+                "median": 513,
+                "p75": 513,
+                "max": 619
+              }
+            }
+          }
+        },
+        "ultra": {
+          "sampleCount": 57,
+          "relativeReduction": {
+            "n": 57,
+            "mean": -0.2237373999156373,
+            "min": -2.2574850299401197,
+            "p25": -0.33333333333333326,
+            "median": -0.16666666666666674,
+            "p75": -0.012539184952978122,
+            "max": 0.4796680497925311
+          },
+          "aggregateTokenReduction": -0.1508441231642037,
+          "perPrompt": {
+            "ambiguous-target": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.11267173215737276,
+                "min": -0.26315789473684204,
+                "p25": -0.26315789473684204,
+                "median": -0.0786026200873362,
+                "p75": -0.0786026200873362,
+                "max": 0.0037453183520599342
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 267,
+                "min": 247,
+                "p25": 247,
+                "median": 266,
+                "p75": 266,
+                "max": 288
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 241.33333333333334,
+                "min": 228,
+                "p25": 228,
+                "median": 229,
+                "p75": 229,
+                "max": 267
+              }
+            },
+            "api-pagination": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.05601296571489437,
+                "min": -0.1610169491525424,
+                "p25": -0.1610169491525424,
+                "median": 0.018711018711018657,
+                "p75": 0.018711018711018657,
+                "max": 0.31034482758620685
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 500,
+                "min": 472,
+                "p25": 472,
+                "median": 480,
+                "p75": 480,
+                "max": 548
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 549.6666666666666,
+                "min": 472,
+                "p25": 472,
+                "median": 481,
+                "p75": 481,
+                "max": 696
+              }
+            },
+            "css-center": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.5298683085829573,
+                "min": -0.9429223744292237,
+                "p25": -0.9429223744292237,
+                "median": -0.34838709677419355,
+                "p75": -0.34838709677419355,
+                "max": -0.2982954545454546
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 575.3333333333334,
+                "min": 418,
+                "p25": 418,
+                "median": 457,
+                "p75": 457,
+                "max": 851
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 366.6666666666667,
+                "min": 310,
+                "p25": 310,
+                "median": 352,
+                "p75": 352,
+                "max": 438
+              }
+            },
+            "detail-required": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.1736275246160283,
+                "min": -0.27717391304347827,
+                "p25": -0.27717391304347827,
+                "median": -0.17464788732394365,
+                "p75": -0.17464788732394365,
+                "max": -0.06906077348066297
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 424.6666666666667,
+                "min": 387,
+                "p25": 387,
+                "median": 417,
+                "p75": 417,
+                "max": 470
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 361.6666666666667,
+                "min": 355,
+                "p25": 355,
+                "median": 362,
+                "p75": 362,
+                "max": 368
+              }
+            },
+            "docker-cache": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.03389361626940953,
+                "min": -0.2534818941504178,
+                "p25": -0.2534818941504178,
+                "median": -0.10619469026548667,
+                "p75": -0.10619469026548667,
+                "max": 0.25799573560767586
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 391,
+                "min": 348,
+                "p25": 348,
+                "median": 375,
+                "p75": 375,
+                "max": 450
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 389,
+                "min": 339,
+                "p25": 339,
+                "median": 359,
+                "p75": 359,
+                "max": 469
+              }
+            },
+            "git-revert": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.1764292362224994,
+                "min": -0.33333333333333326,
+                "p25": -0.33333333333333326,
+                "median": -0.30645161290322576,
+                "p75": -0.30645161290322576,
+                "max": 0.11049723756906082
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 218.66666666666666,
+                "min": 161,
+                "p25": 161,
+                "median": 243,
+                "p75": 243,
+                "max": 252
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 185.33333333333334,
+                "min": 181,
+                "p25": 181,
+                "median": 186,
+                "p75": 186,
+                "max": 189
+              }
+            },
+            "js-closure": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": 0.2692071535914094,
+                "min": 0.09999999999999998,
+                "p25": 0.09999999999999998,
+                "median": 0.2279534109816972,
+                "p75": 0.2279534109816972,
+                "max": 0.4796680497925311
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 567.6666666666666,
+                "min": 464,
+                "p25": 464,
+                "median": 612,
+                "p75": 612,
+                "max": 627
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 828.6666666666666,
+                "min": 601,
+                "p25": 601,
+                "median": 680,
+                "p75": 680,
+                "max": 1205
+              }
+            },
+            "memory-constraints": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.3557181532157752,
+                "min": -0.4393063583815029,
+                "p25": -0.4393063583815029,
+                "median": -0.3999999999999999,
+                "p75": -0.3999999999999999,
+                "max": -0.2278481012658229
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 229.33333333333334,
+                "min": 194,
+                "p25": 194,
+                "median": 245,
+                "p75": 245,
+                "max": 249
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 168.66666666666666,
+                "min": 158,
+                "p25": 158,
+                "median": 173,
+                "p75": 173,
+                "max": 175
+              }
+            },
+            "ordered-restore": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.27560129558132995,
+                "min": -0.7672131147540984,
+                "p25": -0.7672131147540984,
+                "median": -0.14942528735632177,
+                "p75": -0.14942528735632177,
+                "max": 0.08983451536643028
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 441.3333333333333,
+                "min": 385,
+                "p25": 385,
+                "median": 400,
+                "p75": 400,
+                "max": 539
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 358.6666666666667,
+                "min": 305,
+                "p25": 305,
+                "median": 348,
+                "p75": 348,
+                "max": 423
+              }
+            },
+            "persisted-comment": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.7745241666302585,
+                "min": -2.2574850299401197,
+                "p25": -2.2574850299401197,
+                "median": -0.0992366412213741,
+                "p75": -0.0992366412213741,
+                "max": 0.03314917127071826
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 394,
+                "min": 288,
+                "p25": 288,
+                "median": 350,
+                "p75": 350,
+                "max": 544
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 263.6666666666667,
+                "min": 167,
+                "p25": 167,
+                "median": 262,
+                "p75": 262,
+                "max": 362
+              }
+            },
+            "plain-commit-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.48243041149005217,
+                "min": -0.9593810444874276,
+                "p25": -0.9593810444874276,
+                "median": -0.3212435233160622,
+                "p75": -0.3212435233160622,
+                "max": -0.16666666666666674
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 650,
+                "min": 427,
+                "p25": 427,
+                "median": 510,
+                "p75": 510,
+                "max": 1013
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 423,
+                "min": 366,
+                "p25": 366,
+                "median": 386,
+                "p75": 386,
+                "max": 517
+              }
+            },
+            "pt-pr-body": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.32888281309333944,
+                "min": -0.6071428571428572,
+                "p25": -0.6071428571428572,
+                "median": -0.35526315789473695,
+                "p75": -0.35526315789473695,
+                "max": -0.024242424242424176
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 385,
+                "min": 338,
+                "p25": 338,
+                "median": 405,
+                "p75": 405,
+                "max": 412
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 295.3333333333333,
+                "min": 252,
+                "p25": 252,
+                "median": 304,
+                "p75": 304,
+                "max": 330
+              }
+            },
+            "pt-uncertainty": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.13732598024037743,
+                "min": -0.22670025188916876,
+                "p25": -0.22670025188916876,
+                "median": -0.2247838616714697,
+                "p75": -0.2247838616714697,
+                "max": 0.03950617283950619
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 433.6666666666667,
+                "min": 389,
+                "p25": 389,
+                "median": 425,
+                "p75": 425,
+                "max": 487
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 383,
+                "min": 347,
+                "p25": 347,
+                "median": 397,
+                "p75": 397,
+                "max": 405
+              }
+            },
+            "rails-n1": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.17453946937164125,
+                "min": -0.4729064039408868,
+                "p25": -0.4729064039408868,
+                "median": -0.027932960893854775,
+                "p75": -0.027932960893854775,
+                "max": -0.02277904328018221
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 533,
+                "min": 449,
+                "p25": 449,
+                "median": 552,
+                "p75": 552,
+                "max": 598
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 460.6666666666667,
+                "min": 406,
+                "p25": 406,
+                "median": 439,
+                "p75": 439,
+                "max": 537
+              }
+            },
+            "react-rerender": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.41566067653276956,
+                "min": -0.9272727272727272,
+                "p25": -0.9272727272727272,
+                "median": -0.1825000000000001,
+                "p75": -0.1825000000000001,
+                "max": -0.13720930232558137
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 568,
+                "min": 473,
+                "p25": 473,
+                "median": 489,
+                "p75": 489,
+                "max": 742
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 405,
+                "min": 385,
+                "p25": 385,
+                "median": 400,
+                "p75": 400,
+                "max": 430
+              }
+            },
+            "regex-email": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.23694312330867576,
+                "min": -0.5661971830985915,
+                "p25": -0.5661971830985915,
+                "median": -0.3099041533546325,
+                "p75": -0.3099041533546325,
+                "max": 0.16527196652719667
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 455,
+                "min": 399,
+                "p25": 399,
+                "median": 410,
+                "p75": 410,
+                "max": 556
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 382,
+                "min": 313,
+                "p25": 313,
+                "median": 355,
+                "p75": 355,
+                "max": 478
+              }
+            },
+            "requested-table": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.06687589082480579,
+                "min": -0.22741433021806845,
+                "p25": -0.22741433021806845,
+                "median": -0.012539184952978122,
+                "p75": -0.012539184952978122,
+                "max": 0.0393258426966292
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 353,
+                "min": 323,
+                "p25": 323,
+                "median": 342,
+                "p75": 342,
+                "max": 394
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 332,
+                "min": 319,
+                "p25": 319,
+                "median": 321,
+                "p75": 321,
+                "max": 356
+              }
+            },
+            "sql-index": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.21639250491709508,
+                "min": -0.48571428571428577,
+                "p25": -0.48571428571428577,
+                "median": -0.11241217798594838,
+                "p75": -0.11241217798594838,
+                "max": -0.05105105105105112
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 431,
+                "min": 350,
+                "p25": 350,
+                "median": 468,
+                "p75": 468,
+                "max": 475
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 358.3333333333333,
+                "min": 315,
+                "p25": 315,
+                "median": 333,
+                "p75": 333,
+                "max": 427
+              }
+            },
+            "ts-generics": {
+              "n": 3,
+              "relativeReduction": {
+                "n": 3,
+                "mean": -0.08484581464902526,
+                "min": -0.33832976445396135,
+                "p25": -0.33832976445396135,
+                "median": -0.03898635477582846,
+                "p75": -0.03898635477582846,
+                "max": 0.12277867528271402
+              },
+              "armTokens": {
+                "n": 3,
+                "mean": 567,
+                "min": 533,
+                "p25": 533,
+                "median": 543,
+                "p75": 543,
+                "max": 625
+              },
+              "referenceTokens": {
+                "n": 3,
+                "mean": 533,
+                "min": 467,
+                "p25": 467,
+                "median": 513,
+                "p75": 513,
+                "max": 619
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "markerObservations": {
+    "baseline": {
+      "supportedReplies": 51,
+      "unsupportedReplies": 6,
+      "detectedMarkers": 0,
+      "overOneMarkerReplies": 0,
+      "maxMarkers": 0,
+      "overBudgetCells": []
+    },
+    "terse": {
+      "supportedReplies": 51,
+      "unsupportedReplies": 6,
+      "detectedMarkers": 0,
+      "overOneMarkerReplies": 0,
+      "maxMarkers": 0,
+      "overBudgetCells": []
+    },
+    "lite": {
+      "supportedReplies": 51,
+      "unsupportedReplies": 6,
+      "detectedMarkers": 0,
+      "overOneMarkerReplies": 0,
+      "maxMarkers": 0,
+      "overBudgetCells": []
+    },
+    "full": {
+      "supportedReplies": 51,
+      "unsupportedReplies": 6,
+      "detectedMarkers": 1,
+      "overOneMarkerReplies": 0,
+      "maxMarkers": 1,
+      "overBudgetCells": []
+    },
+    "ultra": {
+      "supportedReplies": 51,
+      "unsupportedReplies": 6,
+      "detectedMarkers": 15,
+      "overOneMarkerReplies": 0,
+      "maxMarkers": 1,
+      "overBudgetCells": []
+    }
+  },
+  "examples": [
+    {
+      "arm": "lite",
+      "promptId": "ambiguous-target",
+      "repetition": 1,
+      "reply": "Which backup should be deleted—the production one or staging? Both are named \"old,\" so I need clarification before proceeding with deletion.",
+      "recordHash": "dd70e52d4a5b292313452f5f5512528d9e12f5b89c4c4f2d078ab5919608f2c1",
+      "rawHash": "aae3a9ae4ac4864fe70825f146fbb385ff7726d34873ee67c216d6fd3527c69f"
+    },
+    {
+      "arm": "full",
+      "promptId": "ambiguous-target",
+      "repetition": 1,
+      "reply": "Ask which one—you said there are two backups both called \"old\" (production and staging). Deleting the wrong one in production could be serious, so clarify before you delete either.",
+      "recordHash": "8ca2765db449c00375bc6267a5d0306c8a4ea0e05335c0fd9fb4fef3def13358",
+      "rawHash": "b24932569459dea41e62ef8b0a3ac87aa37bfcac1548f53b2aa9d4f529f86b77"
+    },
+    {
+      "arm": "ultra",
+      "promptId": "ambiguous-target",
+      "repetition": 1,
+      "reply": "Before deleting either backup: which one (production or staging)? And confirm you have a current backup elsewhere and verified it works. Deleting a production backup without a tested restore is a high-risk move.",
+      "recordHash": "026434f2a8d867cacc4ad72fd36463d855efb6f8bb6afcb637c50333e320863c",
+      "rawHash": "2011f4d7ff92fbdd73d309086bd3f753a5e2915b0454430d65383eec5f1999aa"
+    }
+  ],
+  "calibrationCandidates": {
+    "scope": "all provider-reported output, including thinking; not prose-only",
+    "eligibleForRuntime": false,
+    "reason": "Different output scope and quality gate pending; do not overwrite historical or prose-only factors",
+    "model": "claude-haiku-4-5-20251001",
+    "ruleHash": "76f382716132ea7a378237ec6ed58183d757a80aa41d1e09b1188a72debf48a3",
+    "runId": "2026-09-11T16-07-28.095Z-07dd213e",
+    "values": {
+      "lite": {
+        "allOutputAggregateReductionVsBaseline": -0.003840409643695253,
+        "allOutputAggregateReductionVsTerse": -0.07631422427597556
+      },
+      "full": {
+        "allOutputAggregateReductionVsBaseline": -0.013313420098143736,
+        "allOutputAggregateReductionVsTerse": -0.08647115340623146
+      },
+      "ultra": {
+        "allOutputAggregateReductionVsBaseline": -0.07335182419458075,
+        "allOutputAggregateReductionVsTerse": -0.1508441231642037
+      }
+    }
+  },
+  "quality": {
+    "humanReview": "pending",
+    "modelPairedReview": "not run for this candidate",
+    "fullRockyRecognition": "pending independent review",
+    "heldOutPolicy": "reporting only, never tuning input",
+    "preliminaryAssistantScreen": "failed;19anonymous pairs,all19cases;human acceptance pending",
+    "assistantAssessmentFile": "docs/design/008-quality-assessments.json",
+    "archive": "eval/snapshots/clarity-levels/raw-run.tar.gz"
+  }
+}
