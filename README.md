@@ -237,6 +237,12 @@ measure clarity, completeness, or reading time.
 
 Rules of the dialect live in one place: `skills/speak/SKILL.md`.
 
+## Optional investigator design
+
+An investigator-first preset remains a [no-go pending comparative evidence](docs/design/investigator.md).
+Experimental contract fixtures are outside plugin discovery; installing Eridian does
+not spawn agents or install a crew preset. No delegation-savings percentage is claimed.
+
 ## Credits
 
 - **[caveman](https://github.com/juliusbrussee/caveman)** by Julius Brussee —
