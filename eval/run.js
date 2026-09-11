@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 const crypto = require('node:crypto');
+const { setTimeout, clearTimeout } = require('node:timers');
 const { spawn, execFileSync } = require('node:child_process');
 const { ARMS, hash, validateResult, summarize, anonymize } = require('./lib');
 const { loadInjectionBlock, SKILL_FILE } = require('../scripts/lib/persona');

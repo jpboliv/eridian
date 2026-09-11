@@ -56,6 +56,96 @@ function validateJudgment(value, requiredFacts) {
   return value;
 }
 
+function parseJudgment(text, requiredFacts) {
+  const trimmed = text.trim();
+  const fenced = trimmed.match(/^```(?:json)?[ \t]*\r?\n([\s\S]*?)\r?\n```$/);
+  return validateJudgment(JSON.parse(fenced ? fenced[1] : trimmed), requiredFacts);
+}
+
+function interpretRaw(raw, requiredFacts) {
+  const record = { usage: null, modelUsage: null };
+  try {
+    const envelope = JSON.parse(raw.stdout);
+    record.usage = envelope.usage || null;
+    record.modelUsage = envelope.modelUsage || null;
+    if (raw.error || raw.exitCode !== 0 || raw.timedOut)
+      throw new Error(raw.error || `CLI exit ${raw.exitCode}; timedOut=${raw.timedOut}`);
+    const parsed = validateResult(envelope);
+    record.judgment = parseJudgment(parsed.result, requiredFacts);
+    record.status = 'complete';
+    record.actualModels = Object.keys(parsed.modelUsage || {});
+  } catch (error) {
+    record.status = 'failed';
+    record.error = error.message;
+  }
+  return record;
+}
+
+function revalidate(directory) {
+  const read = (name) => fs.readFileSync(path.join(directory, name));
+  const sourceManifest = read('manifest.json');
+  const original = JSON.parse(sourceManifest);
+  // Require a completed collection; never silently summarize a partially written run.
+  const completion = JSON.parse(read('completion.json'));
+  const sourceRecords = JSON.parse(read('records.json'));
+  if (
+    !Array.isArray(sourceRecords) ||
+    sourceRecords.length !== original.pairCount ||
+    completion.complete + completion.failed !== original.pairCount ||
+    new Set(sourceRecords.map((record) => record.pairId)).size !== sourceRecords.length ||
+    sourceRecords.some((record) => !/^[a-zA-Z0-9-]+$/.test(record.pairId))
+  )
+    throw new Error('Incomplete or invalid review collection');
+  const reviewId = `${new Date().toISOString().replaceAll(':', '-')}-${crypto.randomUUID()}`;
+  const out = path.join(path.dirname(path.resolve(directory)), reviewId);
+  fs.mkdirSync(out);
+  const write = (name, value) =>
+    fs.writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + '\n', { flag: 'wx' });
+  const manifest = {
+    ...original,
+    reviewId,
+    startedAt: new Date().toISOString(),
+    revalidatedFrom: path.basename(directory),
+    sourceManifestHash: hash(sourceManifest),
+    reviewerHash: hash(fs.readFileSync(__filename)),
+    mode: 'offline revalidation; no provider calls',
+    humanReview: 'pending',
+  };
+  write('manifest.json', manifest);
+  const records = sourceRecords.map((previous) => {
+    const rawBytes = read(`${previous.pairId}.raw.json`);
+    const inputBytes = read(`${previous.pairId}.input.json`);
+    const input = JSON.parse(inputBytes);
+    if (hash(JSON.stringify(input)) !== previous.promptHash)
+      throw new Error(`Input hash mismatch for ${previous.pairId}`);
+    const record = {
+      ...previous,
+      reviewId,
+      humanReview: 'pending',
+      sourceRawHash: hash(rawBytes),
+      sourceInputHash: hash(inputBytes),
+    };
+    delete record.judgment;
+    delete record.error;
+    delete record.actualModels;
+    Object.assign(record, interpretRaw(JSON.parse(rawBytes), input.requiredFacts));
+    write(`${record.pairId}.raw.json`, JSON.parse(rawBytes));
+    write(`${record.pairId}.input.json`, input);
+    write(`${record.pairId}.json`, record);
+    return record;
+  });
+  write('records.json', records);
+  write('completion.json', {
+    finishedAt: new Date().toISOString(),
+    complete: records.filter((record) => record.status === 'complete').length,
+    failed: records.filter((record) => record.status === 'failed').length,
+    humanReview: 'pending',
+    qualityGate: 'pending human paired review; model assistance cannot approve release',
+  });
+  console.log(`Revalidated model reviews retained: ${out}`);
+  return { out, records, manifest };
+}
+
 async function review(options = {}) {
   if (options.execute !== true)
     throw new Error('Model review makes paid CLI calls; opt in with --execute');
@@ -205,21 +295,7 @@ async function review(options = {}) {
       usage: null,
       modelUsage: null,
     };
-    try {
-      // Retain reported usage even when the process or judgment failed validation.
-      const envelope = JSON.parse(raw.stdout);
-      record.usage = envelope.usage || null;
-      record.modelUsage = envelope.modelUsage || null;
-      if (raw.error || raw.exitCode !== 0 || raw.timedOut)
-        throw new Error(raw.error || `CLI exit ${raw.exitCode}; timedOut=${raw.timedOut}`);
-      const parsed = validateResult(envelope);
-      record.judgment = validateJudgment(JSON.parse(parsed.result), pair.requiredFacts);
-      record.status = 'complete';
-      record.actualModels = Object.keys(parsed.modelUsage || {});
-    } catch (error) {
-      record.status = 'failed';
-      record.error = error.message;
-    }
+    Object.assign(record, interpretRaw(raw, pair.requiredFacts));
     write(`${pair.id}.json`, record);
     records.push(record);
     console.log(`${records.length}/${pairs.length} ${pair.id} model review ${record.status}`);
@@ -253,11 +329,19 @@ if (require.main === module) {
     for (let index = 0; index < args.length; index++) {
       const arg = args[index];
       if (arg === '--execute') options.execute = true;
-      else if (['--run', '--model', '--concurrency'].includes(arg) && args[index + 1])
+      else if (
+        ['--run', '--model', '--concurrency', '--revalidate'].includes(arg) &&
+        args[index + 1]
+      )
         options[arg.slice(2)] = arg === '--concurrency' ? Number(args[++index]) : args[++index];
       else throw new Error(`Unknown or incomplete option: ${arg}`);
     }
-    review(options)
+    if (
+      options.revalidate &&
+      (options.execute || options.run || options.model || options.concurrency)
+    )
+      throw new Error('--revalidate cannot be combined with provider call options');
+    Promise.resolve(options.revalidate ? revalidate(options.revalidate) : review(options))
       .then(({ records }) => {
         if (records.some((record) => record.status === 'failed')) process.exitCode = 1;
       })
@@ -270,4 +354,4 @@ if (require.main === module) {
     process.exitCode = 1;
   }
 }
-module.exports = { review, validateJudgment, SYSTEM_PROMPT, MODEL };
+module.exports = { review, revalidate, parseJudgment, validateJudgment, SYSTEM_PROMPT, MODEL };
