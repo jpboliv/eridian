@@ -1,0 +1,11 @@
+{
+  "tokenizer": "tiktoken",
+  "version": "0.12.0",
+  "encoding": "o200k_base",
+  "hostCost": "approximation",
+  "reminderTokens": {
+    "lite": 34,
+    "full": 34,
+    "ultra": 30
+  }
+}
