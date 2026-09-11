@@ -11,18 +11,26 @@ const SCRIPT = path.join(__dirname, '..', 'scripts', 'buddy-hook.js');
 function run(mode, stdinJson, stateDir) {
   return execFileSync('node', [SCRIPT, mode], {
     env: { ...process.env, ERIDIAN_STATE_DIR: stateDir },
-    input: JSON.stringify(stdinJson),
+    input: JSON.stringify({ session_id: 'test-session', ...stdinJson }),
     encoding: 'utf8',
   });
 }
 
 function readStateFile(dir) {
-  return JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8'));
+  return JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8')).sessions['test-session'];
 }
 
 function writeStateFile(dir, state) {
   fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'state.json'), JSON.stringify(state));
+  fs.writeFileSync(
+    path.join(dir, 'state.json'),
+    JSON.stringify({
+      version: 2,
+      preferences: { current: state.current, buddy: {} },
+      sessions: { 'test-session': state },
+      legacy: { events: [], attribution: 'unknown' },
+    })
+  );
 }
 
 test('prompt event records timestamp and class', () => {

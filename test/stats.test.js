@@ -130,17 +130,17 @@ function statsEnv() {
 test('stats CLI prints (no data) session line when no session cache exists', () => {
   const { env } = statsEnv();
   const out = execFileSync('node', [STATS_SCRIPT], { env }).toString();
-  assert.match(out, /this session: \(no data\)/);
-  assert.match(out, /lifetime \(all sessions\):/);
+  assert.match(out, /this session: unavailable/);
+  assert.match(out, /lifetime \(all retained schema-2 session accounting caches\):/);
 });
 
-test('stats CLI prints formatted session savings from newest session cache', () => {
+test('stats CLI never substitutes the newest cache for an unidentified caller', () => {
   const { stateDir, env } = statsEnv();
   const sessionsDir = path.join(stateDir, 'sessions');
   fs.mkdirSync(sessionsDir, { recursive: true });
   fs.writeFileSync(path.join(sessionsDir, 'sess-1.json'), JSON.stringify({ savedTokens: 2100 }));
   const out = execFileSync('node', [STATS_SCRIPT], { env }).toString();
-  assert.match(out, /this session: ~2\.1k saved \(full\)/);
+  assert.match(out, /this session: unavailable/);
 });
 
 test('stats CLI no longer writes a lifetime cache or milestone into state', () => {
@@ -152,4 +152,22 @@ test('stats CLI no longer writes a lifetime cache or milestone into state', () =
   assert.ok(
     !execFileSync('node', [STATS_SCRIPT], { env }).toString().includes('milestone crossed')
   );
+});
+
+test('stats selects the exact caller cache even when another cache is newer', () => {
+  const { stateDir, env } = statsEnv();
+  const dir = path.join(stateDir, 'sessions');
+  fs.mkdirSync(dir);
+  for (const [sessionId, savedTokens] of [
+    ['caller', 2100],
+    ['newer', 9000],
+  ]) {
+    fs.writeFileSync(
+      path.join(dir, `${sessionId}.json`),
+      JSON.stringify({ version: 2, sessionId, records: {}, outputTokens: 100, savedTokens })
+    );
+  }
+  const out = execFileSync('node', [STATS_SCRIPT, '--session-id', 'caller'], { env }).toString();
+  assert.match(out, /this session: ~2\.1k tokens estimated prose output reduction/);
+  assert.doesNotMatch(out, /this session: ~9/);
 });

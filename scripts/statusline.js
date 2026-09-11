@@ -10,7 +10,7 @@ function formatTokens(n) {
 function infoSegments(state, savedTokens) {
   const parts = [`∙ ${state.current}`];
   if (typeof savedTokens === 'number') {
-    parts.push(`∙ ~${formatTokens(savedTokens)} saved`);
+    parts.push(`∙ ~${formatTokens(savedTokens)} output reduction`);
   }
   return parts;
 }
@@ -34,17 +34,28 @@ function renderLines(state, nowMs, savedTokens) {
 module.exports = { renderLines, formatTokens };
 
 if (require.main === module) {
+  if (require('./lib/runtime').isOptedOut()) process.exit(0);
   // Claude Code pipes session JSON on stdin; the savings segment comes from
   // the current session's transcript, everything else from our own state.
   const render = (raw) => {
     try {
-      const { readState, update } = require('./lib/state');
-      let state = readState();
+      const { readState, updateSession, sessionId } = require('./lib/state');
+      let input = {};
+      try {
+        input = JSON.parse(raw);
+      } catch {
+        /* absent identity */
+      }
+      const id = sessionId(input.session_id);
+      if (!id) {
+        process.exit(0);
+      }
+      let state = readState(id);
+      const update = (fn) => updateSession(id, fn);
       const nowMs = Date.now();
       let savedTokens = null;
       let crossedMilestone = false;
       try {
-        const input = JSON.parse(raw);
         const fs = require('node:fs');
         const path = require('node:path');
         const { sessionSavings } = require('./lib/session-savings');
