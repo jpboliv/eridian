@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 try {
+  const { isOptedOut } = require('./lib/runtime');
+  if (isOptedOut()) process.exit(0);
   const { readState, update } = require('./lib/state');
   const { loadInjectionBlock } = require('./lib/persona');
 
