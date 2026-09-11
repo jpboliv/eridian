@@ -117,10 +117,16 @@ Held-out results are reporting evidence only, not tuning input. Tests, token
 counts, and marker observations cannot clear those release gates, and required
 facts must never be removed to meet a cost target. The PR remains a draft.
 
-An [offline assistant audit of six tuning replies](design/008-quality-audit.md)
+An [offline assistant audit of six tuning replies](008-quality-review.md)
 found remaining required-fact omissions and factual imprecision: the ultra Git
 reply omits the pushed-history caveat; the full pagination reply omits a bounded
 limit/unique tie-breaker and overstates seek complexity. Four inspected ordinary
 full replies largely read as plain technical prose. This small self-audit does
 not replace paired human review or establish comparative arm effects. The
 candidate remains a draft; no payload changes followed these observations.
+
+A broader [19-case anonymous paired screen](008-quality-review.md#broader-anonymous-paired-screen)
+also failed, including unprovided artifact details in a held-out Portuguese PR
+and an unsupported memory-write claim. Human approval remains pending. The
+[raw archive and checksums](../eval/snapshots/clarity-levels/README.md) deliver all
+285 replies with the PR, alongside the partial assessment's explicit coverage.
