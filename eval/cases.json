@@ -197,5 +197,16 @@
       "Explain rollback",
       "External email not rolled back"
     ]
+  },
+  {
+    "id": "plain-commit-body",
+    "language": "en",
+    "split": "tuning",
+    "prompt": "Write only a conventional commit message with a subject and body. The change adds an idempotency key check because retries after a timeout could create duplicate orders. Explain why in plain prose; do not invent tests or model/coauthor identity.",
+    "requiredFacts": [
+      "Conventional commit subject",
+      "Body explains retry/timeout duplicate order motivation",
+      "Plain prose; no invented tests or attribution"
+    ]
   }
 ]
