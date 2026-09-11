@@ -49,7 +49,9 @@ Target file: `$ARGUMENTS` (default `./CLAUDE.md`).
    Explicitly review facts, negations, exceptions, numbers and units, identifiers,
    and ordered constraints against the original. Restore any uncertain changes.
    If this review changes the draft, validate again within the same total limit
-   of two validation attempts; if no attempts remain, stop without overwriting.
+   of two validation attempts; if no attempts remain, delete only the draft and
+   stop without overwriting. After any draft edit, show the updated full diff
+   and size summary before requesting confirmation.
    Say "Structural checks passed; meaning is not verified. Semantic review is
    still required." Never imply PASS proves preservation of facts.
    Show a summary of what was removed, plus the before/after size
