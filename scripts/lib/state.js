@@ -127,7 +127,7 @@ function update(fn) {
     return next;
   });
 }
-function updateSession(id, fn, { initialize = false, cwd } = {}) {
+function updateSession(id, fn, { initialize = false, cwd, afterCommit } = {}) {
   id = sessionId(id);
   if (!id) return null;
   return withLock(STATE_FILE, () => {
@@ -138,7 +138,9 @@ function updateSession(id, fn, { initialize = false, cwd } = {}) {
     store.sessions[id] = { ...next, buddy: { ...next.buddy }, updatedAt: new Date().toISOString() };
     delete store.sessions[id].buddy.stepSeconds;
     atomicWrite(STATE_FILE, store);
-    return effective(store, id);
+    const committed = effective(store, id);
+    if (afterCommit) afterCommit(committed);
+    return committed;
   });
 }
 function recordActivation(state, level, force = true) {

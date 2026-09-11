@@ -23,7 +23,9 @@ the original task, not treated as automatic defects.
 
 The judge runs in a fresh temporary directory with `ERIDIAN_OFF=1`, safe mode,
 no tools, no MCP servers, disabled slash commands, no session persistence, and an
-explicit review system prompt. Concurrency defaults to four and is limited to
+explicit review system prompt and `--json-schema` constraint (supported by the
+installed Claude CLI 2.1.268). Structured-only responses are schema-validated even
+when their prose `result` field is empty. Concurrency defaults to four and is limited to
 1–16. Each call has a three-minute timeout. Testing uses an injected fake CLI;
 `npm test` never makes paid review calls. The JavaScript API exports
 `review({ run, execute: true, cli, model, concurrency, timeoutMs })` for controlled
@@ -33,7 +35,7 @@ Each invocation creates a unique directory under the run's `quality-reviews/`.
 Files are created exclusively; reruns do not modify prior artifacts:
 
 - `manifest.json`: model and its hash, CLI version and its hash, input and system
-  prompt hashes, reviewer source hash, invocation, isolation, and limits.
+  prompt hashes, judgment schema hash, reviewer source hash, invocation, isolation, and limits.
 - `<pair-id>.input.json`: exact anonymous payload; its hash is in the record.
 - `<pair-id>.raw.json`: exact CLI stdout/stderr, exit status, and timeout/error.
 - `<pair-id>.json`: validated judgment or failure, hashes, duration, provider
@@ -65,9 +67,17 @@ its raw responses without making another provider call:
 node eval/review.js --revalidate eval/runs/<run-id>/quality-reviews/<review-id>
 ```
 
-This requires the original collection to be complete. It checks each anonymous
+This requires finalized coverage: either a complete collection or an explicitly
+aborted collection with its reason and skipped count. Aborted status and coverage
+carry into the derived results; early stops never count as complete review. It checks each anonymous
 input against its recorded prompt hash and creates a new sibling directory with
 the source manifest/raw/input hashes, new reviewer hash, copied raw evidence, and
 new validated records. Original records are untouched; malformed or contradictory
 judgments still fail. Provider usage is carried forward as original-call evidence,
 not additional consumption. Human review remains pending.
+
+A successful structured-output envelope may end with `stop_reason: "tool_use"`
+because the schema tool supplied the result. It is accepted only with explicit
+`terminal_reason: "completed"`, a successful provider envelope, valid usage and a
+valid judgment. Original stop/terminal reasons remain in the record. Pending tool
+calls, unstructured tool results, provider errors and truncation remain failures.

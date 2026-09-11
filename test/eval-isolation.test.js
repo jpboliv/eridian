@@ -4,7 +4,7 @@ const path = require('node:path');
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { run } = require('../eval/run');
-const { validateResult, summarize, anonymize } = require('../eval/lib');
+const { validateResult, summarize, anonymize, validateCollection } = require('../eval/lib');
 
 test('rejects failed, truncated, empty and invalid usage results', () => {
   const good = {
@@ -108,4 +108,36 @@ test('harness retains immutable raw replies, failures and isolation without chan
   assert.equal(second.records[0].status, 'failed');
   assert.equal(fs.readFileSync(path.join(first.out, 'manifest.json'), 'utf8'), saved);
   assert.ok(fs.existsSync(path.join(second.out, 'case--baseline--1.raw.json')));
+});
+
+test('completed collection requires all declared prompts and consistent completion counts', () => {
+  const manifest = { runId: 'run', ruleHash: 'rules', arms: ['baseline'], repetitions: 1 };
+  const prompts = [{ id: 'one' }, { id: 'two' }];
+  const records = prompts.map(({ id }) => ({
+    runId: 'run',
+    ruleHash: 'rules',
+    promptId: id,
+    arm: 'baseline',
+    repetition: 1,
+    status: 'complete',
+    usage: { output_tokens: 3 },
+  }));
+  const completion = { finishedAt: '2026-09-11', successful: 2, failed: 0 };
+  assert.deepEqual(validateCollection(manifest, prompts, records, completion), {
+    successful: 2,
+    failed: 0,
+  });
+  assert.throws(() => validateCollection(manifest, prompts, records, undefined), /metadata/);
+  assert.throws(
+    () => validateCollection(manifest, prompts, records.slice(1), { ...completion, successful: 1 }),
+    /coverage/
+  );
+  assert.throws(
+    () => validateCollection(manifest, prompts, records, { ...completion, successful: 1 }),
+    /counts/
+  );
+  assert.throws(
+    () => validateCollection(manifest, prompts, [...records, records[0]], completion),
+    /duplicate/
+  );
 });
