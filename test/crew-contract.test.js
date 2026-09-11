@@ -68,3 +68,26 @@ test('uncertain runtime dispatch cannot be reported as confirmed exhaustive know
   report.limitations.push('The runtime key and handler map were not provided.');
   assert.deepEqual(validate(report, fixtures[2]), []);
 });
+
+test('fixture checker rejects fabricated symbols and malformed report entries', () => {
+  const report = {
+    status: 'found',
+    searched: ['src/total.js'],
+    limitations: [],
+    findings: ['total', 'checkout'].map((symbol) => ({
+      path: 'src/total.js',
+      line: 2,
+      evidence: 'module.exports',
+      symbol,
+      confidence: 'confirmed',
+    })),
+  };
+  assert.ok(validate(report, fixtures[0]).includes('symbol does not occur at declared line'));
+  assert.ok(validate({ ...report, findings: [null] }, fixtures[0]).includes('invalid finding'));
+  assert.ok(
+    validate(
+      { status: 'no-match', searched: [null], findings: [], limitations: [] },
+      fixtures[1]
+    ).includes('invalid searched scope')
+  );
+});

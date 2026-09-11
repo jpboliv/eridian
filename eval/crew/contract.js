@@ -13,10 +13,18 @@ function validate(report, fixture) {
     !Array.isArray(report.limitations)
   )
     return ['missing findings, searched scope, or limitations'];
+  if (report.searched.some((scope) => typeof scope !== 'string' || !scope.trim()))
+    errors.push('invalid searched scope');
+  if (report.limitations.some((item) => typeof item !== 'string' || !item.trim()))
+    errors.push('invalid limitation');
   if (report.status !== fixture.expectedStatus)
     errors.push('status does not match fixture evidence');
   for (const finding of report.findings) {
-    const source = fixture.files[finding.path];
+    if (!finding || typeof finding !== 'object' || Array.isArray(finding)) {
+      errors.push('invalid finding');
+      continue;
+    }
+    const source = Object.hasOwn(fixture.files, finding.path) ? fixture.files[finding.path] : null;
     if (
       !source ||
       !Number.isInteger(finding.line) ||
@@ -33,9 +41,11 @@ function validate(report, fixture) {
     const line = source.split('\n')[finding.line - 1];
     if (!line || !line.includes(finding.evidence))
       errors.push('evidence does not occur at declared line');
+    const symbols = line?.match(/[A-Za-z_$][\w$]*/g) || [];
+    if (!symbols.includes(finding.symbol)) errors.push('symbol does not occur at declared line');
   }
   for (const symbol of fixture.requiredSymbols) {
-    if (!report.findings.some((finding) => finding.symbol === symbol))
+    if (!report.findings.some((finding) => finding?.symbol === symbol))
       errors.push(`missing symbol ${symbol}`);
   }
   if (report.status === 'no-match' && report.findings.length)
