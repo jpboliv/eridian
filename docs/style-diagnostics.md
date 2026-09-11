@@ -50,8 +50,8 @@ spaces) are excluded until a matching same-character fence of equal or greater
 length; unclosed fences exclude the remainder. Paired inline backtick runs and lines indented by four spaces or a tab are
 excluded. Indented prose is conservatively treated as code. Markdown blockquote lines and paired straight/curly double quotes,
 guillemets, and standalone single-quoted spans are excluded from both counts and
-the word denominator. Contractions are retained. Straight quotes are paired within
-a line; curly quotes and guillemets may span lines. Unmatched quotes/ticks remain
+the word denominator. Contractions are retained. Straight single quotes are paired within
+a line; double quotes, curly quotes, and guillemets may span lines. Unmatched quotes/ticks remain
 prose. This conservative heuristic does not parse every Markdown quotation form
 (for example lazy blockquote continuations), or nested quotation.
 

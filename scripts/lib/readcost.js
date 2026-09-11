@@ -48,8 +48,11 @@ function withoutCode(text) {
 function withoutQuotes(text) {
   return text
     .replace(/^ {0,3}>.*$/gm, '')
-    .replace(/"[^"\n]*"|“[^”]*”|«[^»]*»/g, ' ')
-    .replace(/(?<![\p{L}\p{N}])'[^'\n]+'(?![\p{L}\p{N}])|‘[^’]*’/gu, ' ');
+    .replace(/"[^"]*"|“[^”]*”|«[^»]*»/g, ' ')
+    .replace(
+      /(?<![\p{L}\p{N}])'(?:[^'\n]|(?<=[\p{L}\p{N}])'(?=[\p{L}\p{N}]))+'(?![\p{L}\p{N}])|‘(?:[^’]|(?<=[\p{L}\p{N}])’(?=[\p{L}\p{N}]))*’/gu,
+      ' '
+    );
 }
 
 function lexicalCounts(text) {

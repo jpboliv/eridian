@@ -61,6 +61,9 @@ test('quoted prose and code are excluded from counts and rate denominator', () =
   assert.equal(score('``great ` question``').proseWords, 0);
   assert.equal(score('    great question\n\tgreat question').proseWords, 0);
   assert.equal(score('`great question``').phraseMatches, 1);
+  assert.equal(score("'it's worth noting' and ‘it’s worth noting’").phraseMatches, 0);
+  assert.equal(score('"great\nquestion"').proseWords, 0);
+  assert.equal(score('good good good good good good').counts.rockyMarkers, 2);
 });
 
 test('unsupported languages keep structure and report null lexical counts', () => {
