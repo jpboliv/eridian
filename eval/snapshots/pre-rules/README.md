@@ -25,6 +25,18 @@ The full ≤ terse and ultra ≤ baseline targets are unmet in this baseline. Th
 per-prompt distributions in `summary.json` show substantial variation. This is new
 evidence on its named model, not a reconstruction of missing July 22 raw data.
 
-Paired model-assisted review and synthetic multi-turn baseline are captured separately.
+[Paired model-assisted review](quality-review.md) stopped early after schema failures
+and critical-loss observations: 58/324 collected, 32 validated after offline
+revalidation, 26 invalid, 266 skipped. It is an order-biased screen, not an arm-quality
+comparison. All 270 response cells remain available for later human review.
+
+The [synthetic multi-turn baseline](multiturn-review.md) retained 132/132 replies
+with no CLI failures. Assistant inspection found 64 correctness concerns and eight
+critical failures. Its per-turn mode metadata confounds drift measurement, so it is
+excluded from cadence selection. The runner is corrected for future comparisons.
+An earlier ambiguous-fixture attempt is also retained and explicitly excluded.
+
+Raw judge and multi-turn archives are adjacent; `archive-hashes.json` identifies
+all archive bytes. Both preliminary quality screens fail acceptance.
 Human correctness/completeness/readability sign-off remains pending and blocks
 release acceptance; token counts alone do not pass quality gates.

@@ -163,4 +163,60 @@ function anonymize(records, prompts) {
   return { pairs, key };
 }
 
-module.exports = { ARMS, hash, validateResult, distribution, summarize, anonymize };
+function validateCollection(manifest, prompts, records, completion) {
+  if (
+    !completion ||
+    !completion.finishedAt ||
+    completion.aborted ||
+    !Array.isArray(prompts) ||
+    !prompts.length ||
+    !Array.isArray(manifest.arms) ||
+    !manifest.arms.length ||
+    !Number.isInteger(manifest.repetitions) ||
+    manifest.repetitions < 1
+  ) {
+    throw new Error('Missing or invalid completed collection metadata');
+  }
+  const expected = new Set();
+  for (const prompt of prompts) {
+    for (let repetition = 1; repetition <= manifest.repetitions; repetition++) {
+      for (const arm of manifest.arms) expected.add(`${prompt.id}:${repetition}:${arm}`);
+    }
+  }
+  if (expected.size !== prompts.length * manifest.repetitions * manifest.arms.length) {
+    throw new Error('Duplicate prompt identities or arms');
+  }
+  let successful = 0,
+    failed = 0;
+  for (const record of records) {
+    const key = `${record.promptId}:${record.repetition}:${record.arm}`;
+    if (
+      !expected.delete(key) ||
+      record.runId !== manifest.runId ||
+      record.ruleHash !== manifest.ruleHash
+    ) {
+      throw new Error('Unexpected, duplicate, or mixed-identity result cell');
+    }
+    if (record.status === 'complete') {
+      successful++;
+      if (!Number.isFinite(record.usage?.output_tokens) || record.usage.output_tokens < 0) {
+        throw new Error('Invalid completed output usage');
+      }
+    } else if (record.status === 'failed') failed++;
+    else throw new Error('Unknown result status');
+  }
+  if (expected.size || completion.successful !== successful || completion.failed !== failed) {
+    throw new Error('Incomplete declared coverage or mismatched completion counts');
+  }
+  return { successful, failed };
+}
+
+module.exports = {
+  ARMS,
+  hash,
+  validateResult,
+  distribution,
+  summarize,
+  anonymize,
+  validateCollection,
+};
