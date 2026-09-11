@@ -59,10 +59,12 @@ instructions already in the conversation, including a resumed transcript.
 This suppresses Eridian's automatic injections; it does not disable other plugins,
 project instructions, explicit style requests, or explicitly invoked style skills
 and commands. `eval/run.sh` sets it for every arm, including baseline, while still
-adding each dialect arm's explicit prefix. It records the start time, arms, and
-override in `eval/results-isolation.jsonl` alongside `eval/results.csv`; both reset
-on a full run and append on a partial run. No manual global mode change is needed.
-This is Eridian isolation, not a fully isolated evaluation environment.
+adding each dialect arm's explicit prefix. The evaluation harness also uses safe
+mode, a fresh working directory, no tools, an empty MCP configuration and no session
+persistence. Each invocation creates a unique directory under `eval/runs/`, retaining
+run metadata, exact prefixes, raw responses and usage without overwriting earlier
+runs. No manual global mode change is needed. See [evaluation guidance](docs/evaluation.md)
+for the comparison protocol and its limits.
 
 Host support checked against the [Claude Code hook reference](https://code.claude.com/docs/en/hooks)
 on 2026-09-11: SessionStart's documented `source` describes lifecycle events
