@@ -1,5 +1,10 @@
 # Ticket 008 offline assistant quality audit
 
+Historical scope: this report evaluates the frozen first candidate. The current
+[revision 2](clarity-levels.md#revision-2-rerun-plan) changes the rules and has no
+new output evaluation. These failures remain preserved evidence; they do not
+establish whether the new candidate fixes them.
+
 Source: candidate run `2026-09-11T16-07-28.095Z-07dd213e`, frozen rule hash `76f382716132ea7a378237ec6ed58183d757a80aa41d1e09b1188a72debf48a3`. This audit inspected six first-repetition tuning replies offline. It made no provider calls, used no held-out content for tuning, and supplies neither human approval nor a complete paired review.
 
 ## Concrete evidence
@@ -15,7 +20,7 @@ Source: candidate run `2026-09-11T16-07-28.095Z-07dd213e`, frozen rule hash `76f
 
 The inspected full replies for Docker, pagination, CSS and closures largely read as ordinary technical prose. I did not identify distinctive Rocky phrasing in these four replies. This agrees with sparse lexicon observations (only one marker across 51 supported English full replies), but marker absence alone does not establish loss of character. This is an author's assistant self-audit of a small sample, not the independent human Rocky-recognition acceptance check.
 
-The draft remains gated: full/terse and ultra/baseline cost targets were missed; required-fact omissions and factual imprecision remain in the inspected tuning sample; complete paired correctness/readability review and independent human recognition review are pending. No payload was tuned after evaluation.
+The draft remains gated: full/terse and ultra/baseline cost targets were missed; required-fact omissions and factual imprecision remain in the inspected tuning sample; complete paired correctness/readability review and independent human recognition review are pending. The first candidate remained frozen throughout this evaluation.
 
 ## Broader anonymous paired screen
 
@@ -49,5 +54,5 @@ Held-out observations are **reporting only**, never tuning input:
 
 The entire 285-response raw run and the anonymous selection/assessment artifacts
 are in the [committed raw archive](../eval/snapshots/clarity-levels/README.md).
-No payload was tuned after these observations. Human acceptance and independent
+The first candidate remained frozen throughout these observations. Human acceptance and independent
 Rocky recognition remain pending; known failures keep this candidate in draft.

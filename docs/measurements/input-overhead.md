@@ -1,7 +1,7 @@
 # Input overhead and estimate limits — ticket 002
 
-Measured after ticket 010 selected the unchanged every-20-active-prompts full
-refresh. `input-payloads.json` retains exact captured text, byte lengths, SHA256
+Measured after the review corrections to tickets 007/009/008, with ticket 010
+retaining the existing every-20-active-prompts full refresh. `input-payloads.json` retains exact captured text, byte lengths, SHA256
 identities and counts from **tiktoken 0.12.0 / o200k_base**. These are exact counts
 for that encoding, **approximate for Claude**, and not provider-billed input counts.
 Run with the pinned optional dependency in `eval/tokenizer-requirements.txt`:
@@ -20,12 +20,12 @@ wrappers, descriptions chosen by the host, or its complete system prompt.
 
 | Payload                                    | Lite | Full | Ultra |
 | ------------------------------------------ | ---: | ---: | ----: |
-| Shared rules                               |  143 |  143 |   143 |
-| Level alone                                |   90 |  154 |   243 |
-| Combined persona                           |  233 |  297 |   386 |
-| Activation with wrapper                    |  239 |  303 |   392 |
-| SessionStart with wrapper                  |  253 |  317 |   407 |
-| Prompt-20 full reminder with wrapper       |  250 |  314 |   404 |
+| Shared rules                               |  249 |  249 |   249 |
+| Level alone                                |  102 |  202 |   279 |
+| Combined persona                           |  351 |  451 |   528 |
+| Activation with wrapper                    |  357 |  457 |   534 |
+| SessionStart with wrapper                  |  371 |  471 |   549 |
+| Prompt-20 full reminder with wrapper       |  368 |  468 |   546 |
 | Experimental short reminder (not selected) |   34 |   34 |    30 |
 
 The probe observed emission at prompt 20 only for each level. A newly injected
@@ -60,3 +60,12 @@ above cannot substitute for measured provider usage in this formula.
 Under fixed per-request billing, shorter replies do not inherently reduce charges.
 Subscriptions, quotas and tiered billing require their own analysis. There is no
 universal reply-length threshold or unconditional monetary-saving claim.
+
+## Candidate revision
+
+This snapshot was recaptured from the actual revised command and hooks in a
+disposable state directory. Its source hash and exact text identify the corrected
+candidate; it supersedes the prior payload measurement, whose earlier version
+remains in git history. The failed single-turn and incomplete cadence archives
+evaluate older rules, so they do not establish output savings or break-even for
+this revision. New provider evaluations and human acceptance remain pending.
