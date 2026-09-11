@@ -1,0 +1,12 @@
+{
+  "_calibration": {
+    "id": "2026-09-11T15-47-21.837Z-7766f0c6",
+    "model": "claude-haiku-4-5-20251001",
+    "rule": "1063263fb16e129b9c9502aa7f9d382abedbe7c6f502bc26eb1c884a5c83cb34",
+    "scope": "all-output",
+    "qualityStatus": "model-review running; human review pending"
+  },
+  "lite": -0.09195203697644645,
+  "full": -1.7367617259504595,
+  "ultra": -2.1265460316381897
+}
