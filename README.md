@@ -58,10 +58,12 @@ instructions already in the conversation, including a resumed transcript.
 This suppresses Eridian's automatic injections; it does not disable other plugins,
 project instructions, explicit style requests, or explicitly invoked style skills
 and commands. `eval/run.sh` sets it for every arm, including baseline, while still
-adding each dialect arm's explicit prefix. It records the start time, arms, and
-override in `eval/results-isolation.jsonl` alongside `eval/results.csv`; both reset
-on a full run and append on a partial run. No manual global mode change is needed.
-This is Eridian isolation, not a fully isolated evaluation environment.
+adding each dialect arm's explicit prefix. The evaluation harness also uses safe
+mode, a fresh working directory, no tools, an empty MCP configuration and no session
+persistence. Each invocation creates a unique directory under `eval/runs/`, retaining
+run metadata, exact prefixes, raw responses and usage without overwriting earlier
+runs. No manual global mode change is needed. See [evaluation guidance](docs/evaluation.md)
+for the comparison protocol and its limits.
 
 Host support checked against the [Claude Code hook reference](https://code.claude.com/docs/en/hooks)
 on 2026-09-11: SessionStart's documented `source` describes lifecycle events
@@ -139,14 +141,12 @@ just asking for brevity:
 | `full`  | ~-25%                  |
 | `ultra` | ~-56%                  |
 
-`lite` is the saver — about on par with plain terseness. `full` and `ultra`
-cost _more_ tokens than a plain `Answer concisely.`: the triples and ♫
-outweigh what terseness buys back. You run `ultra` because it is amaze, not
-because it is cheap. Against default Claude all three still net a reduction
-(the table above). Single runs per cell, so expect variance; recalibrate
-with `bash eval/run.sh && node eval/compute-factors.js` (a partial re-run
-like `bash eval/run.sh terse` appends to the existing cells). These historical
-full-output factors are not a validated prose-only runtime calibration.
+These are historical single-run observations with incomplete raw evidence. The
+new [evaluation harness](docs/evaluation.md) retains replies, usage and quality
+reviews across at least three repetitions; it does not overwrite old factors.
+Run `bash eval/run.sh` for all five arms (costs provider tokens), then
+`node eval/compute-factors.js <run-directory>` for distributions and paired output
+comparisons. Human quality review remains required before accepting new rules.
 
 ## Accounting limitations and storage
 

@@ -1,0 +1,201 @@
+[
+  {
+    "id": "react-rerender",
+    "prompt": "Why does my React component re-render when I pass an inline object as a prop, and how do I fix it?",
+    "language": "en",
+    "split": "tuning",
+    "requiredFacts": [
+      "An inline object has a new reference on each render",
+      "Memoization only helps referential comparison; explain React.memo/useMemo or move stable data outside"
+    ]
+  },
+  {
+    "id": "git-revert",
+    "prompt": "How do I undo my last git commit but keep the changes staged?",
+    "language": "en",
+    "split": "tuning",
+    "requiredFacts": [
+      "Use git reset --soft HEAD~1",
+      "Changes remain staged",
+      "Rewrites local history; coordinate if already pushed"
+    ]
+  },
+  {
+    "id": "sql-index",
+    "prompt": "My Postgres query with a WHERE on created_at is slow on a 10M row table. What should I do?",
+    "language": "en",
+    "split": "tuning",
+    "requiredFacts": [
+      "Inspect EXPLAIN (ANALYZE, BUFFERS) and selectivity",
+      "Consider an index matching filtering/order",
+      "An index is not guaranteed to help and adds write/storage cost"
+    ]
+  },
+  {
+    "id": "docker-cache",
+    "prompt": "Why does my Docker build re-run npm install on every build and how do I make it cache properly?",
+    "language": "en",
+    "split": "tuning",
+    "requiredFacts": [
+      "Copy dependency manifests before source",
+      "Run npm ci/install before copying frequently changed source",
+      "Use .dockerignore and preserve lockfile"
+    ]
+  },
+  {
+    "id": "js-closure",
+    "prompt": "Explain why all my setTimeout callbacks in a for loop print the same value, and the fix.",
+    "language": "en",
+    "split": "tuning",
+    "requiredFacts": [
+      "var shares a binding across loop iterations",
+      "let creates per-iteration binding; closure capture alternative"
+    ]
+  },
+  {
+    "id": "css-center",
+    "prompt": "What is the most reliable way to center a div vertically and horizontally in 2026?",
+    "language": "en",
+    "split": "tuning",
+    "requiredFacts": [
+      "Use flex align-items/justify-content center or grid place-items center",
+      "Container needs a defined available height to vertically center"
+    ]
+  },
+  {
+    "id": "rails-n1",
+    "prompt": "How do I find and fix N+1 queries in a Rails app?",
+    "language": "en",
+    "split": "tuning",
+    "requiredFacts": [
+      "Observe repeated queries through logs or tooling",
+      "Preload needed associations with includes/preload",
+      "Verify query count; avoid blindly loading everything"
+    ]
+  },
+  {
+    "id": "ts-generics",
+    "prompt": "When should I use generics vs union types in TypeScript? Give practical guidance.",
+    "language": "en",
+    "split": "tuning",
+    "requiredFacts": [
+      "Generics preserve relationships between input/output types",
+      "Unions represent a finite choice of alternative shapes",
+      "Provide practical examples without unsafe casts"
+    ]
+  },
+  {
+    "id": "api-pagination",
+    "prompt": "Design cursor-based pagination for a REST API — what does the contract look like and why is it better than offset?",
+    "language": "en",
+    "split": "tuning",
+    "requiredFacts": [
+      "Stable deterministic ordering with unique tie-breaker",
+      "Opaque cursor and bounded limit; next cursor/end indicator",
+      "Cursor improves changing/large datasets but arbitrary page jumps are harder"
+    ]
+  },
+  {
+    "id": "regex-email",
+    "prompt": "Should I validate emails with a regex? What is the pragmatic approach?",
+    "language": "en",
+    "split": "tuning",
+    "requiredFacts": [
+      "Use modest syntax checks/library rather than a complete RFC regex",
+      "Verification email establishes reachability/control; regex cannot"
+    ]
+  },
+  {
+    "id": "pt-uncertainty",
+    "language": "pt",
+    "split": "tuning",
+    "prompt": "Responde em português: o serviço falhou uma vez depois do deploy. Isso prova que a alteração causou a falha? Indica como verificar sem afirmar causalidade.",
+    "requiredFacts": [
+      "Uma ocorrência não prova causalidade",
+      "Comparar logs, métricas e condições antes/depois",
+      "Preservar incerteza e responder em português"
+    ]
+  },
+  {
+    "id": "ordered-restore",
+    "language": "en",
+    "split": "tuning",
+    "prompt": "Explain this restore procedure in order: stop writes; verify the backup checksum; restore to staging; validate counts; only then request approval before production cutover. Never delete the original backup. Preserve every constraint.",
+    "requiredFacts": [
+      "Stop writes before checksum verification",
+      "Restore to staging before validating counts",
+      "Request approval after validation and before production cutover",
+      "Never delete original backup"
+    ]
+  },
+  {
+    "id": "ambiguous-target",
+    "language": "en",
+    "split": "tuning",
+    "prompt": "Delete the old one. There are two backups called old: production and staging. What should you do next?",
+    "requiredFacts": [
+      "Do not choose a backup or delete anything",
+      "Ask which specific target the user means"
+    ]
+  },
+  {
+    "id": "requested-table",
+    "language": "en",
+    "split": "tuning",
+    "prompt": "Give a two-row Markdown table comparing a mutex and a semaphore, with columns Primitive, Capacity, Use. Then state one limitation of each.",
+    "requiredFacts": [
+      "Requested two-row table with named columns",
+      "Mutex provides exclusive ownership; semaphore controls count/permits",
+      "State a limitation for each"
+    ]
+  },
+  {
+    "id": "pt-pr-body",
+    "language": "pt",
+    "split": "held-out",
+    "prompt": "Escreve apenas o corpo de um pull request, em português claro, com os títulos Problema, Alteração e Validação. Antes, pedidos repetidos criavam duplicados; agora uma chave de idempotência evita duplicados. Os testes de concorrência passaram. Não inventes outros testes.",
+    "requiredFacts": [
+      "Portuguese PR body with requested titles",
+      "Describe before/after accurately",
+      "Only concurrency tests claimed",
+      "Plain prose appropriate for persisted PR"
+    ]
+  },
+  {
+    "id": "persisted-comment",
+    "language": "en",
+    "split": "held-out",
+    "prompt": "Write only a JavaScript code comment for this invariant: retries reuse the same requestId, and a timeout does not prove the server rejected the request. No implementation.",
+    "requiredFacts": [
+      "JavaScript comment only",
+      "Retries reuse requestId exactly",
+      "Timeout does not prove rejection",
+      "Plain artifact prose"
+    ]
+  },
+  {
+    "id": "memory-constraints",
+    "language": "en",
+    "split": "held-out",
+    "prompt": "Write a short MEMORY.md entry: use port 5433 for local tests; never use production credentials; run migrations only after taking a backup, except read-only schema inspection needs no backup. Preserve the exception.",
+    "requiredFacts": [
+      "Port 5433",
+      "Never production credentials",
+      "Backup before migrations",
+      "Read-only schema inspection exception",
+      "Plain persisted prose"
+    ]
+  },
+  {
+    "id": "detail-required",
+    "language": "en",
+    "split": "held-out",
+    "prompt": "Explain a database transaction to a new developer in three short paragraphs, with a bank-transfer example, rollback behavior, and the caveat that external emails are not rolled back by a database transaction. Keep the requested detail.",
+    "requiredFacts": [
+      "Three paragraphs requested",
+      "Bank transfer example preserving debit/credit atomicity",
+      "Explain rollback",
+      "External email not rolled back"
+    ]
+  }
+]
