@@ -17,3 +17,8 @@ docs/superpowers/
 # config. release-please never runs Prettier on its output, so gating
 # format:check on this file breaks CI on every single release.
 CHANGELOG.md
+
+# Immutable provider evidence; do not rewrite captured bytes.
+eval/runs/
+eval/reviews/
+eval/snapshots/

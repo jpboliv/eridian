@@ -10,3 +10,5 @@ eval/results-isolation.jsonl
 # env / local secrets
 .env
 .env.*
+eval/runs/
+eval/reviews/
