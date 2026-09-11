@@ -18,7 +18,7 @@ test('validate-compress.js exits 0 and prints PASS for a valid compression', () 
   const original = writeTemp('# Title\n\nVerbose text about things.\n\n```bash\nnpm test\n```\n');
   const draft = writeTemp('# Title\n\nDense text.\n\n```bash\nnpm test\n```\n');
   const out = execFileSync('node', [SCRIPT, original, draft], { encoding: 'utf8' });
-  assert.match(out, /^PASS/);
+  assert.match(out, /^PASS structural checks passed; meaning NOT verified/);
   assert.match(out, /headings 1\/1/);
   assert.match(out, /code-blocks 1\/1/);
 });
@@ -48,4 +48,21 @@ test('validate-compress.js exits 1 when the draft file is empty', () => {
       return true;
     }
   );
+});
+
+test('negation-loss regression fails with an explicit category and never writes original', () => {
+  const original = writeTemp('Never delete production data.');
+  const draft = writeTemp('Delete production data.');
+  assert.throws(
+    () => execFileSync('node', [SCRIPT, original, draft]),
+    (error) => {
+      assert.strictEqual(error.status, 1);
+      assert.match(
+        error.stdout.toString(),
+        /meaning-sensitive change \(negations and exceptions\)/
+      );
+      return true;
+    }
+  );
+  assert.strictEqual(fs.readFileSync(original, 'utf8'), 'Never delete production data.');
 });
