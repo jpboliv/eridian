@@ -62,7 +62,7 @@ else {
   if (payload.prompt === 'contradictory') result.a.requiredFacts[0].status = 'missing';
   if (payload.prompt === 'incomplete' || payload.prompt === 'structured-invalid') delete result.a.readability;
   if (!args.includes('--json-schema')) throw new Error('missing schema');
-  if (payload.prompt.startsWith('structured')) { console.log(JSON.stringify({subtype:'success',result:'',structured_output:result,usage:{input_tokens:23,output_tokens:17}})); process.exit(0); }
+  if (payload.prompt.startsWith('structured')) { console.log(JSON.stringify({subtype:'success',result:'',structured_output:result,usage:{input_tokens:23,output_tokens:17},...(payload.prompt.startsWith('structured-tool') ? {stop_reason:'tool_use',terminal_reason:payload.prompt === 'structured-tool-complete' ? 'completed' : 'pending'} : {}),...(payload.prompt === 'structured-truncated' ? {stop_reason:'max_tokens',terminal_reason:'completed'} : {})})); process.exit(0); }
   console.log(JSON.stringify({subtype:'success', result: payload.prompt === 'malformed' ? 'not JSON' : JSON.stringify(result), usage:{input_tokens:23,output_tokens:17},modelUsage:{'${MODEL}':{inputTokens:23,outputTokens:17}}}));
   if (payload.prompt === 'failed') process.exitCode = 1;
 }
@@ -210,4 +210,18 @@ test('offline revalidation preserves explicit early-stop coverage', async (t) =>
   assert.equal(result.skipped, 2);
   assert.equal(result.planned, 3);
   assert.equal(result.complete, 1);
+});
+
+test('successful completed schema-tool envelope is accepted without accepting pending tools or truncation', async (t) => {
+  const { dir, cli } = fixture(t, [
+    'structured-tool-complete',
+    'structured-tool-pending',
+    'structured-truncated',
+  ]);
+  const result = await review({ run: dir, cli, execute: true });
+  assert.equal(result.records[0].status, 'complete');
+  assert.equal(result.records[0].providerStopReason, 'tool_use');
+  assert.equal(result.records[0].providerTerminalReason, 'completed');
+  assert.equal(result.records[1].status, 'failed');
+  assert.equal(result.records[2].status, 'failed');
 });
