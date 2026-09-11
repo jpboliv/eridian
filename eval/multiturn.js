@@ -82,6 +82,9 @@ async function run(options = {}) {
   if (options.allowPaid !== true) throw new Error('Pass --allow-paid to opt in to CLI usage.');
   const policy = options.policy || 'start-only';
   const repetitions = options.repetitions ?? 3;
+  const concurrency = options.concurrency ?? 3;
+  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 6)
+    throw new Error('Concurrency must be an integer from 1 through 6.');
   if (!POLICIES.includes(policy) || !Number.isInteger(repetitions) || repetitions < 3)
     throw new Error('Expected a supported policy and at least three repetitions.');
   const cases = options.scenarios || scenarios();
@@ -148,6 +151,7 @@ async function run(options = {}) {
     startedAt: new Date().toISOString(),
     policy,
     repetitions,
+    concurrency,
     model,
     cliVersion,
     mode: 'controlled context replay; not persisted host sessions or live hooks',
@@ -176,80 +180,93 @@ async function run(options = {}) {
   write('scenarios.json', cases);
   const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-multiturn-'));
   const records = [];
-  try {
-    for (let repetition = 1; repetition <= repetitions; repetition++) {
-      for (const scenario of cases) {
-        let context = [];
-        const transcript = [];
-        const state = { mode: 'full', index: 0 };
-        for (const [index, turn] of scenario.turns.entries()) {
-          state.index = index;
-          if (turn.event === 'compact') {
-            context = [
-              {
-                role: 'context-summary',
-                content:
-                  'Earlier turns discussed safe service deployment. Never delete production data. Keep a rollback path. This is a fixed synthetic compaction summary, not actual host compaction.',
-              },
-            ];
-          }
-          const payload = injection(policy, turn, state, prefixes, brief);
-          const user = {
-            role: 'user',
-            content: turn.prompt,
-            event: turn.event || null,
-            mode: state.mode,
-            injection: payload,
-          };
-          context.push(user);
-          transcript.push(user);
-          const prompt = JSON.stringify({ format: 'eridian-context-replay-v1', messages: context });
-          const id = `${scenario.id}--${policy}--${repetition}--${index + 1}`;
-          write(`${id}.request.json`, { prompt, requiredFacts: turn.requiredFacts });
-          const startedAt = new Date().toISOString();
-          const raw = await invoke(cli, ['-p', prompt, ...args], cwd, options.timeoutMs || 180000);
-          write(`${id}.raw.json`, raw);
-          const record = {
-            id,
-            runId,
-            scenarioId: scenario.id,
-            policy,
-            repetition,
-            turn: index + 1,
-            mode: state.mode,
-            event: user.event,
-            startedAt,
-            finishedAt: new Date().toISOString(),
-            promptHash: hash(prompt),
-            injectionHash: hash(payload),
-            injectionChars: payload.length,
-            ruleHash: manifest.ruleHash,
-          };
-          try {
-            if (raw.error || raw.exitCode !== 0 || raw.timedOut)
-              throw new Error(raw.error || `CLI exit ${raw.exitCode}; timedOut=${raw.timedOut}`);
-            const parsed = validateResult(raw.stdout);
-            Object.assign(record, {
-              status: 'complete',
-              reply: parsed.result,
-              usage: parsed.usage,
-              modelUsage: parsed.modelUsage || null,
-              actualModels: Object.keys(parsed.modelUsage || {}),
-              diagnostics: score(parsed.result, { language: 'en' }),
-            });
-            const assistant = { role: 'assistant', content: parsed.result };
-            context.push(assistant);
-            transcript.push(assistant);
-          } catch (error) {
-            Object.assign(record, { status: 'failed', error: error.message });
-          }
-          records.push(record);
-          write(`${id}.json`, record);
-          if (record.status !== 'complete') break; // no fabricated continuation after failure
-        }
-        write(`${scenario.id}--${policy}--${repetition}.transcript.json`, transcript);
+  const sessions = [];
+  for (let repetition = 1; repetition <= repetitions; repetition++) {
+    for (const scenario of cases) sessions.push({ repetition, scenario });
+  }
+  let next = 0;
+  async function session({ repetition, scenario }) {
+    let context = [];
+    const transcript = [];
+    const state = { mode: 'full', index: 0 };
+    for (const [index, turn] of scenario.turns.entries()) {
+      state.index = index;
+      if (turn.event === 'compact') {
+        context = [
+          {
+            role: 'context-summary',
+            content:
+              'Earlier turns discussed safe service deployment. Never delete production data. Keep a rollback path. This is a fixed synthetic compaction summary, not actual host compaction.',
+          },
+        ];
       }
+      const payload = injection(policy, turn, state, prefixes, brief);
+      const user = {
+        role: 'user',
+        content: turn.prompt,
+        event: turn.event || null,
+        mode: state.mode,
+        injection: payload,
+      };
+      context.push(user);
+      transcript.push(user);
+      const prompt = JSON.stringify({ format: 'eridian-context-replay-v1', messages: context });
+      const id = `${scenario.id}--${policy}--${repetition}--${index + 1}`;
+      write(`${id}.request.json`, { prompt, requiredFacts: turn.requiredFacts });
+      const startedAt = new Date().toISOString();
+      const raw = await invoke(cli, ['-p', prompt, ...args], cwd, options.timeoutMs || 180000);
+      write(`${id}.raw.json`, raw);
+      const record = {
+        id,
+        runId,
+        scenarioId: scenario.id,
+        policy,
+        repetition,
+        turn: index + 1,
+        mode: state.mode,
+        event: user.event,
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        promptHash: hash(prompt),
+        injectionHash: hash(payload),
+        injectionChars: payload.length,
+        ruleHash: manifest.ruleHash,
+      };
+      try {
+        if (raw.error || raw.exitCode !== 0 || raw.timedOut)
+          throw new Error(raw.error || `CLI exit ${raw.exitCode}; timedOut=${raw.timedOut}`);
+        const parsed = validateResult(raw.stdout);
+        Object.assign(record, {
+          status: 'complete',
+          reply: parsed.result,
+          usage: parsed.usage,
+          modelUsage: parsed.modelUsage || null,
+          actualModels: Object.keys(parsed.modelUsage || {}),
+          diagnostics: score(parsed.result, { language: 'en' }),
+        });
+        const assistant = { role: 'assistant', content: parsed.result };
+        context.push(assistant);
+        transcript.push(assistant);
+      } catch (error) {
+        Object.assign(record, { status: 'failed', error: error.message });
+      }
+      records.push(record);
+      write(`${id}.json`, record);
+      console.log(`${id} ${record.status}`);
+      if (record.status !== 'complete') break; // no fabricated continuation after failure
     }
+    write(`${scenario.id}--${policy}--${repetition}.transcript.json`, transcript);
+  }
+  try {
+    await Promise.all(
+      Array.from({ length: Math.min(concurrency, sessions.length) }, async () => {
+        while (next < sessions.length) await session(sessions[next++]);
+      })
+    );
+    records.sort(
+      (a, b) =>
+        a.scenarioId.localeCompare(b.scenarioId) || a.repetition - b.repetition || a.turn - b.turn
+    );
     write('records.json', records);
     const expectedTurns = cases.reduce((n, c) => n + c.turns.length, 0) * repetitions;
     const successful = records.filter((r) => r.status === 'complete');
@@ -287,11 +304,13 @@ if (require.main === module) {
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--allow-paid') options.allowPaid = true;
     else if (
-      ['--policy', '--model', '--out', '--repetitions', '--brief-file'].includes(args[i]) &&
+      ['--policy', '--model', '--out', '--repetitions', '--concurrency', '--brief-file'].includes(
+        args[i]
+      ) &&
       args[i + 1]
     ) {
       const key = args[i].slice(2).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
-      options[key] = key === 'repetitions' ? Number(args[++i]) : args[++i];
+      options[key] = ['repetitions', 'concurrency'].includes(key) ? Number(args[++i]) : args[++i];
     } else throw new Error(`Unknown or incomplete option: ${args[i]}`);
   }
   run(options)

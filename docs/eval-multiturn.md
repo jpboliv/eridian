@@ -16,7 +16,9 @@ node eval/multiturn.js --allow-paid --policy brief --brief-file /path/to/reminde
 Runs can incur provider usage. Nothing runs on import; the API also requires
 `allowPaid: true`. Tests invoke a local fake executable and never contact a model.
 Default model is `claude-haiku-4-5-20251001`; `--model`, `--out`, and
-`--repetitions` (minimum three) override defaults. Full rules come from the current
+`--repetitions` (minimum three) override defaults. `--concurrency` runs independent
+scenario repetitions in parallel (default three, maximum six); turns within each
+conversation remain sequential. Full rules come from the current
 persona injection blocks. The brief policy requires a JSON object with `lite`,
 `full`, and `ultra` string payloads; no proposed reminder is silently invented.
 Run all policies with the same rule/scenario/model hashes for a valid comparison.

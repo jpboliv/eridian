@@ -34,6 +34,7 @@ test('replay injection distinguishes interval policies and suppresses off refres
 
 test('paid CLI calls require explicit opt-in and valid repeat coverage', async () => {
   await assert.rejects(run({ cli: '/missing' }), /allow-paid/);
+  await assert.rejects(run({ allowPaid: true, concurrency: 7, cli: '/missing' }), /Concurrency/);
   await assert.rejects(
     run({ allowPaid: true, repetitions: 1, cli: '/missing' }),
     /three repetitions/
