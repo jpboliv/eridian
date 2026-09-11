@@ -105,3 +105,60 @@ test('validateDraft does not flag urls added in the draft', () => {
   const result = validateDraft(original, draft);
   assert.strictEqual(result.ok, true);
 });
+
+test('refuses env variants and normalized sensitive names', () => {
+  for (const file of [
+    '.env.local',
+    '.env.production',
+    'docs/.ENV.test',
+    '.AWS/readme.md',
+    'docs/../.env.local',
+  ]) {
+    assert.strictEqual(isSensitivePath(file).ok, false, file);
+  }
+});
+
+test('meaning-sensitive changes block automatic overwrite', () => {
+  for (const [original, draft, category] of [
+    ['Never delete production data.', 'Delete production data.', 'negations'],
+    ['Allow access unless disabled.', 'Allow access.', 'exceptions'],
+    ['Wait 10 ms.', 'Wait 10 seconds.', 'units'],
+    ['Set maxRetries to 3.', 'Set minRetries to 3.', 'identifiers'],
+    ['1. Build\n2. Deploy', '1. Deploy\n2. Build', 'ordered'],
+    ['Do not delete. Delete logs.', 'Delete. Do not delete logs.', 'negations'],
+  ]) {
+    const result = validateDraft(original, draft);
+    // The final example demonstrates the documented scope limit: the marker
+    // sequence alone cannot identify which object the negation qualifies.
+    if (original.startsWith('Do not')) {
+      assert.strictEqual(result.ok, true);
+    } else {
+      assert.strictEqual(result.ok, false, original);
+      assert.ok(result.reasons.some((reason) => reason.includes(category)));
+    }
+  }
+});
+
+test('supports tilde and longer backtick fences with embedded shorter fences', () => {
+  for (const block of [
+    '~~~js\n# code\n~~~',
+    '````md\n```js\n# code\n```\n````',
+    '   ~~~text\n# code\n   ~~~~',
+  ]) {
+    const result = validateDraft('# Title\nVerbose prose.\n' + block, '# Title\nProse.\n' + block);
+    assert.strictEqual(result.ok, true);
+    assert.deepStrictEqual(result.summary.headings, [1, 1]);
+    assert.strictEqual(
+      validateDraft('Verbose\n' + block, 'Dense\n' + block.replace('# code', '# changed')).ok,
+      false
+    );
+  }
+});
+
+test('code blocks retain multiplicity and order; unclosed fences fail', () => {
+  const a = '```\na\n```';
+  const b = '~~~\nb\n~~~';
+  assert.strictEqual(validateDraft(a + '\n' + a, a).ok, false);
+  assert.strictEqual(validateDraft(a + '\n' + b, b + '\n' + a).ok, false);
+  assert.strictEqual(validateDraft('Verbose\n```\ncode', 'Dense\n```\ncode').ok, false);
+});

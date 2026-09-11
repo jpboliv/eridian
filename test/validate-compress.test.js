@@ -49,3 +49,20 @@ test('validate-compress.js exits 1 when the draft file is empty', () => {
     }
   );
 });
+
+test('negation-loss regression fails with an explicit category and never writes original', () => {
+  const original = writeTemp('Never delete production data.');
+  const draft = writeTemp('Delete production data.');
+  assert.throws(
+    () => execFileSync('node', [SCRIPT, original, draft]),
+    (error) => {
+      assert.strictEqual(error.status, 1);
+      assert.match(
+        error.stdout.toString(),
+        /meaning-sensitive change \(negations and exceptions\)/
+      );
+      return true;
+    }
+  );
+  assert.strictEqual(fs.readFileSync(original, 'utf8'), 'Never delete production data.');
+});

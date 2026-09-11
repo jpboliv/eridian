@@ -20,3 +20,41 @@ test('check-compress-path.js exits 1 and prints a refusal for a .env path', () =
     }
   );
 });
+
+test('refuses sensitive and safe symlink aliases, including directory links', (t) => {
+  const fs = require('node:fs');
+  const os = require('node:os');
+  const dir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-path-')));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  fs.writeFileSync(path.join(dir, '.env.local'), 'private');
+  fs.writeFileSync(path.join(dir, 'notes.md'), 'notes');
+  fs.symlinkSync(path.join(dir, '.env.local'), path.join(dir, 'innocent.md'));
+  fs.symlinkSync(path.join(dir, 'notes.md'), path.join(dir, 'safe-link.md'));
+  fs.symlinkSync(dir, path.join(dir, 'linked-directory'));
+  for (const file of ['innocent.md', 'safe-link.md', 'linked-directory/notes.md']) {
+    assert.throws(
+      () => execFileSync('node', [SCRIPT, path.join(dir, file)]),
+      (error) => {
+        assert.match(error.stdout.toString(), /symlink/);
+        return error.status === 1;
+      }
+    );
+  }
+  assert.match(execFileSync('node', [SCRIPT, path.join(dir, 'notes.md')]).toString(), /^ok/);
+});
+
+test('refuses hard-linked aliases of sensitive files', (t) => {
+  const fs = require('node:fs');
+  const os = require('node:os');
+  const dir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-hardlink-')));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  fs.writeFileSync(path.join(dir, '.env.local'), 'private');
+  fs.linkSync(path.join(dir, '.env.local'), path.join(dir, 'notes.md'));
+  assert.throws(
+    () => execFileSync('node', [SCRIPT, path.join(dir, 'notes.md')]),
+    (error) => {
+      assert.match(error.stdout.toString(), /hard links/);
+      return error.status === 1;
+    }
+  );
+});
