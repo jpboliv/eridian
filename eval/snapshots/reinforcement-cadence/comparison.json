@@ -1,0 +1,1816 @@
+{
+  "schemaVersion": 1,
+  "matchedCellCount": 73,
+  "comparisonLimit": "Only matched cohorts share complete cells; overall totals have unequal coverage and cannot establish a policy benefit.",
+  "model": "claude-haiku-4-5-20251001",
+  "cliVersion": "2.1.268 (Claude Code)",
+  "ruleHash": "898a0b1e396e6a1a72e7040f92a8e2a6c219457d6c9855ba65a996ce26e724ee",
+  "scenarioHash": "3171ab60350aada017d8813c480447d1c47095a5f9f3c619198e85b1a19105c9",
+  "scope": "Synthetic context replay, not real host hooks or billed session cost. Output may include thinking; character counts are not tokens.",
+  "qualityGate": "Human acceptance pending; literal anchors and style diagnostics cannot establish correctness.",
+  "policies": {
+    "start-only": {
+      "runId": "2026-09-11T16-09-15.177Z-c7640fa8-2800-4f3c-8d85-98aa3f392aed",
+      "coverage": {
+        "expectedTurns": 132,
+        "completedTurns": 97,
+        "failedTurns": 6,
+        "skippedTurns": 29,
+        "complete": false,
+        "outputTokens": {
+          "n": 97,
+          "mean": 1082.5876288659795,
+          "min": 310,
+          "p25": 618,
+          "median": 916,
+          "p75": 1329,
+          "max": 4095
+        },
+        "qualityGate": "pending semantic review at every turn; critical fact loss blocks acceptance"
+      },
+      "overall": {
+        "turns": 97,
+        "inputTokens": {
+          "reported": 97,
+          "missing": 0,
+          "total": 179716,
+          "distribution": {
+            "n": 97,
+            "mean": 1852.7422680412371,
+            "min": 10,
+            "p25": 10,
+            "median": 1850,
+            "p75": 2963,
+            "max": 4053
+          }
+        },
+        "outputTokens": {
+          "reported": 97,
+          "missing": 0,
+          "total": 105011,
+          "distribution": {
+            "n": 97,
+            "mean": 1082.5876288659795,
+            "min": 310,
+            "p25": 618,
+            "median": 916,
+            "p75": 1329,
+            "max": 4095
+          }
+        },
+        "cacheReadInputTokens": {
+          "reported": 97,
+          "missing": 0,
+          "total": 0,
+          "distribution": {
+            "n": 97,
+            "mean": 0,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 0,
+            "max": 0
+          }
+        },
+        "cacheCreationInputTokens": {
+          "reported": 97,
+          "missing": 0,
+          "total": 120714,
+          "distribution": {
+            "n": 97,
+            "mean": 1244.4742268041236,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 4111,
+            "max": 5899
+          }
+        },
+        "injectedCharacters": 22396,
+        "replayedRequestCharacters": 1008369,
+        "proseWords": {
+          "n": 97,
+          "mean": 109.64948453608247,
+          "min": 56,
+          "p25": 86,
+          "median": 109,
+          "p75": 130,
+          "max": 186
+        },
+        "rockyMarkerMatches": 2,
+        "phraseMatches": 0,
+        "literalConstraintScreen": {
+          "label": "Literal anchors only; not semantic correctness or quality approval",
+          "missingNeverDelete": [
+            "lifecycle--start-only--3--1",
+            "lifecycle--start-only--3--2",
+            "lifecycle--start-only--3--3",
+            "lifecycle--start-only--3--4",
+            "lifecycle--start-only--3--5",
+            "lifecycle--start-only--3--6",
+            "lifecycle--start-only--3--7",
+            "lifecycle--start-only--3--8",
+            "lifecycle--start-only--3--10",
+            "lifecycle--start-only--3--11",
+            "lifecycle--start-only--3--16"
+          ],
+          "missingRollback": [
+            "lifecycle--start-only--3--1"
+          ]
+        }
+      },
+      "matchedCohort": {
+        "turns": 73,
+        "inputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 167846,
+          "distribution": {
+            "n": 73,
+            "mean": 2299.2602739726026,
+            "min": 10,
+            "p25": 1616,
+            "median": 2286,
+            "p75": 3103,
+            "max": 4053
+          }
+        },
+        "outputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 72504,
+          "distribution": {
+            "n": 73,
+            "mean": 993.2054794520548,
+            "min": 310,
+            "p25": 558,
+            "median": 761,
+            "p75": 1205,
+            "max": 4095
+          }
+        },
+        "cacheReadInputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 0,
+          "distribution": {
+            "n": 73,
+            "mean": 0,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 0,
+            "max": 0
+          }
+        },
+        "cacheCreationInputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 18740,
+          "distribution": {
+            "n": 73,
+            "mean": 256.71232876712327,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 0,
+            "max": 5247
+          }
+        },
+        "injectedCharacters": 17863,
+        "replayedRequestCharacters": 573572,
+        "proseWords": {
+          "n": 73,
+          "mean": 106.43835616438356,
+          "min": 56,
+          "p25": 85,
+          "median": 107,
+          "p75": 123,
+          "max": 186
+        },
+        "rockyMarkerMatches": 2,
+        "phraseMatches": 0,
+        "literalConstraintScreen": {
+          "label": "Literal anchors only; not semantic correctness or quality approval",
+          "missingNeverDelete": [
+            "lifecycle--start-only--3--1",
+            "lifecycle--start-only--3--2",
+            "lifecycle--start-only--3--3",
+            "lifecycle--start-only--3--4",
+            "lifecycle--start-only--3--5",
+            "lifecycle--start-only--3--6",
+            "lifecycle--start-only--3--7",
+            "lifecycle--start-only--3--8",
+            "lifecycle--start-only--3--10",
+            "lifecycle--start-only--3--11"
+          ],
+          "missingRollback": [
+            "lifecycle--start-only--3--1"
+          ]
+        }
+      },
+      "byScenario": {
+        "drift": {
+          "turns": 49,
+          "inputTokens": {
+            "reported": 49,
+            "missing": 0,
+            "total": 94424,
+            "distribution": {
+              "n": 49,
+              "mean": 1927.0204081632653,
+              "min": 10,
+              "p25": 1238,
+              "median": 2041,
+              "p75": 2948,
+              "max": 3993
+            }
+          },
+          "outputTokens": {
+            "reported": 49,
+            "missing": 0,
+            "total": 53281,
+            "distribution": {
+              "n": 49,
+              "mean": 1087.3673469387754,
+              "min": 310,
+              "p25": 620,
+              "median": 916,
+              "p75": 1329,
+              "max": 4095
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 49,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 49,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 49,
+            "missing": 0,
+            "total": 53435,
+            "distribution": {
+              "n": 49,
+              "mean": 1090.5102040816328,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 5899
+            }
+          },
+          "injectedCharacters": 4533,
+          "replayedRequestCharacters": 498188,
+          "proseWords": {
+            "n": 49,
+            "mean": 120.34693877551021,
+            "min": 77,
+            "p25": 107,
+            "median": 122,
+            "p75": 131,
+            "max": 163
+          },
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [],
+            "missingRollback": []
+          }
+        },
+        "lifecycle": {
+          "turns": 48,
+          "inputTokens": {
+            "reported": 48,
+            "missing": 0,
+            "total": 85292,
+            "distribution": {
+              "n": 48,
+              "mean": 1776.9166666666667,
+              "min": 10,
+              "p25": 10,
+              "median": 1706,
+              "p75": 2963,
+              "max": 4053
+            }
+          },
+          "outputTokens": {
+            "reported": 48,
+            "missing": 0,
+            "total": 51730,
+            "distribution": {
+              "n": 48,
+              "mean": 1077.7083333333333,
+              "min": 325,
+              "p25": 593,
+              "median": 893,
+              "p75": 1311,
+              "max": 3889
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 48,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 48,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 48,
+            "missing": 0,
+            "total": 67279,
+            "distribution": {
+              "n": 48,
+              "mean": 1401.6458333333333,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 4130,
+              "max": 5535
+            }
+          },
+          "injectedCharacters": 17863,
+          "replayedRequestCharacters": 510181,
+          "proseWords": {
+            "n": 48,
+            "mean": 98.72916666666667,
+            "min": 56,
+            "p25": 77,
+            "median": 87,
+            "p75": 119,
+            "max": 186
+          },
+          "rockyMarkerMatches": 2,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [
+              "lifecycle--start-only--3--1",
+              "lifecycle--start-only--3--2",
+              "lifecycle--start-only--3--3",
+              "lifecycle--start-only--3--4",
+              "lifecycle--start-only--3--5",
+              "lifecycle--start-only--3--6",
+              "lifecycle--start-only--3--7",
+              "lifecycle--start-only--3--8",
+              "lifecycle--start-only--3--10",
+              "lifecycle--start-only--3--11",
+              "lifecycle--start-only--3--16"
+            ],
+            "missingRollback": [
+              "lifecycle--start-only--3--1"
+            ]
+          }
+        }
+      },
+      "driftWindows": {
+        "early": {
+          "turns": 15,
+          "inputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 24454,
+            "distribution": {
+              "n": 15,
+              "mean": 1630.2666666666667,
+              "min": 1238,
+              "p25": 1415,
+              "median": 1620,
+              "p75": 1829,
+              "max": 2072
+            }
+          },
+          "outputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 8437,
+            "distribution": {
+              "n": 15,
+              "mean": 562.4666666666667,
+              "min": 310,
+              "p25": 446,
+              "median": 500,
+              "p75": 645,
+              "max": 1014
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 15,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 15,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "injectedCharacters": 4533,
+          "replayedRequestCharacters": 54384,
+          "proseWords": {
+            "n": 15,
+            "mean": 97.73333333333333,
+            "min": 77,
+            "p25": 90,
+            "median": 94,
+            "p75": 107,
+            "max": 117
+          },
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [],
+            "missingRollback": []
+          }
+        },
+        "beforeRefresh": {
+          "turns": 6,
+          "inputTokens": {
+            "reported": 6,
+            "missing": 0,
+            "total": 60,
+            "distribution": {
+              "n": 6,
+              "mean": 10,
+              "min": 10,
+              "p25": 10,
+              "median": 10,
+              "p75": 10,
+              "max": 10
+            }
+          },
+          "outputTokens": {
+            "reported": 6,
+            "missing": 0,
+            "total": 8622,
+            "distribution": {
+              "n": 6,
+              "mean": 1437,
+              "min": 682,
+              "p25": 823,
+              "median": 959,
+              "p75": 1642,
+              "max": 2824
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 6,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 6,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 6,
+            "missing": 0,
+            "total": 30262,
+            "distribution": {
+              "n": 6,
+              "mean": 5043.666666666667,
+              "min": 4633,
+              "p25": 4769,
+              "median": 4872,
+              "p75": 5048,
+              "max": 5609
+            }
+          },
+          "injectedCharacters": 0,
+          "replayedRequestCharacters": 119076,
+          "proseWords": {
+            "n": 6,
+            "mean": 147.33333333333334,
+            "min": 124,
+            "p25": 130,
+            "median": 151,
+            "p75": 158,
+            "max": 163
+          },
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [],
+            "missingRollback": []
+          }
+        },
+        "afterRefresh": {
+          "turns": 1,
+          "inputTokens": {
+            "reported": 1,
+            "missing": 0,
+            "total": 10,
+            "distribution": {
+              "n": 1,
+              "mean": 10,
+              "min": 10,
+              "p25": 10,
+              "median": 10,
+              "p75": 10,
+              "max": 10
+            }
+          },
+          "outputTokens": {
+            "reported": 1,
+            "missing": 0,
+            "total": 1343,
+            "distribution": {
+              "n": 1,
+              "mean": 1343,
+              "min": 1343,
+              "p25": 1343,
+              "median": 1343,
+              "p75": 1343,
+              "max": 1343
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 1,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 1,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 1,
+            "missing": 0,
+            "total": 5899,
+            "distribution": {
+              "n": 1,
+              "mean": 5899,
+              "min": 5899,
+              "p25": 5899,
+              "median": 5899,
+              "p75": 5899,
+              "max": 5899
+            }
+          },
+          "injectedCharacters": 0,
+          "replayedRequestCharacters": 23958,
+          "proseWords": {
+            "n": 1,
+            "mean": 160,
+            "min": 160,
+            "p25": 160,
+            "median": 160,
+            "p75": 160,
+            "max": 160
+          },
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [],
+            "missingRollback": []
+          }
+        }
+      },
+      "failures": [
+        {
+          "id": "drift--start-only--1--21",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "drift--start-only--2--18",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "drift--start-only--3--13",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "lifecycle--start-only--1--18",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "lifecycle--start-only--2--15",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "lifecycle--start-only--3--18",
+          "error": "CLI exit 1; timedOut=false"
+        }
+      ]
+    },
+    "interval20": {
+      "runId": "2026-09-11T16-09-31.408Z-24d31719-fa04-4708-a8b9-744c242e2acf",
+      "coverage": {
+        "expectedTurns": 132,
+        "completedTurns": 86,
+        "failedTurns": 6,
+        "skippedTurns": 40,
+        "complete": false,
+        "outputTokens": {
+          "n": 86,
+          "mean": 1141.2209302325582,
+          "min": 248,
+          "p25": 597,
+          "median": 824,
+          "p75": 1331,
+          "max": 3992
+        },
+        "qualityGate": "pending semantic review at every turn; critical fact loss blocks acceptance"
+      },
+      "overall": {
+        "turns": 86,
+        "inputTokens": {
+          "reported": 86,
+          "missing": 0,
+          "total": 170807,
+          "distribution": {
+            "n": 86,
+            "mean": 1986.1279069767443,
+            "min": 10,
+            "p25": 1365,
+            "median": 1992,
+            "p75": 2890,
+            "max": 3991
+          }
+        },
+        "outputTokens": {
+          "reported": 86,
+          "missing": 0,
+          "total": 98145,
+          "distribution": {
+            "n": 86,
+            "mean": 1141.2209302325582,
+            "min": 248,
+            "p25": 597,
+            "median": 824,
+            "p75": 1331,
+            "max": 3992
+          }
+        },
+        "cacheReadInputTokens": {
+          "reported": 86,
+          "missing": 0,
+          "total": 0,
+          "distribution": {
+            "n": 86,
+            "mean": 0,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 0,
+            "max": 0
+          }
+        },
+        "cacheCreationInputTokens": {
+          "reported": 86,
+          "missing": 0,
+          "total": 71631,
+          "distribution": {
+            "n": 86,
+            "mean": 832.9186046511628,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 0,
+            "max": 6141
+          }
+        },
+        "injectedCharacters": 20885,
+        "replayedRequestCharacters": 787648,
+        "proseWords": {
+          "n": 86,
+          "mean": 107.31395348837209,
+          "min": 41,
+          "p25": 81,
+          "median": 105,
+          "p75": 139,
+          "max": 173
+        },
+        "rockyMarkerMatches": 4,
+        "phraseMatches": 0,
+        "literalConstraintScreen": {
+          "label": "Literal anchors only; not semantic correctness or quality approval",
+          "missingNeverDelete": [
+            "drift--interval20--1--1",
+            "drift--interval20--1--2",
+            "drift--interval20--1--3",
+            "drift--interval20--1--4",
+            "drift--interval20--1--5",
+            "drift--interval20--1--6",
+            "drift--interval20--1--7",
+            "drift--interval20--1--8",
+            "drift--interval20--1--9",
+            "drift--interval20--1--10",
+            "drift--interval20--1--11",
+            "drift--interval20--1--12",
+            "drift--interval20--1--13",
+            "drift--interval20--1--14",
+            "drift--interval20--1--15",
+            "drift--interval20--1--16",
+            "lifecycle--interval20--3--1",
+            "lifecycle--interval20--3--2"
+          ],
+          "missingRollback": [
+            "drift--interval20--1--2",
+            "drift--interval20--1--4",
+            "drift--interval20--1--5",
+            "drift--interval20--1--6",
+            "drift--interval20--1--7",
+            "drift--interval20--1--8",
+            "drift--interval20--1--9",
+            "drift--interval20--1--10",
+            "drift--interval20--1--11",
+            "drift--interval20--1--12",
+            "drift--interval20--1--13",
+            "drift--interval20--1--14",
+            "drift--interval20--1--15",
+            "drift--interval20--1--16"
+          ]
+        }
+      },
+      "matchedCohort": {
+        "turns": 73,
+        "inputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 156047,
+          "distribution": {
+            "n": 73,
+            "mean": 2137.6301369863013,
+            "min": 10,
+            "p25": 1470,
+            "median": 2115,
+            "p75": 2923,
+            "max": 3991
+          }
+        },
+        "outputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 78399,
+          "distribution": {
+            "n": 73,
+            "mean": 1073.958904109589,
+            "min": 248,
+            "p25": 584,
+            "median": 794,
+            "p75": 1298,
+            "max": 3992
+          }
+        },
+        "cacheReadInputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 0,
+          "distribution": {
+            "n": 73,
+            "mean": 0,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 0,
+            "max": 0
+          }
+        },
+        "cacheCreationInputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 31496,
+          "distribution": {
+            "n": 73,
+            "mean": 431.45205479452056,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 0,
+            "max": 4967
+          }
+        },
+        "injectedCharacters": 17863,
+        "replayedRequestCharacters": 580935,
+        "proseWords": {
+          "n": 73,
+          "mean": 105.38356164383562,
+          "min": 41,
+          "p25": 84,
+          "median": 105,
+          "p75": 134,
+          "max": 170
+        },
+        "rockyMarkerMatches": 2,
+        "phraseMatches": 0,
+        "literalConstraintScreen": {
+          "label": "Literal anchors only; not semantic correctness or quality approval",
+          "missingNeverDelete": [
+            "drift--interval20--1--1",
+            "drift--interval20--1--2",
+            "drift--interval20--1--3",
+            "drift--interval20--1--4",
+            "drift--interval20--1--5",
+            "drift--interval20--1--6",
+            "drift--interval20--1--7",
+            "drift--interval20--1--8",
+            "drift--interval20--1--9",
+            "drift--interval20--1--10",
+            "drift--interval20--1--11",
+            "lifecycle--interval20--3--1",
+            "lifecycle--interval20--3--2"
+          ],
+          "missingRollback": [
+            "drift--interval20--1--2",
+            "drift--interval20--1--4",
+            "drift--interval20--1--5",
+            "drift--interval20--1--6",
+            "drift--interval20--1--7",
+            "drift--interval20--1--8",
+            "drift--interval20--1--9",
+            "drift--interval20--1--10",
+            "drift--interval20--1--11"
+          ]
+        }
+      },
+      "byScenario": {
+        "drift": {
+          "turns": 44,
+          "inputTokens": {
+            "reported": 44,
+            "missing": 0,
+            "total": 92369,
+            "distribution": {
+              "n": 44,
+              "mean": 2099.2954545454545,
+              "min": 10,
+              "p25": 1497,
+              "median": 2124,
+              "p75": 2805,
+              "max": 3923
+            }
+          },
+          "outputTokens": {
+            "reported": 44,
+            "missing": 0,
+            "total": 49431,
+            "distribution": {
+              "n": 44,
+              "mean": 1123.4318181818182,
+              "min": 355,
+              "p25": 584,
+              "median": 794,
+              "p75": 1255,
+              "max": 3992
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 44,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 44,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 44,
+            "missing": 0,
+            "total": 18429,
+            "distribution": {
+              "n": 44,
+              "mean": 418.84090909090907,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 5029
+            }
+          },
+          "injectedCharacters": 4533,
+          "replayedRequestCharacters": 348756,
+          "proseWords": {
+            "n": 44,
+            "mean": 91.22727272727273,
+            "min": 41,
+            "p25": 54,
+            "median": 86,
+            "p75": 121,
+            "max": 168
+          },
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [
+              "drift--interval20--1--1",
+              "drift--interval20--1--2",
+              "drift--interval20--1--3",
+              "drift--interval20--1--4",
+              "drift--interval20--1--5",
+              "drift--interval20--1--6",
+              "drift--interval20--1--7",
+              "drift--interval20--1--8",
+              "drift--interval20--1--9",
+              "drift--interval20--1--10",
+              "drift--interval20--1--11",
+              "drift--interval20--1--12",
+              "drift--interval20--1--13",
+              "drift--interval20--1--14",
+              "drift--interval20--1--15",
+              "drift--interval20--1--16"
+            ],
+            "missingRollback": [
+              "drift--interval20--1--2",
+              "drift--interval20--1--4",
+              "drift--interval20--1--5",
+              "drift--interval20--1--6",
+              "drift--interval20--1--7",
+              "drift--interval20--1--8",
+              "drift--interval20--1--9",
+              "drift--interval20--1--10",
+              "drift--interval20--1--11",
+              "drift--interval20--1--12",
+              "drift--interval20--1--13",
+              "drift--interval20--1--14",
+              "drift--interval20--1--15",
+              "drift--interval20--1--16"
+            ]
+          }
+        },
+        "lifecycle": {
+          "turns": 42,
+          "inputTokens": {
+            "reported": 42,
+            "missing": 0,
+            "total": 78438,
+            "distribution": {
+              "n": 42,
+              "mean": 1867.5714285714287,
+              "min": 10,
+              "p25": 10,
+              "median": 1807,
+              "p75": 3051,
+              "max": 3991
+            }
+          },
+          "outputTokens": {
+            "reported": 42,
+            "missing": 0,
+            "total": 48714,
+            "distribution": {
+              "n": 42,
+              "mean": 1159.857142857143,
+              "min": 248,
+              "p25": 687,
+              "median": 906,
+              "p75": 1331,
+              "max": 3914
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 42,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 42,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 42,
+            "missing": 0,
+            "total": 53202,
+            "distribution": {
+              "n": 42,
+              "mean": 1266.7142857142858,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 6141
+            }
+          },
+          "injectedCharacters": 16352,
+          "replayedRequestCharacters": 438892,
+          "proseWords": {
+            "n": 42,
+            "mean": 124.16666666666667,
+            "min": 68,
+            "p25": 102,
+            "median": 119,
+            "p75": 147,
+            "max": 173
+          },
+          "rockyMarkerMatches": 4,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [
+              "lifecycle--interval20--3--1",
+              "lifecycle--interval20--3--2"
+            ],
+            "missingRollback": []
+          }
+        }
+      },
+      "driftWindows": {
+        "early": {
+          "turns": 15,
+          "inputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 23735,
+            "distribution": {
+              "n": 15,
+              "mean": 1582.3333333333333,
+              "min": 1237,
+              "p25": 1365,
+              "median": 1576,
+              "p75": 1742,
+              "max": 2115
+            }
+          },
+          "outputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 11483,
+            "distribution": {
+              "n": 15,
+              "mean": 765.5333333333333,
+              "min": 355,
+              "p25": 490,
+              "median": 584,
+              "p75": 794,
+              "max": 2818
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 15,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 15,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "injectedCharacters": 4533,
+          "replayedRequestCharacters": 51527,
+          "proseWords": {
+            "n": 15,
+            "mean": 80.6,
+            "min": 41,
+            "p25": 46,
+            "median": 81,
+            "p75": 98,
+            "max": 135
+          },
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [
+              "drift--interval20--1--1",
+              "drift--interval20--1--2",
+              "drift--interval20--1--3",
+              "drift--interval20--1--4",
+              "drift--interval20--1--5"
+            ],
+            "missingRollback": [
+              "drift--interval20--1--2",
+              "drift--interval20--1--4",
+              "drift--interval20--1--5"
+            ]
+          }
+        },
+        "beforeRefresh": {
+          "turns": 2,
+          "inputTokens": {
+            "reported": 2,
+            "missing": 0,
+            "total": 3207,
+            "distribution": {
+              "n": 2,
+              "mean": 1603.5,
+              "min": 10,
+              "p25": 10,
+              "median": 10,
+              "p75": 10,
+              "max": 3197
+            }
+          },
+          "outputTokens": {
+            "reported": 2,
+            "missing": 0,
+            "total": 4343,
+            "distribution": {
+              "n": 2,
+              "mean": 2171.5,
+              "min": 1761,
+              "p25": 1761,
+              "median": 1761,
+              "p75": 1761,
+              "max": 2582
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 2,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 2,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 2,
+            "missing": 0,
+            "total": 5029,
+            "distribution": {
+              "n": 2,
+              "mean": 2514.5,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 5029
+            }
+          },
+          "injectedCharacters": 0,
+          "replayedRequestCharacters": 31470,
+          "proseWords": {
+            "n": 2,
+            "mean": 102.5,
+            "min": 54,
+            "p25": 54,
+            "median": 54,
+            "p75": 54,
+            "max": 151
+          },
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [
+              "drift--interval20--1--16"
+            ],
+            "missingRollback": [
+              "drift--interval20--1--16"
+            ]
+          }
+        },
+        "afterRefresh": {
+          "turns": 0,
+          "inputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "outputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "cacheReadInputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "cacheCreationInputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "injectedCharacters": 0,
+          "replayedRequestCharacters": 0,
+          "proseWords": null,
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [],
+            "missingRollback": []
+          }
+        }
+      },
+      "failures": [
+        {
+          "id": "drift--interval20--1--17",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "drift--interval20--2--13",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "drift--interval20--3--17",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "lifecycle--interval20--1--16",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "lifecycle--interval20--2--14",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "lifecycle--interval20--3--15",
+          "error": "CLI exit 1; timedOut=false"
+        }
+      ]
+    },
+    "brief": {
+      "runId": "2026-09-11T16-09-32.587Z-9d8e0697-b90c-4985-b738-4f8984036d27",
+      "coverage": {
+        "expectedTurns": 132,
+        "completedTurns": 79,
+        "failedTurns": 6,
+        "skippedTurns": 47,
+        "complete": false,
+        "outputTokens": {
+          "n": 79,
+          "mean": 1252.73417721519,
+          "min": 297,
+          "p25": 601,
+          "median": 1018,
+          "p75": 1730,
+          "max": 4242
+        },
+        "qualityGate": "pending semantic review at every turn; critical fact loss blocks acceptance"
+      },
+      "overall": {
+        "turns": 79,
+        "inputTokens": {
+          "reported": 79,
+          "missing": 0,
+          "total": 170770,
+          "distribution": {
+            "n": 79,
+            "mean": 2161.6455696202534,
+            "min": 10,
+            "p25": 1454,
+            "median": 2210,
+            "p75": 3243,
+            "max": 4059
+          }
+        },
+        "outputTokens": {
+          "reported": 79,
+          "missing": 0,
+          "total": 98966,
+          "distribution": {
+            "n": 79,
+            "mean": 1252.73417721519,
+            "min": 297,
+            "p25": 601,
+            "median": 1018,
+            "p75": 1730,
+            "max": 4242
+          }
+        },
+        "cacheReadInputTokens": {
+          "reported": 79,
+          "missing": 0,
+          "total": 0,
+          "distribution": {
+            "n": 79,
+            "mean": 0,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 0,
+            "max": 0
+          }
+        },
+        "cacheCreationInputTokens": {
+          "reported": 79,
+          "missing": 0,
+          "total": 63346,
+          "distribution": {
+            "n": 79,
+            "mean": 801.8481012658228,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 0,
+            "max": 6347
+          }
+        },
+        "injectedCharacters": 30253,
+        "replayedRequestCharacters": 771983,
+        "proseWords": {
+          "n": 79,
+          "mean": 109.24050632911393,
+          "min": 77,
+          "p25": 98,
+          "median": 108,
+          "p75": 115,
+          "max": 172
+        },
+        "rockyMarkerMatches": 7,
+        "phraseMatches": 0,
+        "literalConstraintScreen": {
+          "label": "Literal anchors only; not semantic correctness or quality approval",
+          "missingNeverDelete": [
+            "drift--brief--1--1"
+          ],
+          "missingRollback": []
+        }
+      },
+      "matchedCohort": {
+        "turns": 73,
+        "inputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 170710,
+          "distribution": {
+            "n": 73,
+            "mean": 2338.4931506849316,
+            "min": 10,
+            "p25": 1511,
+            "median": 2360,
+            "p75": 3275,
+            "max": 4059
+          }
+        },
+        "outputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 86490,
+          "distribution": {
+            "n": 73,
+            "mean": 1184.7945205479452,
+            "min": 297,
+            "p25": 599,
+            "median": 938,
+            "p75": 1716,
+            "max": 3501
+          }
+        },
+        "cacheReadInputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 0,
+          "distribution": {
+            "n": 73,
+            "mean": 0,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 0,
+            "max": 0
+          }
+        },
+        "cacheCreationInputTokens": {
+          "reported": 73,
+          "missing": 0,
+          "total": 33300,
+          "distribution": {
+            "n": 73,
+            "mean": 456.16438356164383,
+            "min": 0,
+            "p25": 0,
+            "median": 0,
+            "p75": 0,
+            "max": 5422
+          }
+        },
+        "injectedCharacters": 27837,
+        "replayedRequestCharacters": 655709,
+        "proseWords": {
+          "n": 73,
+          "mean": 108.28767123287672,
+          "min": 77,
+          "p25": 97,
+          "median": 108,
+          "p75": 114,
+          "max": 172
+        },
+        "rockyMarkerMatches": 5,
+        "phraseMatches": 0,
+        "literalConstraintScreen": {
+          "label": "Literal anchors only; not semantic correctness or quality approval",
+          "missingNeverDelete": [
+            "drift--brief--1--1"
+          ],
+          "missingRollback": []
+        }
+      },
+      "byScenario": {
+        "drift": {
+          "turns": 39,
+          "inputTokens": {
+            "reported": 39,
+            "missing": 0,
+            "total": 90176,
+            "distribution": {
+              "n": 39,
+              "mean": 2312.2051282051284,
+              "min": 10,
+              "p25": 1491,
+              "median": 2467,
+              "p75": 3221,
+              "max": 4059
+            }
+          },
+          "outputTokens": {
+            "reported": 39,
+            "missing": 0,
+            "total": 49422,
+            "distribution": {
+              "n": 39,
+              "mean": 1267.2307692307693,
+              "min": 297,
+              "p25": 678,
+              "median": 1018,
+              "p75": 1730,
+              "max": 4242
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 39,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 39,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 39,
+            "missing": 0,
+            "total": 17972,
+            "distribution": {
+              "n": 39,
+              "mean": 460.8205128205128,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 4833
+            }
+          },
+          "injectedCharacters": 11049,
+          "replayedRequestCharacters": 348861,
+          "proseWords": {
+            "n": 39,
+            "mean": 107.64102564102564,
+            "min": 84,
+            "p25": 103,
+            "median": 108,
+            "p75": 113,
+            "max": 127
+          },
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [
+              "drift--brief--1--1"
+            ],
+            "missingRollback": []
+          }
+        },
+        "lifecycle": {
+          "turns": 40,
+          "inputTokens": {
+            "reported": 40,
+            "missing": 0,
+            "total": 80594,
+            "distribution": {
+              "n": 40,
+              "mean": 2014.85,
+              "min": 10,
+              "p25": 1236,
+              "median": 1925,
+              "p75": 3262,
+              "max": 3982
+            }
+          },
+          "outputTokens": {
+            "reported": 40,
+            "missing": 0,
+            "total": 49544,
+            "distribution": {
+              "n": 40,
+              "mean": 1238.6,
+              "min": 302,
+              "p25": 583,
+              "median": 945,
+              "p75": 1729,
+              "max": 2722
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 40,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 40,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 40,
+            "missing": 0,
+            "total": 45374,
+            "distribution": {
+              "n": 40,
+              "mean": 1134.35,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 6347
+            }
+          },
+          "injectedCharacters": 19204,
+          "replayedRequestCharacters": 423122,
+          "proseWords": {
+            "n": 40,
+            "mean": 110.8,
+            "min": 77,
+            "p25": 91,
+            "median": 106,
+            "p75": 130,
+            "max": 172
+          },
+          "rockyMarkerMatches": 7,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [],
+            "missingRollback": []
+          }
+        }
+      },
+      "driftWindows": {
+        "early": {
+          "turns": 15,
+          "inputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 25915,
+            "distribution": {
+              "n": 15,
+              "mean": 1727.6666666666667,
+              "min": 1236,
+              "p25": 1475,
+              "median": 1729,
+              "p75": 1959,
+              "max": 2231
+            }
+          },
+          "outputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 11887,
+            "distribution": {
+              "n": 15,
+              "mean": 792.4666666666667,
+              "min": 297,
+              "p25": 446,
+              "median": 608,
+              "p75": 846,
+              "max": 2131
+            }
+          },
+          "cacheReadInputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 15,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "cacheCreationInputTokens": {
+            "reported": 15,
+            "missing": 0,
+            "total": 0,
+            "distribution": {
+              "n": 15,
+              "mean": 0,
+              "min": 0,
+              "p25": 0,
+              "median": 0,
+              "p75": 0,
+              "max": 0
+            }
+          },
+          "injectedCharacters": 6705,
+          "replayedRequestCharacters": 61560,
+          "proseWords": {
+            "n": 15,
+            "mean": 103.66666666666667,
+            "min": 84,
+            "p25": 101,
+            "median": 105,
+            "p75": 108,
+            "max": 121
+          },
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [
+              "drift--brief--1--1"
+            ],
+            "missingRollback": []
+          }
+        },
+        "beforeRefresh": {
+          "turns": 0,
+          "inputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "outputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "cacheReadInputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "cacheCreationInputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "injectedCharacters": 0,
+          "replayedRequestCharacters": 0,
+          "proseWords": null,
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [],
+            "missingRollback": []
+          }
+        },
+        "afterRefresh": {
+          "turns": 0,
+          "inputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "outputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "cacheReadInputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "cacheCreationInputTokens": {
+            "reported": 0,
+            "missing": 0,
+            "total": null,
+            "distribution": null
+          },
+          "injectedCharacters": 0,
+          "replayedRequestCharacters": 0,
+          "proseWords": null,
+          "rockyMarkerMatches": 0,
+          "phraseMatches": 0,
+          "literalConstraintScreen": {
+            "label": "Literal anchors only; not semantic correctness or quality approval",
+            "missingNeverDelete": [],
+            "missingRollback": []
+          }
+        }
+      },
+      "failures": [
+        {
+          "id": "drift--brief--1--12",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "drift--brief--2--14",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "drift--brief--3--16",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "lifecycle--brief--1--12",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "lifecycle--brief--2--16",
+          "error": "CLI exit 1; timedOut=false"
+        },
+        {
+          "id": "lifecycle--brief--3--15",
+          "error": "CLI exit 1; timedOut=false"
+        }
+      ]
+    }
+  }
+}
