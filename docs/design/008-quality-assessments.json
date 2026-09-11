@@ -1,0 +1,1350 @@
+{
+  "schemaVersion": 1,
+  "reviewType": "assistant-offline-self-audit",
+  "createdAt": "2026-09-11T16:20:54.379066+00:00",
+  "qualityGate": "failed preliminary screen; human acceptance pending",
+  "coverage": {
+    "reviewedPairs": 19,
+    "representativePairs": 57,
+    "unreviewedRepresentativePairs": 38,
+    "allRunPairs": 342,
+    "unreviewedAllRunPairs": 323,
+    "casesCovered": 19,
+    "heldOutCasesCovered": 4,
+    "policy": "one anonymous baseline/dialect pair per case from deterministic sample; selected arm rotates across sorted case groups; no tuning based on held-out results"
+  },
+  "reviewerLimitations": "Author assistant inspection, not an independent human or fresh paid model judge; no causal arm-quality claim; no numeric scores invented. Side labels remain anonymous until this assessment artifact is saved.",
+  "records": [
+    {
+      "pairId": "2b8444506daa",
+      "split": "tuning",
+      "anonymousInputHash": "20e4b4797ac7e09887dc660a2a109a2186b3af3e31b3c5d88f4eea75aac2d68e",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Do not choose a backup or delete anything",
+              "status": "preserved",
+              "reason": "A asks production versus staging directly. B assumes deletion already happened and asks goals instead of the intended target."
+            },
+            {
+              "fact": "Ask which specific target the user means",
+              "status": "preserved",
+              "reason": "A asks production versus staging directly. B assumes deletion already happened and asks goals instead of the intended target."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Do not choose a backup or delete anything",
+              "status": "preserved",
+              "reason": "A asks production versus staging directly. B assumes deletion already happened and asks goals instead of the intended target."
+            },
+            {
+              "fact": "Ask which specific target the user means",
+              "status": "missing",
+              "reason": "A asks production versus staging directly. B assumes deletion already happened and asks goals instead of the intended target."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": ["Assumes a deletion the prompt did not report."],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "A asks production versus staging directly. B assumes deletion already happened and asks goals instead of the intended target.",
+      "attributionAfterAssessment": {
+        "promptId": "ambiguous-target",
+        "repetition": 1,
+        "a": "lite",
+        "b": "baseline"
+      }
+    },
+    {
+      "pairId": "70b60e6b2bab",
+      "split": "tuning",
+      "anonymousInputHash": "3e96d598c82e0816de178bb85abc374d8210de77f139a87ba3c33068c39962bc",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Stable deterministic ordering with unique tie-breaker",
+              "status": "missing",
+              "reason": "Both supply cursor/end fields and a page-jump tradeoff, but neither bounds limit or states stable unique ordering. An example limit=20 is not a enforced upper bound. Both claim O(1) seeks and unconditional stability."
+            },
+            {
+              "fact": "Opaque cursor and bounded limit; next cursor/end indicator",
+              "status": "missing",
+              "reason": "Both supply cursor/end fields and a page-jump tradeoff, but neither bounds limit or states stable unique ordering. An example limit=20 is not a enforced upper bound. Both claim O(1) seeks and unconditional stability."
+            },
+            {
+              "fact": "Cursor improves changing/large datasets but arbitrary page jumps are harder",
+              "status": "preserved",
+              "reason": "Both supply cursor/end fields and a page-jump tradeoff, but neither bounds limit or states stable unique ordering. An example limit=20 is not a enforced upper bound. Both claim O(1) seeks and unconditional stability."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [
+            "O(1) and always-correct concurrent-change guarantees are overstated."
+          ],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Stable deterministic ordering with unique tie-breaker",
+              "status": "missing",
+              "reason": "Both supply cursor/end fields and a page-jump tradeoff, but neither bounds limit or states stable unique ordering. An example limit=20 is not a enforced upper bound. Both claim O(1) seeks and unconditional stability."
+            },
+            {
+              "fact": "Opaque cursor and bounded limit; next cursor/end indicator",
+              "status": "missing",
+              "reason": "Both supply cursor/end fields and a page-jump tradeoff, but neither bounds limit or states stable unique ordering. An example limit=20 is not a enforced upper bound. Both claim O(1) seeks and unconditional stability."
+            },
+            {
+              "fact": "Cursor improves changing/large datasets but arbitrary page jumps are harder",
+              "status": "preserved",
+              "reason": "Both supply cursor/end fields and a page-jump tradeoff, but neither bounds limit or states stable unique ordering. An example limit=20 is not a enforced upper bound. Both claim O(1) seeks and unconditional stability."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": ["O(1) and immunity to concurrent changes are overstated."],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both supply cursor/end fields and a page-jump tradeoff, but neither bounds limit or states stable unique ordering. An example limit=20 is not a enforced upper bound. Both claim O(1) seeks and unconditional stability.",
+      "attributionAfterAssessment": {
+        "promptId": "api-pagination",
+        "repetition": 3,
+        "a": "baseline",
+        "b": "full"
+      }
+    },
+    {
+      "pairId": "89984ed41aec",
+      "split": "tuning",
+      "anonymousInputHash": "f14f2e556441c458750205e9796f9720f9826626c080b862191e2175f80159f3",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Use flex align-items/justify-content center or grid place-items center",
+              "status": "preserved",
+              "reason": "Both show correct flex/grid properties and a defined 100vh container height."
+            },
+            {
+              "fact": "Container needs a defined available height to vertically center",
+              "status": "preserved",
+              "reason": "Both show correct flex/grid properties and a defined 100vh container height."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Use flex align-items/justify-content center or grid place-items center",
+              "status": "preserved",
+              "reason": "Both show correct flex/grid properties and a defined 100vh container height."
+            },
+            {
+              "fact": "Container needs a defined available height to vertically center",
+              "status": "preserved",
+              "reason": "Both show correct flex/grid properties and a defined 100vh container height."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both show correct flex/grid properties and a defined 100vh container height.",
+      "attributionAfterAssessment": {
+        "promptId": "css-center",
+        "repetition": 2,
+        "a": "ultra",
+        "b": "baseline"
+      }
+    },
+    {
+      "pairId": "25c3b9ea0db9",
+      "split": "held-out",
+      "anonymousInputHash": "e8d303588ad1e303c51c2e2c89c8b808579704c45fa4b613ab8186bc521f26ec",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Three paragraphs requested",
+              "status": "preserved",
+              "reason": "Both provide three explanatory paragraphs, transfer/rollback and the external-email caveat. B adds a heading; the requested paragraph content remains present."
+            },
+            {
+              "fact": "Bank transfer example preserving debit/credit atomicity",
+              "status": "preserved",
+              "reason": "Both provide three explanatory paragraphs, transfer/rollback and the external-email caveat. B adds a heading; the requested paragraph content remains present."
+            },
+            {
+              "fact": "Explain rollback",
+              "status": "preserved",
+              "reason": "Both provide three explanatory paragraphs, transfer/rollback and the external-email caveat. B adds a heading; the requested paragraph content remains present."
+            },
+            {
+              "fact": "External email not rolled back",
+              "status": "preserved",
+              "reason": "Both provide three explanatory paragraphs, transfer/rollback and the external-email caveat. B adds a heading; the requested paragraph content remains present."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Three paragraphs requested",
+              "status": "preserved",
+              "reason": "Both provide three explanatory paragraphs, transfer/rollback and the external-email caveat. B adds a heading; the requested paragraph content remains present."
+            },
+            {
+              "fact": "Bank transfer example preserving debit/credit atomicity",
+              "status": "preserved",
+              "reason": "Both provide three explanatory paragraphs, transfer/rollback and the external-email caveat. B adds a heading; the requested paragraph content remains present."
+            },
+            {
+              "fact": "Explain rollback",
+              "status": "preserved",
+              "reason": "Both provide three explanatory paragraphs, transfer/rollback and the external-email caveat. B adds a heading; the requested paragraph content remains present."
+            },
+            {
+              "fact": "External email not rolled back",
+              "status": "preserved",
+              "reason": "Both provide three explanatory paragraphs, transfer/rollback and the external-email caveat. B adds a heading; the requested paragraph content remains present."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [
+            "Atomic operations need not execute simultaneously; that wording is imprecise."
+          ],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both provide three explanatory paragraphs, transfer/rollback and the external-email caveat. B adds a heading; the requested paragraph content remains present.",
+      "attributionAfterAssessment": {
+        "promptId": "detail-required",
+        "repetition": 1,
+        "a": "lite",
+        "b": "baseline"
+      }
+    },
+    {
+      "pairId": "fe51c40f4090",
+      "split": "tuning",
+      "anonymousInputHash": "86861c73ff221ef861f03e2c875fc8d7f7199113eb72473bc3e2436d181266a3",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Copy dependency manifests before source",
+              "status": "preserved",
+              "reason": "Both show dependency copy, one npm ci step, then source copy. Neither mentions .dockerignore. A also incorrectly narrows invalidation to package.json alone."
+            },
+            {
+              "fact": "Run npm ci/install before copying frequently changed source",
+              "status": "preserved",
+              "reason": "Both show dependency copy, one npm ci step, then source copy. Neither mentions .dockerignore. A also incorrectly narrows invalidation to package.json alone."
+            },
+            {
+              "fact": "Use .dockerignore and preserve lockfile",
+              "status": "missing",
+              "reason": "Both show dependency copy, one npm ci step, then source copy. Neither mentions .dockerignore. A also incorrectly narrows invalidation to package.json alone."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": ["Lockfile changes also invalidate the copied dependency layer."],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Copy dependency manifests before source",
+              "status": "preserved",
+              "reason": "Both show dependency copy, one npm ci step, then source copy. Neither mentions .dockerignore. A also incorrectly narrows invalidation to package.json alone."
+            },
+            {
+              "fact": "Run npm ci/install before copying frequently changed source",
+              "status": "preserved",
+              "reason": "Both show dependency copy, one npm ci step, then source copy. Neither mentions .dockerignore. A also incorrectly narrows invalidation to package.json alone."
+            },
+            {
+              "fact": "Use .dockerignore and preserve lockfile",
+              "status": "missing",
+              "reason": "Both show dependency copy, one npm ci step, then source copy. Neither mentions .dockerignore. A also incorrectly narrows invalidation to package.json alone."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both show dependency copy, one npm ci step, then source copy. Neither mentions .dockerignore. A also incorrectly narrows invalidation to package.json alone.",
+      "attributionAfterAssessment": {
+        "promptId": "docker-cache",
+        "repetition": 3,
+        "a": "baseline",
+        "b": "full"
+      }
+    },
+    {
+      "pairId": "0b1c63456caa",
+      "split": "tuning",
+      "anonymousInputHash": "4b7fe3d53cb4231cf1517169820012ba977d8a8a8bdbf1c244fa99dd575cc08d",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Use git reset --soft HEAD~1",
+              "status": "preserved",
+              "reason": "Both give reset --soft HEAD~1 and preserve staging. Neither gives the required already-pushed history coordination caveat."
+            },
+            {
+              "fact": "Changes remain staged",
+              "status": "preserved",
+              "reason": "Both give reset --soft HEAD~1 and preserve staging. Neither gives the required already-pushed history coordination caveat."
+            },
+            {
+              "fact": "Rewrites local history; coordinate if already pushed",
+              "status": "missing",
+              "reason": "Both give reset --soft HEAD~1 and preserve staging. Neither gives the required already-pushed history coordination caveat."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Use git reset --soft HEAD~1",
+              "status": "preserved",
+              "reason": "Both give reset --soft HEAD~1 and preserve staging. Neither gives the required already-pushed history coordination caveat."
+            },
+            {
+              "fact": "Changes remain staged",
+              "status": "preserved",
+              "reason": "Both give reset --soft HEAD~1 and preserve staging. Neither gives the required already-pushed history coordination caveat."
+            },
+            {
+              "fact": "Rewrites local history; coordinate if already pushed",
+              "status": "missing",
+              "reason": "Both give reset --soft HEAD~1 and preserve staging. Neither gives the required already-pushed history coordination caveat."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both give reset --soft HEAD~1 and preserve staging. Neither gives the required already-pushed history coordination caveat.",
+      "attributionAfterAssessment": {
+        "promptId": "git-revert",
+        "repetition": 2,
+        "a": "ultra",
+        "b": "baseline"
+      }
+    },
+    {
+      "pairId": "71cb45c07811",
+      "split": "tuning",
+      "anonymousInputHash": "5f502ec64d887daed6dc7bd8a2cffa6eb4f107daca5cde43c076553373eb58e3",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "var shares a binding across loop iterations",
+              "status": "preserved",
+              "reason": "Both explain shared var binding, per-iteration let, and a closure alternative with concrete examples."
+            },
+            {
+              "fact": "let creates per-iteration binding; closure capture alternative",
+              "status": "preserved",
+              "reason": "Both explain shared var binding, per-iteration let, and a closure alternative with concrete examples."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "var shares a binding across loop iterations",
+              "status": "preserved",
+              "reason": "Both explain shared var binding, per-iteration let, and a closure alternative with concrete examples."
+            },
+            {
+              "fact": "let creates per-iteration binding; closure capture alternative",
+              "status": "preserved",
+              "reason": "Both explain shared var binding, per-iteration let, and a closure alternative with concrete examples."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both explain shared var binding, per-iteration let, and a closure alternative with concrete examples.",
+      "attributionAfterAssessment": {
+        "promptId": "js-closure",
+        "repetition": 1,
+        "a": "baseline",
+        "b": "lite"
+      }
+    },
+    {
+      "pairId": "4003c976ce60",
+      "split": "held-out",
+      "anonymousInputHash": "76208ac0be8cfb336812c1a8920c28ef6545617ae2c5f51cb1007b4eb204eeeb",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Port 5433",
+              "status": "preserved",
+              "reason": "Both artifact blocks retain port, credentials restriction, backup order, read-only exception and plain wording. A adds an unsupported claim of writing the file and a dialect closing offer outside the block."
+            },
+            {
+              "fact": "Never production credentials",
+              "status": "preserved",
+              "reason": "Both artifact blocks retain port, credentials restriction, backup order, read-only exception and plain wording. A adds an unsupported claim of writing the file and a dialect closing offer outside the block."
+            },
+            {
+              "fact": "Backup before migrations",
+              "status": "preserved",
+              "reason": "Both artifact blocks retain port, credentials restriction, backup order, read-only exception and plain wording. A adds an unsupported claim of writing the file and a dialect closing offer outside the block."
+            },
+            {
+              "fact": "Read-only schema inspection exception",
+              "status": "preserved",
+              "reason": "Both artifact blocks retain port, credentials restriction, backup order, read-only exception and plain wording. A adds an unsupported claim of writing the file and a dialect closing offer outside the block."
+            },
+            {
+              "fact": "Plain persisted prose",
+              "status": "preserved",
+              "reason": "Both artifact blocks retain port, credentials restriction, backup order, read-only exception and plain wording. A adds an unsupported claim of writing the file and a dialect closing offer outside the block."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [
+            "Entry added to MEMORY.md claims an action without tool execution evidence."
+          ],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Port 5433",
+              "status": "preserved",
+              "reason": "Both artifact blocks retain port, credentials restriction, backup order, read-only exception and plain wording. A adds an unsupported claim of writing the file and a dialect closing offer outside the block."
+            },
+            {
+              "fact": "Never production credentials",
+              "status": "preserved",
+              "reason": "Both artifact blocks retain port, credentials restriction, backup order, read-only exception and plain wording. A adds an unsupported claim of writing the file and a dialect closing offer outside the block."
+            },
+            {
+              "fact": "Backup before migrations",
+              "status": "preserved",
+              "reason": "Both artifact blocks retain port, credentials restriction, backup order, read-only exception and plain wording. A adds an unsupported claim of writing the file and a dialect closing offer outside the block."
+            },
+            {
+              "fact": "Read-only schema inspection exception",
+              "status": "preserved",
+              "reason": "Both artifact blocks retain port, credentials restriction, backup order, read-only exception and plain wording. A adds an unsupported claim of writing the file and a dialect closing offer outside the block."
+            },
+            {
+              "fact": "Plain persisted prose",
+              "status": "preserved",
+              "reason": "Both artifact blocks retain port, credentials restriction, backup order, read-only exception and plain wording. A adds an unsupported claim of writing the file and a dialect closing offer outside the block."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both artifact blocks retain port, credentials restriction, backup order, read-only exception and plain wording. A adds an unsupported claim of writing the file and a dialect closing offer outside the block.",
+      "attributionAfterAssessment": {
+        "promptId": "memory-constraints",
+        "repetition": 3,
+        "a": "full",
+        "b": "baseline"
+      }
+    },
+    {
+      "pairId": "25cb43b5576c",
+      "split": "tuning",
+      "anonymousInputHash": "6bdd645c0fedc15664fdbf31ecbde8075a6820125adaa228266391337da53d9a",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Stop writes before checksum verification",
+              "status": "preserved",
+              "reason": "Both preserve stop/checksum/staging/counts/approval ordering and never-delete instruction. A adds a glyph despite the plain-language safeguard for order-sensitive procedures."
+            },
+            {
+              "fact": "Restore to staging before validating counts",
+              "status": "preserved",
+              "reason": "Both preserve stop/checksum/staging/counts/approval ordering and never-delete instruction. A adds a glyph despite the plain-language safeguard for order-sensitive procedures."
+            },
+            {
+              "fact": "Request approval after validation and before production cutover",
+              "status": "preserved",
+              "reason": "Both preserve stop/checksum/staging/counts/approval ordering and never-delete instruction. A adds a glyph despite the plain-language safeguard for order-sensitive procedures."
+            },
+            {
+              "fact": "Never delete original backup",
+              "status": "preserved",
+              "reason": "Both preserve stop/checksum/staging/counts/approval ordering and never-delete instruction. A adds a glyph despite the plain-language safeguard for order-sensitive procedures."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [
+            "Decorative glyph conflicts with the order-sensitive plain-language fallback."
+          ],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Stop writes before checksum verification",
+              "status": "preserved",
+              "reason": "Both preserve stop/checksum/staging/counts/approval ordering and never-delete instruction. A adds a glyph despite the plain-language safeguard for order-sensitive procedures."
+            },
+            {
+              "fact": "Restore to staging before validating counts",
+              "status": "preserved",
+              "reason": "Both preserve stop/checksum/staging/counts/approval ordering and never-delete instruction. A adds a glyph despite the plain-language safeguard for order-sensitive procedures."
+            },
+            {
+              "fact": "Request approval after validation and before production cutover",
+              "status": "preserved",
+              "reason": "Both preserve stop/checksum/staging/counts/approval ordering and never-delete instruction. A adds a glyph despite the plain-language safeguard for order-sensitive procedures."
+            },
+            {
+              "fact": "Never delete original backup",
+              "status": "preserved",
+              "reason": "Both preserve stop/checksum/staging/counts/approval ordering and never-delete instruction. A adds a glyph despite the plain-language safeguard for order-sensitive procedures."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both preserve stop/checksum/staging/counts/approval ordering and never-delete instruction. A adds a glyph despite the plain-language safeguard for order-sensitive procedures.",
+      "attributionAfterAssessment": {
+        "promptId": "ordered-restore",
+        "repetition": 2,
+        "a": "ultra",
+        "b": "baseline"
+      }
+    },
+    {
+      "pairId": "76acab4a3143",
+      "split": "held-out",
+      "anonymousInputHash": "86c92faddfa942a9141fcf7e2a7b7c73aa16a50c61b272ab6ea2f2c9ba563ae3",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "JavaScript comment only",
+              "status": "preserved",
+              "reason": "Both contain only a fenced JavaScript comment, preserve requestId and timeout uncertainty, and use plain artifact prose."
+            },
+            {
+              "fact": "Retries reuse requestId exactly",
+              "status": "preserved",
+              "reason": "Both contain only a fenced JavaScript comment, preserve requestId and timeout uncertainty, and use plain artifact prose."
+            },
+            {
+              "fact": "Timeout does not prove rejection",
+              "status": "preserved",
+              "reason": "Both contain only a fenced JavaScript comment, preserve requestId and timeout uncertainty, and use plain artifact prose."
+            },
+            {
+              "fact": "Plain artifact prose",
+              "status": "preserved",
+              "reason": "Both contain only a fenced JavaScript comment, preserve requestId and timeout uncertainty, and use plain artifact prose."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "JavaScript comment only",
+              "status": "preserved",
+              "reason": "Both contain only a fenced JavaScript comment, preserve requestId and timeout uncertainty, and use plain artifact prose."
+            },
+            {
+              "fact": "Retries reuse requestId exactly",
+              "status": "preserved",
+              "reason": "Both contain only a fenced JavaScript comment, preserve requestId and timeout uncertainty, and use plain artifact prose."
+            },
+            {
+              "fact": "Timeout does not prove rejection",
+              "status": "preserved",
+              "reason": "Both contain only a fenced JavaScript comment, preserve requestId and timeout uncertainty, and use plain artifact prose."
+            },
+            {
+              "fact": "Plain artifact prose",
+              "status": "preserved",
+              "reason": "Both contain only a fenced JavaScript comment, preserve requestId and timeout uncertainty, and use plain artifact prose."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both contain only a fenced JavaScript comment, preserve requestId and timeout uncertainty, and use plain artifact prose.",
+      "attributionAfterAssessment": {
+        "promptId": "persisted-comment",
+        "repetition": 1,
+        "a": "baseline",
+        "b": "lite"
+      }
+    },
+    {
+      "pairId": "146912032dd6",
+      "split": "tuning",
+      "anonymousInputHash": "2461277367cec7d7d7a3d1f59185f82d55f29f7c757e8d580cb6fa637299d29d",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Conventional commit subject",
+              "status": "preserved",
+              "reason": "Both have conventional subjects and explanatory bodies without fabricated tests or author identity. A adds unprovided implementation detail about returning the prior response."
+            },
+            {
+              "fact": "Body explains retry/timeout duplicate order motivation",
+              "status": "preserved",
+              "reason": "Both have conventional subjects and explanatory bodies without fabricated tests or author identity. A adds unprovided implementation detail about returning the prior response."
+            },
+            {
+              "fact": "Plain prose; no invented tests or attribution",
+              "status": "preserved",
+              "reason": "Both have conventional subjects and explanatory bodies without fabricated tests or author identity. A adds unprovided implementation detail about returning the prior response."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [
+            "Stored-key lookup and returning original response are plausible but not supplied facts."
+          ],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Conventional commit subject",
+              "status": "preserved",
+              "reason": "Both have conventional subjects and explanatory bodies without fabricated tests or author identity. A adds unprovided implementation detail about returning the prior response."
+            },
+            {
+              "fact": "Body explains retry/timeout duplicate order motivation",
+              "status": "preserved",
+              "reason": "Both have conventional subjects and explanatory bodies without fabricated tests or author identity. A adds unprovided implementation detail about returning the prior response."
+            },
+            {
+              "fact": "Plain prose; no invented tests or attribution",
+              "status": "preserved",
+              "reason": "Both have conventional subjects and explanatory bodies without fabricated tests or author identity. A adds unprovided implementation detail about returning the prior response."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both have conventional subjects and explanatory bodies without fabricated tests or author identity. A adds unprovided implementation detail about returning the prior response.",
+      "attributionAfterAssessment": {
+        "promptId": "plain-commit-body",
+        "repetition": 3,
+        "a": "baseline",
+        "b": "full"
+      }
+    },
+    {
+      "pairId": "cbca9f8dfccb",
+      "split": "held-out",
+      "anonymousInputHash": "0259af420b7495a5e3a67aecf54145312583430525c56a91c4f45ebf1a360d74",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Portuguese PR body with requested titles",
+              "status": "preserved",
+              "reason": "Both use Portuguese and requested titles with concurrency-only validation. A invents creation endpoints, cache window, configurable TTL and cached-return behavior not supplied by the prompt; B stays close to the stated change."
+            },
+            {
+              "fact": "Describe before/after accurately",
+              "status": "incorrect",
+              "reason": "Both use Portuguese and requested titles with concurrency-only validation. A invents creation endpoints, cache window, configurable TTL and cached-return behavior not supplied by the prompt; B stays close to the stated change."
+            },
+            {
+              "fact": "Only concurrency tests claimed",
+              "status": "preserved",
+              "reason": "Both use Portuguese and requested titles with concurrency-only validation. A invents creation endpoints, cache window, configurable TTL and cached-return behavior not supplied by the prompt; B stays close to the stated change."
+            },
+            {
+              "fact": "Plain prose appropriate for persisted PR",
+              "status": "preserved",
+              "reason": "Both use Portuguese and requested titles with concurrency-only validation. A invents creation endpoints, cache window, configurable TTL and cached-return behavior not supplied by the prompt; B stays close to the stated change."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [
+            "Unprovided cache/TTL implementation claims make the artifact inaccurate."
+          ],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Portuguese PR body with requested titles",
+              "status": "preserved",
+              "reason": "Both use Portuguese and requested titles with concurrency-only validation. A invents creation endpoints, cache window, configurable TTL and cached-return behavior not supplied by the prompt; B stays close to the stated change."
+            },
+            {
+              "fact": "Describe before/after accurately",
+              "status": "preserved",
+              "reason": "Both use Portuguese and requested titles with concurrency-only validation. A invents creation endpoints, cache window, configurable TTL and cached-return behavior not supplied by the prompt; B stays close to the stated change."
+            },
+            {
+              "fact": "Only concurrency tests claimed",
+              "status": "preserved",
+              "reason": "Both use Portuguese and requested titles with concurrency-only validation. A invents creation endpoints, cache window, configurable TTL and cached-return behavior not supplied by the prompt; B stays close to the stated change."
+            },
+            {
+              "fact": "Plain prose appropriate for persisted PR",
+              "status": "preserved",
+              "reason": "Both use Portuguese and requested titles with concurrency-only validation. A invents creation endpoints, cache window, configurable TTL and cached-return behavior not supplied by the prompt; B stays close to the stated change."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both use Portuguese and requested titles with concurrency-only validation. A invents creation endpoints, cache window, configurable TTL and cached-return behavior not supplied by the prompt; B stays close to the stated change.",
+      "attributionAfterAssessment": {
+        "promptId": "pt-pr-body",
+        "repetition": 2,
+        "a": "ultra",
+        "b": "baseline"
+      }
+    },
+    {
+      "pairId": "f9c01c150ec9",
+      "split": "tuning",
+      "anonymousInputHash": "60e50b589c5caf8685f8e0692c4f8ceacdeaecd9114010dceaa19bc25a0c7fca",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Uma ocorrência não prova causalidade",
+              "status": "preserved",
+              "reason": "Both initially reject causal certainty, but both claim a persistent error after rollback proves the change was not responsible. That categorical exclusion is unwarranted. A does not explicitly compare metrics."
+            },
+            {
+              "fact": "Comparar logs, métricas e condições antes/depois",
+              "status": "missing",
+              "reason": "Both initially reject causal certainty, but both claim a persistent error after rollback proves the change was not responsible. That categorical exclusion is unwarranted. A does not explicitly compare metrics."
+            },
+            {
+              "fact": "Preservar incerteza e responder em português",
+              "status": "incorrect",
+              "reason": "Both initially reject causal certainty, but both claim a persistent error after rollback proves the change was not responsible. That categorical exclusion is unwarranted. A does not explicitly compare metrics."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [
+            "Rollback persistence alone cannot exclude a contribution from the change."
+          ],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Uma ocorrência não prova causalidade",
+              "status": "preserved",
+              "reason": "Both initially reject causal certainty, but both claim a persistent error after rollback proves the change was not responsible. That categorical exclusion is unwarranted. A does not explicitly compare metrics."
+            },
+            {
+              "fact": "Comparar logs, métricas e condições antes/depois",
+              "status": "preserved",
+              "reason": "Both initially reject causal certainty, but both claim a persistent error after rollback proves the change was not responsible. That categorical exclusion is unwarranted. A does not explicitly compare metrics."
+            },
+            {
+              "fact": "Preservar incerteza e responder em português",
+              "status": "incorrect",
+              "reason": "Both initially reject causal certainty, but both claim a persistent error after rollback proves the change was not responsible. That categorical exclusion is unwarranted. A does not explicitly compare metrics."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [
+            "Rollback persistence alone cannot exclude a contribution from the change."
+          ],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both initially reject causal certainty, but both claim a persistent error after rollback proves the change was not responsible. That categorical exclusion is unwarranted. A does not explicitly compare metrics.",
+      "attributionAfterAssessment": {
+        "promptId": "pt-uncertainty",
+        "repetition": 1,
+        "a": "baseline",
+        "b": "lite"
+      }
+    },
+    {
+      "pairId": "4d7f235cb7f8",
+      "split": "tuning",
+      "anonymousInputHash": "c907c76ce02d271caea4c410235055a228394f6147489a442025e9e60fe5fa68",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Observe repeated queries through logs or tooling",
+              "status": "preserved",
+              "reason": "Both show logs/tooling and includes eager loading. Neither explicitly verifies the resulting query count or warns against loading unnecessary associations."
+            },
+            {
+              "fact": "Preload needed associations with includes/preload",
+              "status": "preserved",
+              "reason": "Both show logs/tooling and includes eager loading. Neither explicitly verifies the resulting query count or warns against loading unnecessary associations."
+            },
+            {
+              "fact": "Verify query count; avoid blindly loading everything",
+              "status": "missing",
+              "reason": "Both show logs/tooling and includes eager loading. Neither explicitly verifies the resulting query count or warns against loading unnecessary associations."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [
+            "The unsupported 90% claim and categorical includes-cannot-filter statement reduce reliability."
+          ],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Observe repeated queries through logs or tooling",
+              "status": "preserved",
+              "reason": "Both show logs/tooling and includes eager loading. Neither explicitly verifies the resulting query count or warns against loading unnecessary associations."
+            },
+            {
+              "fact": "Preload needed associations with includes/preload",
+              "status": "preserved",
+              "reason": "Both show logs/tooling and includes eager loading. Neither explicitly verifies the resulting query count or warns against loading unnecessary associations."
+            },
+            {
+              "fact": "Verify query count; avoid blindly loading everything",
+              "status": "missing",
+              "reason": "Both show logs/tooling and includes eager loading. Neither explicitly verifies the resulting query count or warns against loading unnecessary associations."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both show logs/tooling and includes eager loading. Neither explicitly verifies the resulting query count or warns against loading unnecessary associations.",
+      "attributionAfterAssessment": {
+        "promptId": "rails-n1",
+        "repetition": 3,
+        "a": "full",
+        "b": "baseline"
+      }
+    },
+    {
+      "pairId": "7b6fba45e061",
+      "split": "tuning",
+      "anonymousInputHash": "e3ec42bf33a0ae792fdea998bd2b5cfe76bfc36ee53c78b202f2e6e4dc2a5b20",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "An inline object has a new reference on each render",
+              "status": "preserved",
+              "reason": "Both identify new object references and show useMemo/memo. They do not clearly condition the explanation on memoized referential comparison, and suggest memo alone resolves a frequently recreated object."
+            },
+            {
+              "fact": "Memoization only helps referential comparison; explain React.memo/useMemo or move stable data outside",
+              "status": "incorrect",
+              "reason": "Both identify new object references and show useMemo/memo. They do not clearly condition the explanation on memoized referential comparison, and suggest memo alone resolves a frequently recreated object."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [
+            "memo cannot skip a changed-reference object prop merely as insurance."
+          ],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "An inline object has a new reference on each render",
+              "status": "preserved",
+              "reason": "Both identify new object references and show useMemo/memo. They do not clearly condition the explanation on memoized referential comparison, and suggest memo alone resolves a frequently recreated object."
+            },
+            {
+              "fact": "Memoization only helps referential comparison; explain React.memo/useMemo or move stable data outside",
+              "status": "incorrect",
+              "reason": "Both identify new object references and show useMemo/memo. They do not clearly condition the explanation on memoized referential comparison, and suggest memo alone resolves a frequently recreated object."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [
+            "Default child rendering is not governed by the asserted universal shallow-prop comparison."
+          ],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both identify new object references and show useMemo/memo. They do not clearly condition the explanation on memoized referential comparison, and suggest memo alone resolves a frequently recreated object.",
+      "attributionAfterAssessment": {
+        "promptId": "react-rerender",
+        "repetition": 2,
+        "a": "baseline",
+        "b": "ultra"
+      }
+    },
+    {
+      "pairId": "459e848751c5",
+      "split": "tuning",
+      "anonymousInputHash": "0f4e1d067578b7e0bf422bbaf6ba95765ea0f4f129245269997ca44cc20e8f71",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Use modest syntax checks/library rather than a complete RFC regex",
+              "status": "preserved",
+              "reason": "Both recommend modest syntax checks/libraries and confirmation email for real reachability/control. Some absolute rhetoric goes beyond those core facts."
+            },
+            {
+              "fact": "Verification email establishes reachability/control; regex cannot",
+              "status": "preserved",
+              "reason": "Both recommend modest syntax checks/libraries and confirmation email for real reachability/control. Some absolute rhetoric goes beyond those core facts."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Use modest syntax checks/library rather than a complete RFC regex",
+              "status": "preserved",
+              "reason": "Both recommend modest syntax checks/libraries and confirmation email for real reachability/control. Some absolute rhetoric goes beyond those core facts."
+            },
+            {
+              "fact": "Verification email establishes reachability/control; regex cannot",
+              "status": "preserved",
+              "reason": "Both recommend modest syntax checks/libraries and confirmation email for real reachability/control. Some absolute rhetoric goes beyond those core facts."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both recommend modest syntax checks/libraries and confirmation email for real reachability/control. Some absolute rhetoric goes beyond those core facts.",
+      "attributionAfterAssessment": {
+        "promptId": "regex-email",
+        "repetition": 1,
+        "a": "lite",
+        "b": "baseline"
+      }
+    },
+    {
+      "pairId": "2a2eb5cff56f",
+      "split": "tuning",
+      "anonymousInputHash": "55eb330d948e93d94ca839a63fd14a727b838821216eb85c03da5debc04a5790",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Requested two-row table with named columns",
+              "status": "preserved",
+              "reason": "Both give the requested table and limitations. A falsely states that mutexes have no ownership tracking; B correctly distinguishes mutex ownership and semaphore permits."
+            },
+            {
+              "fact": "Mutex provides exclusive ownership; semaphore controls count/permits",
+              "status": "incorrect",
+              "reason": "Both give the requested table and limitations. A falsely states that mutexes have no ownership tracking; B correctly distinguishes mutex ownership and semaphore permits."
+            },
+            {
+              "fact": "State a limitation for each",
+              "status": "preserved",
+              "reason": "Both give the requested table and limitations. A falsely states that mutexes have no ownership tracking; B correctly distinguishes mutex ownership and semaphore permits."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": ["Mutex no-ownership assertion reverses the key distinction."],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Requested two-row table with named columns",
+              "status": "preserved",
+              "reason": "Both give the requested table and limitations. A falsely states that mutexes have no ownership tracking; B correctly distinguishes mutex ownership and semaphore permits."
+            },
+            {
+              "fact": "Mutex provides exclusive ownership; semaphore controls count/permits",
+              "status": "preserved",
+              "reason": "Both give the requested table and limitations. A falsely states that mutexes have no ownership tracking; B correctly distinguishes mutex ownership and semaphore permits."
+            },
+            {
+              "fact": "State a limitation for each",
+              "status": "preserved",
+              "reason": "Both give the requested table and limitations. A falsely states that mutexes have no ownership tracking; B correctly distinguishes mutex ownership and semaphore permits."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both give the requested table and limitations. A falsely states that mutexes have no ownership tracking; B correctly distinguishes mutex ownership and semaphore permits.",
+      "attributionAfterAssessment": {
+        "promptId": "requested-table",
+        "repetition": 3,
+        "a": "full",
+        "b": "baseline"
+      }
+    },
+    {
+      "pairId": "9af608ed3735",
+      "split": "tuning",
+      "anonymousInputHash": "789a027ee99902c9270548d41d75060eca55f6ddc564369642a3a888ef4e628f",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Inspect EXPLAIN (ANALYZE, BUFFERS) and selectivity",
+              "status": "missing",
+              "reason": "Both discuss EXPLAIN ANALYZE/selectivity and candidate indexes, but omit BUFFERS and write/storage cost. Both lead with creating an index rather than diagnosis."
+            },
+            {
+              "fact": "Consider an index matching filtering/order",
+              "status": "preserved",
+              "reason": "Both discuss EXPLAIN ANALYZE/selectivity and candidate indexes, but omit BUFFERS and write/storage cost. Both lead with creating an index rather than diagnosis."
+            },
+            {
+              "fact": "An index is not guaranteed to help and adds write/storage cost",
+              "status": "missing",
+              "reason": "Both discuss EXPLAIN ANALYZE/selectivity and candidate indexes, but omit BUFFERS and write/storage cost. Both lead with creating an index rather than diagnosis."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Inspect EXPLAIN (ANALYZE, BUFFERS) and selectivity",
+              "status": "missing",
+              "reason": "Both discuss EXPLAIN ANALYZE/selectivity and candidate indexes, but omit BUFFERS and write/storage cost. Both lead with creating an index rather than diagnosis."
+            },
+            {
+              "fact": "Consider an index matching filtering/order",
+              "status": "preserved",
+              "reason": "Both discuss EXPLAIN ANALYZE/selectivity and candidate indexes, but omit BUFFERS and write/storage cost. Both lead with creating an index rather than diagnosis."
+            },
+            {
+              "fact": "An index is not guaranteed to help and adds write/storage cost",
+              "status": "missing",
+              "reason": "Both discuss EXPLAIN ANALYZE/selectivity and candidate indexes, but omit BUFFERS and write/storage cost. Both lead with creating an index rather than diagnosis."
+            }
+          ],
+          "criticalConstraintLoss": true,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both discuss EXPLAIN ANALYZE/selectivity and candidate indexes, but omit BUFFERS and write/storage cost. Both lead with creating an index rather than diagnosis.",
+      "attributionAfterAssessment": {
+        "promptId": "sql-index",
+        "repetition": 2,
+        "a": "baseline",
+        "b": "ultra"
+      }
+    },
+    {
+      "pairId": "f7147e97fab0",
+      "split": "tuning",
+      "anonymousInputHash": "cd8dbcf32cf6d7cab2318b3bf6bc83d20071bba1d031ce0078c5a060f498c540",
+      "reviewType": "assistant-offline-self-audit",
+      "humanReview": "pending",
+      "sides": {
+        "a": {
+          "requiredFacts": [
+            {
+              "fact": "Generics preserve relationships between input/output types",
+              "status": "preserved",
+              "reason": "Both explain generic type relationships versus fixed alternatives with examples and no unsafe casts. B ends with an illustrative function fragment rather than a complete declaration."
+            },
+            {
+              "fact": "Unions represent a finite choice of alternative shapes",
+              "status": "preserved",
+              "reason": "Both explain generic type relationships versus fixed alternatives with examples and no unsafe casts. B ends with an illustrative function fragment rather than a complete declaration."
+            },
+            {
+              "fact": "Provide practical examples without unsafe casts",
+              "status": "preserved",
+              "reason": "Both explain generic type relationships versus fixed alternatives with examples and no unsafe casts. B ends with an illustrative function fragment rather than a complete declaration."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        },
+        "b": {
+          "requiredFacts": [
+            {
+              "fact": "Generics preserve relationships between input/output types",
+              "status": "preserved",
+              "reason": "Both explain generic type relationships versus fixed alternatives with examples and no unsafe casts. B ends with an illustrative function fragment rather than a complete declaration."
+            },
+            {
+              "fact": "Unions represent a finite choice of alternative shapes",
+              "status": "preserved",
+              "reason": "Both explain generic type relationships versus fixed alternatives with examples and no unsafe casts. B ends with an illustrative function fragment rather than a complete declaration."
+            },
+            {
+              "fact": "Provide practical examples without unsafe casts",
+              "status": "preserved",
+              "reason": "Both explain generic type relationships versus fixed alternatives with examples and no unsafe casts. B ends with an illustrative function fragment rather than a complete declaration."
+            }
+          ],
+          "criticalConstraintLoss": false,
+          "correctnessFindings": [],
+          "completeness": "See required-fact assessments; missing facts count against this rubric, not necessarily every user context.",
+          "actionability": "Concrete steps/examples are usable only subject to recorded omissions and factual findings.",
+          "readability": "Generally readable prose/code; structure alone is not penalized. Specific concerns appear in the pair evidence."
+        }
+      },
+      "evidence": "Both explain generic type relationships versus fixed alternatives with examples and no unsafe casts. B ends with an illustrative function fragment rather than a complete declaration.",
+      "attributionAfterAssessment": {
+        "promptId": "ts-generics",
+        "repetition": 1,
+        "a": "baseline",
+        "b": "lite"
+      }
+    }
+  ],
+  "sourceRun": "2026-09-11T16-07-28.095Z-07dd213e",
+  "sourceRuleHash": "76f382716132ea7a378237ec6ed58183d757a80aa41d1e09b1188a72debf48a3",
+  "anonymousAssessmentsHash": "2e5464ee668b58de48367175db7eb0f20eb026b048aa615efab46ff62e7f4700",
+  "aggregateSideAssessments": [
+    {
+      "split": "held-out",
+      "arm": "baseline",
+      "measure": "reviewed",
+      "count": 4
+    },
+    {
+      "split": "held-out",
+      "arm": "full",
+      "measure": "reviewed",
+      "count": 1
+    },
+    {
+      "split": "held-out",
+      "arm": "lite",
+      "measure": "reviewed",
+      "count": 2
+    },
+    {
+      "split": "held-out",
+      "arm": "ultra",
+      "measure": "requiredFactLoss",
+      "count": 1
+    },
+    {
+      "split": "held-out",
+      "arm": "ultra",
+      "measure": "reviewed",
+      "count": 1
+    },
+    {
+      "split": "tuning",
+      "arm": "baseline",
+      "measure": "requiredFactLoss",
+      "count": 8
+    },
+    {
+      "split": "tuning",
+      "arm": "baseline",
+      "measure": "reviewed",
+      "count": 15
+    },
+    {
+      "split": "tuning",
+      "arm": "full",
+      "measure": "requiredFactLoss",
+      "count": 4
+    },
+    {
+      "split": "tuning",
+      "arm": "full",
+      "measure": "reviewed",
+      "count": 5
+    },
+    {
+      "split": "tuning",
+      "arm": "lite",
+      "measure": "requiredFactLoss",
+      "count": 1
+    },
+    {
+      "split": "tuning",
+      "arm": "lite",
+      "measure": "reviewed",
+      "count": 5
+    },
+    {
+      "split": "tuning",
+      "arm": "ultra",
+      "measure": "requiredFactLoss",
+      "count": 3
+    },
+    {
+      "split": "tuning",
+      "arm": "ultra",
+      "measure": "reviewed",
+      "count": 5
+    }
+  ]
+}
