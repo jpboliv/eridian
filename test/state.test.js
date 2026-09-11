@@ -25,7 +25,8 @@ test('writeState then readState round-trips', () => {
     buddy: {},
   });
   assert.strictEqual(state.readState().current, 'full');
-  assert.strictEqual(state.readState().events.length, 1);
+  assert.strictEqual(state.readState().events.length, 0);
+  assert.strictEqual(state.readStore().legacy.events.length, 1);
 });
 
 test('readState prunes retired keys from old state files', () => {
@@ -81,4 +82,27 @@ test('migrateLegacyStateDir no-ops when neither exists', () => {
   const base = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-mig-'));
   state.migrateLegacyStateDir(path.join(base, 'rocky'), path.join(base, 'eridian'));
   assert.ok(!fs.existsSync(path.join(base, 'eridian')));
+});
+
+test('malformed schema-2 containers recover while preserving valid preferences', () => {
+  state.writeState({
+    version: 2,
+    preferences: { current: 'ultra', buddy: { stepSeconds: 2 } },
+    sessions: null,
+  });
+  assert.equal(state.readState().current, 'ultra');
+  state.updateSession('alpha', (s) => s, { initialize: true });
+  assert.equal(state.readState('alpha').current, 'ultra');
+  assert.equal(state.readState('alpha').buddy.stepSeconds, 2);
+  state.writeState({ version: 2 });
+  assert.equal(state.readState().current, 'off');
+  state.updateSession('alpha', (s) => s, { initialize: true });
+  assert.equal(state.readState('alpha').current, 'off');
+});
+test('future schemas are never downgraded or overwritten', () => {
+  state.writeState({ version: 99, preferences: { current: 'ultra' } });
+  const before = fs.readFileSync(state.STATE_FILE, 'utf8');
+  assert.throws(() => state.update((s) => s), /Unsupported/);
+  assert.equal(fs.readFileSync(state.STATE_FILE, 'utf8'), before);
+  state.writeState({ current: 'off' });
 });

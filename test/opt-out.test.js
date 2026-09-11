@@ -20,7 +20,7 @@ function fixture(t, current = 'full') {
 function run(script, args, dir, off = '1', input = {}) {
   return execFileSync(process.execPath, [path.join(ROOT, script), ...args], {
     env: { ...process.env, ERIDIAN_OFF: off, ERIDIAN_STATE_DIR: dir },
-    input: JSON.stringify(input),
+    input: JSON.stringify({ session_id: 'test-session', ...input }),
     encoding: 'utf8',
   });
 }
@@ -82,7 +82,7 @@ test('only exact 1 opts out; scheduled-task text does not suppress reminders', (
     assert.match(run('scripts/session-start.js', [], dir, off), /ROCKY MODE/);
     run('scripts/mode.js', ['full'], dir, off);
     const state = JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8'));
-    state.promptsSinceReinject = 999;
+    state.sessions['test-session'].promptsSinceReinject = 999;
     fs.writeFileSync(path.join(dir, 'state.json'), JSON.stringify(state));
     assert.match(
       run('scripts/buddy-hook.js', ['prompt'], dir, off, { prompt: '<scheduled-task>' }),
