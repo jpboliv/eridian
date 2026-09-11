@@ -45,6 +45,15 @@ function loadInjectionBlock(level) {
   }
 }
 
+function loadReminderBlock(level) {
+  if (!LEVELS.includes(level) || level === 'off') return null;
+  try {
+    return extractInjectionBlock(fs.readFileSync(SKILL_FILE, 'utf8'), `reminder-${level}`);
+  } catch {
+    return null;
+  }
+}
+
 function ruleIdentity() {
   try {
     return require('node:crypto')
@@ -57,6 +66,7 @@ function ruleIdentity() {
 }
 
 module.exports = {
+  loadReminderBlock,
   composeInjectionBlock,
   ruleIdentity,
   extractInjectionBlock,
