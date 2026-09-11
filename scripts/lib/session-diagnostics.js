@@ -44,6 +44,11 @@ function observe(cache, obj) {
   const usage = message?.usage?.output_tokens;
   const tokens = Number.isFinite(usage) && usage >= 0 ? usage : null;
   const old = cache.records[key];
+  if (old && !text.length && old.textLength > 0) {
+    // Usage-only or protected-block updates do not erase already observed prose.
+    if (tokens !== null) old.tokens = Math.max(old.tokens || 0, tokens);
+    return;
+  }
   if (
     old &&
     ((old.tokens !== null && tokens !== null && tokens < old.tokens) ||
@@ -129,7 +134,7 @@ function validObservations(cache) {
   });
 }
 
-function sessionDiagnostics({ sessionId, transcriptPath, language = 'und' }) {
+function sessionDiagnostics({ sessionId, transcriptPath, language = 'und' } = {}) {
   if (
     !validId(sessionId) ||
     typeof transcriptPath !== 'string' ||

@@ -62,6 +62,7 @@ test('stream snapshots and duplicates count once, weighted denominator uses raw 
   const long = 'Check deployment settings carefully. '.repeat(20);
   f.append(reply('b', long, 80));
   f.append(reply('b', long, 80));
+  f.append(reply('a', '', 90, [{ type: 'thinking', thinking: 'hidden' }]));
   const r = f.scan();
   const a = score('Great question. Run tests before deployment.'),
     b = score(long);
