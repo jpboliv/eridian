@@ -3,6 +3,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { atomicWrite, withLock } = require('./atomic');
 const { ruleIdentity } = require('./persona');
+const { resolveConfig } = require('./config');
 const DEFAULT_STATE_DIR = path.join(os.homedir(), '.claude', 'eridian');
 const STATE_DIR = process.env.ERIDIAN_STATE_DIR || DEFAULT_STATE_DIR;
 const STATE_FILE = path.join(STATE_DIR, 'state.json');
@@ -48,6 +49,9 @@ function readStore() {
       sessions[id] = {
         ...session,
         current: level(session.current),
+        modeOverride: ['off', 'lite', 'full', 'ultra'].includes(session.modeOverride)
+          ? session.modeOverride
+          : null,
         events: Array.isArray(session.events)
           ? session.events.filter(
               (event) =>
@@ -91,19 +95,24 @@ function readStore() {
     legacy: { attribution: 'unknown', events: parsed.events || [] },
   };
 }
-function effective(store, id) {
+function effective(store, id, cwd) {
   const session = id && Object.hasOwn(store.sessions, id) ? store.sessions[id] : null;
+  const defaults =
+    !session && id ? resolveConfig({ cwd, preference: store.preferences.current }) : null;
   return session
     ? { ...session, buddy: { ...session.buddy, ...store.preferences.buddy } }
     : {
-        current: store.preferences.current,
+        current: defaults ? defaults.mode : store.preferences.current,
+        ...(defaults
+          ? { modeOverride: null, resolvedSource: defaults.source, repoRoot: defaults.repoRoot }
+          : {}),
         events: [],
         buddy: { ...store.preferences.buddy },
         promptsSinceReinject: 0,
       };
 }
-function readState(id) {
-  return effective(readStore(), sessionId(id || null));
+function readState(id, { cwd } = {}) {
+  return effective(readStore(), sessionId(id || null), cwd);
 }
 function update(fn) {
   return withLock(STATE_FILE, () => {
@@ -118,12 +127,12 @@ function update(fn) {
     return next;
   });
 }
-function updateSession(id, fn, { initialize = false } = {}) {
+function updateSession(id, fn, { initialize = false, cwd } = {}) {
   id = sessionId(id);
   if (!id) return null;
   return withLock(STATE_FILE, () => {
     const store = readStore();
-    const state = effective(store, id);
+    const state = effective(store, id, cwd);
     if (initialize) recordActivation(state, state.current, false);
     const next = fn(state, store);
     store.sessions[id] = { ...next, buddy: { ...next.buddy }, updatedAt: new Date().toISOString() };

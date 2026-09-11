@@ -50,8 +50,8 @@ if (require.main === module) {
       if (!id) {
         process.exit(0);
       }
-      let state = readState(id);
-      const update = (fn) => updateSession(id, fn);
+      let state = readState(id, { cwd: input.cwd });
+      const update = (fn) => updateSession(id, fn, { cwd: input.cwd });
       const nowMs = Date.now();
       let savedTokens = null;
       let crossedMilestone = false;

@@ -20,7 +20,7 @@ function main(raw) {
   }
   const id = sessionId(input.session_id);
   if (!id) return;
-  const update = (fn) => updateSession(id, fn);
+  const update = (fn) => updateSession(id, fn, { cwd: input.cwd });
   const now = new Date().toISOString();
 
   if (kind === 'prompt') {

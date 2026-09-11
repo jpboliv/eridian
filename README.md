@@ -198,6 +198,30 @@ Do not share the state directory across hosts. Details and the runtime fixture a
 [the accounting design](docs/design/session-accounting.md) and
 [test/fixtures/session-accounting.json](test/fixtures/session-accounting.json).
 
+## Team defaults
+
+Commit `.eridian.json` at your repository root:
+
+```json
+{ "defaultMode": "lite" }
+```
+
+New sessions use environment `ERIDIAN_DEFAULT_MODE`, then repo config, user
+`~/.config/eridian/config.json` (or `$XDG_CONFIG_HOME/eridian/config.json`), saved
+preference, then off. `/eridian:mode off` overrides defaults for this session;
+`/eridian:mode reset` clears that override and reads current defaults again.
+Explicit mode changes also save the future-session preference, while other live
+sessions retain their mode. Resume/compaction keep the session snapshot. Starting
+from off, `/eridian:mode` activates full. `ERIDIAN_OFF=1` suppresses all style paths
+without changing saved state.
+
+Config accepts only `{ "defaultMode": "lite|full|ultra|off" }` (choose one value).
+Files are bounded to 4 KiB, must be regular files without symlinked components,
+and invalid sources fall through with a short diagnostic. Discovery stops at the
+nearest repository root; unversioned directories inspect only the current folder.
+See [session lifecycle design](docs/team-defaults-design.md) for reset and migration
+semantics. This draft remains dependent on ticket 010's cadence decision.
+
 ## Development
 
 ```
