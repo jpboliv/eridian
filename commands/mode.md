@@ -1,6 +1,6 @@
 ---
-description: Toggle eridian mode or set level (lite | full | ultra | off)
-argument-hint: "[lite|full|ultra|eridian|off]"
+description: Toggle eridian mode or set level (lite | full | ultra | off | reset)
+argument-hint: "[lite|full|ultra|eridian|off|reset]"
 allowed-tools: Bash(node:*)
 ---
 
@@ -19,3 +19,8 @@ Follow the result above:
 - If it shows `eridian mode: off`: drop the Rocky persona entirely and confirm
   plainly: "Eridian mode off."
 - If it shows `unknown level`: relay the usage line to the user.
+
+`reset` clears this session's explicit override and re-reads defaults; it leaves
+other sessions and the future-session preference unchanged. Explicit mode changes
+(including off) update this session and the future-session preference. A session
+identity is required for reset; relay an identity-required message plainly.

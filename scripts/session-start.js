@@ -19,7 +19,7 @@ try {
       s.promptsSinceReinject = 0;
       return s;
     },
-    { initialize: true }
+    { initialize: true, cwd: input.cwd }
   );
   if (state.current && state.current !== 'off') {
     const block = loadInjectionBlock(state.current);
