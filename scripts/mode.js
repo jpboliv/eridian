@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+const { isOptedOut } = require('./lib/runtime');
+if (isOptedOut()) {
+  console.log('eridian disabled for this run (ERIDIAN_OFF=1). Saved mode unchanged.');
+  process.exit(0);
+}
+
 const { readState, update } = require('./lib/state');
 const { normalizeLevel, loadInjectionBlock } = require('./lib/persona');
 
