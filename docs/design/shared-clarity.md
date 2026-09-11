@@ -20,9 +20,9 @@ comments, commits, PRs, issues and memory. Compression keeps its specialized den
 rules without authorizing dialect or meaning loss. Ticket 009 supplies the matching
 command cleanup and behavioral evaluation; these tickets release together.
 
-The shared block is 143 tokens using `tiktoken` 0.12.0, `o200k_base`. This is a
+The revised shared block is 235 tokens using `tiktoken` 0.12.0, `o200k_base`. This is a
 named-tokenizer measurement, an approximation of the host's tokenizer cost. The
-43-token increase over the approximately 100-token target retains explicit
+135-token increase over the approximately 100-token target retains explicit
 uncertainty/negation protections, host-required communication and the artifact
 boundary. Removing those protections to meet the target would defeat this change.
 
@@ -32,3 +32,25 @@ human reviews correctness, completeness and avoidable filler. Model review is
 advisory and cannot satisfy human signoff. Structural counts are diagnostic; no
 requirement says every count must fall. Root orchestration owns the combined run,
 so this ticket does not launch a duplicate paid evaluation.
+
+## Review correction — 2026-09-11
+
+The original shared candidate did not reliably distinguish artifact drafting from
+conversational flavor or restrict claims to available evidence. The tuning commit
+case also invented implementation details. The revision makes those priorities
+explicit: complete the task before shortening its wording, preserve material
+conditions, use grammatical artifact prose in the exact requested format, and
+distinguish a proposed draft from actions actually performed. A final private
+check covers the deliverable and evidence without requesting extra output.
+
+This is a general instruction correction informed by tuning observations, not a
+patch containing expected answers from held-out prompts. The original evaluation
+remains evidence for the original hash only. Revised rules require fresh repeated
+paired evaluation and human acceptance; prompt-string or composition tests cannot
+establish that this correction changes model behavior. The increased input cost
+is measured and justified by the missing safeguards, not advertised as savings.
+
+Run the frozen case suite after the final 007/009/008 candidate is composed; do not
+modify its held-out cases or select favorable repetitions. Preserve raw usage and
+report failures before considering release. The provider spend limit currently
+prevents that rerun (reported reset: 19:20 Europe/Lisbon, September 11).
