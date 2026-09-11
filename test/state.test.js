@@ -25,7 +25,8 @@ test('writeState then readState round-trips', () => {
     buddy: {},
   });
   assert.strictEqual(state.readState().current, 'full');
-  assert.strictEqual(state.readState().events.length, 1);
+  assert.strictEqual(state.readState().events.length, 0);
+  assert.strictEqual(state.readStore().legacy.events.length, 1);
 });
 
 test('readState prunes retired keys from old state files', () => {

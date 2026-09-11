@@ -5,7 +5,7 @@ allowed-tools: Bash(node:*)
 
 Stats output:
 
-!`node "${CLAUDE_PLUGIN_ROOT}/scripts/stats.js"`
+!`node "${CLAUDE_PLUGIN_ROOT}/scripts/stats.js" --session-id "${CLAUDE_SESSION_ID}"`
 
 Statusline check:
 

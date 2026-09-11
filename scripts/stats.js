@@ -1,42 +1,27 @@
 #!/usr/bin/env node
-const fs = require('node:fs');
-const os = require('node:os');
-const path = require('node:path');
-const { readState } = require('./lib/state');
-const { buildWindows, attribute, estimateSaved } = require('./lib/stats-lib');
-const { collectMessages } = require('./lib/collect-messages');
-const { latestSessionSaved } = require('./lib/session-savings');
+const { readStore, commandSessionId } = require('./lib/state');
+const { readCache, allCaches } = require('./lib/session-savings');
 const { formatTokens } = require('./statusline');
-
-const PROJECTS_DIR =
-  process.env.CLAUDE_PROJECTS_DIR || path.join(os.homedir(), '.claude', 'projects');
-const FACTORS = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '..', 'eval', 'factors.json'), 'utf8')
+const id = commandSessionId();
+const cache = readCache(id);
+const estimate = (value) =>
+  value === null
+    ? 'unavailable (no applicable prose calibration)'
+    : `~${formatTokens(value)} tokens estimated prose output reduction`;
+console.log('♫ eridian stats — output reduction estimates, not measured savings\n');
+console.log(
+  `this session: ${cache ? estimate(cache.savedTokens) : 'unavailable (no identified session accounting data)'}\n`
 );
-
-const state = readState();
-const windows = buildWindows(state.events, Date.now());
-const { messages, sessions } = collectMessages(PROJECTS_DIR);
-const totals = attribute(messages, windows);
-const saved = estimateSaved(totals, FACTORS);
-
-console.log('♫ eridian stats (all numbers estimated)\n');
-
-const sessionSaved = latestSessionSaved();
-if (sessionSaved === null) {
-  console.log('this session: (no data)\n');
-} else {
-  console.log(`this session: ~${formatTokens(sessionSaved)} saved (${state.current})\n`);
-}
-
-console.log('lifetime (all sessions):');
-console.log('level  messages  output tokens  est. saved');
-for (const [level, t] of Object.entries(totals)) {
-  const levelSaved = Math.round(t.tokens / (1 - FACTORS[level]) - t.tokens);
-  console.log(
-    `${level.padEnd(6)} ${String(t.messages).padEnd(9)} ${String(t.tokens).padEnd(14)} ~${levelSaved}`
-  );
-}
-if (!Object.keys(totals).length) console.log('(no eridian-mode messages found yet)');
-console.log(`\nlifetime est. saved: ~${saved} tokens`);
-console.log(`sessions scanned: ${sessions}`);
+const caches = allCaches();
+console.log('lifetime (all retained schema-2 session accounting caches):');
+console.log(`sessions accounted: ${caches.length}`);
+console.log(
+  `observed active-mode output: ${caches.reduce((sum, c) => sum + c.outputTokens, 0)} tokens`
+);
+const estimates = caches.filter((c) => c.savedTokens !== null);
+console.log(
+  `lifetime: ${estimate(estimates.length ? estimates.reduce((sum, c) => sum + c.savedTokens, 0) : null)}`
+);
+console.log(`sessions without applicable calibration: ${caches.length - estimates.length}`);
+if (readStore().legacy.events.length)
+  console.log('legacy history: unknown session attribution; excluded from estimates');

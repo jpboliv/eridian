@@ -16,14 +16,10 @@ function buildWindows(events, nowMs) {
 }
 
 function attribute(messages, windows) {
-  const inAnyWindow = (ts) => windows.some((w) => ts >= w.startMs && ts < w.endMs);
   const totals = {};
   for (const m of messages) {
     const w = windows.find((w) => m.tsMs >= w.startMs && m.tsMs < w.endMs);
     if (!w) continue;
-    // Only sessions started while a mode was active got the dialect injected.
-    const sessionStart = m.sessionStartMs ?? m.tsMs;
-    if (!inAnyWindow(sessionStart)) continue;
     totals[w.level] = totals[w.level] || { messages: 0, tokens: 0 };
     totals[w.level].messages += 1;
     totals[w.level].tokens += m.outputTokens;
@@ -35,7 +31,7 @@ function estimateSaved(tokensByLevel, factors) {
   let saved = 0;
   for (const [level, { tokens }] of Object.entries(tokensByLevel)) {
     const r = factors[level];
-    if (typeof r === 'number' && r > 0 && r < 1) {
+    if (typeof r === 'number' && r < 1) {
       saved += tokens / (1 - r) - tokens;
     }
   }

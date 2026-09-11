@@ -10,7 +10,7 @@ const MODE = path.join(__dirname, '..', 'scripts', 'mode.js');
 
 function run(args, stateDir) {
   return execFileSync('node', [MODE, ...args], {
-    env: { ...process.env, ERIDIAN_STATE_DIR: stateDir },
+    env: { ...process.env, ERIDIAN_STATE_DIR: stateDir, CLAUDE_SESSION_ID: 'test-session' },
     encoding: 'utf8',
   });
 }
@@ -24,7 +24,9 @@ test('set full prints mode and dialect block, logs event', () => {
   const out = run(['full'], dir);
   assert.match(out, /eridian mode: full/);
   assert.match(out, /ROCKY MODE \(full\)/);
-  const state = JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8'));
+  const state = JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8')).sessions[
+    'test-session'
+  ];
   assert.strictEqual(state.current, 'full');
   assert.strictEqual(state.events.length, 1);
 });
@@ -61,6 +63,8 @@ test('activating a level resets the reinject counter', () => {
     })
   );
   run(['full'], dir);
-  const state = JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8'));
+  const state = JSON.parse(fs.readFileSync(path.join(dir, 'state.json'), 'utf8')).sessions[
+    'test-session'
+  ];
   assert.strictEqual(state.promptsSinceReinject, 0);
 });

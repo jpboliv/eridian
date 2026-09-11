@@ -41,16 +41,16 @@ test('attribute assigns messages to window levels', () => {
   });
 });
 
-test('attribute excludes messages from sessions started before mode-on', () => {
+test('attribute counts activation inside an existing session', () => {
   const windows = [{ startMs: mins(10), endMs: mins(60), level: 'full' }];
   const messages = [
-    // session began at mins(0), before the window: hook never injected
+    // session began before activation, but this output follows activation
     { tsMs: mins(20), outputTokens: 500, sessionStartMs: mins(0) },
     // session began inside the window: counts
     { tsMs: mins(20), outputTokens: 100, sessionStartMs: mins(15) },
   ];
   assert.deepStrictEqual(attribute(messages, windows), {
-    full: { messages: 1, tokens: 100 },
+    full: { messages: 2, tokens: 600 },
   });
 });
 

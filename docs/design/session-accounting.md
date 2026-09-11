@@ -16,9 +16,9 @@ until users delete the state directory; no automatic pruning silently reduces li
 totals. Runtime objects are per session. This is a local, single-host store.
 
 Read-modify-write transactions hold a filesystem lock across reading and atomic
-replacement. Lock ownership records the process ID. Dead owners are reclaimed;
-live owners are never stolen, and contention times out rather than losing updates.
-Uninitialized locks can be reclaimed only after a grace period. Temporary files use
+replacement. Lock ownership records the process ID. Locks are never stolen: contention times out rather than losing updates. After a
+process is forcibly killed, remove its `.lock` directory only after verifying the
+recorded owner is no longer running. This avoids races between stale-lock reapers. Temporary files use
 random names and are cleaned on failure. State and accounting use separate locks;
 accounting never writes global state while holding its lock.
 

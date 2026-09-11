@@ -5,14 +5,15 @@ if (isOptedOut()) {
   process.exit(0);
 }
 
-const { readState, update } = require('./lib/state');
+const { readState, update, updateSession, commandSessionId } = require('./lib/state');
 const { normalizeLevel, loadInjectionBlock } = require('./lib/persona');
 
-const arg = (process.argv[2] || '').trim();
+const id = commandSessionId();
+const arg = (process.argv[2] === '--session-id' ? '' : process.argv[2] || '').trim();
 let target;
 
 if (!arg) {
-  target = readState().current === 'off' ? 'full' : 'off';
+  target = readState(id).current === 'off' ? 'full' : 'off';
 } else {
   target = normalizeLevel(arg);
   if (!target) {
@@ -21,15 +22,22 @@ if (!arg) {
   }
 }
 
-update((s) => {
+const change = (s, store) => {
+  if (!arg) target = s.current === 'off' ? 'full' : 'off';
+  if (store) store.preferences.current = target;
   s.current = target;
-  s.events.push({ ts: new Date().toISOString(), level: target });
+  if (id) s.events.push({ ts: new Date().toISOString(), level: target });
   s.promptsSinceReinject = 0;
   return s;
-});
+};
+if (id) updateSession(id, change);
+else update(change);
 
 if (target === 'off') {
   console.log('eridian mode: off');
 } else {
   console.log(`eridian mode: ${target}\n\n${loadInjectionBlock(target)}`);
 }
+
+if (!id)
+  console.log('Session identity unavailable; preference saved, session accounting unavailable.');

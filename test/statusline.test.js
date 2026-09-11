@@ -13,7 +13,7 @@ test('3 rows, quip on the top row, level+savings on the body row', () => {
   assert.strictEqual(lines.length, 3);
   assert.match(lines[0], /♫/);
   assert.match(lines[1], /∙\s*full/);
-  assert.match(lines[1], /~12\.3k saved/);
+  assert.match(lines[1], /~12\.3k output reduction/);
 });
 
 test('omits savings segment when session savings unavailable', () => {
@@ -63,23 +63,35 @@ test('CLI: renders session savings from stdin session JSON', () => {
     env,
     input: JSON.stringify({ session_id: 'cli-sess', transcript_path: transcript }),
   }).toString();
-  assert.match(out, /saved/);
+  assert.doesNotMatch(out, /output reduction/);
+  assert.match(out, /full/);
 });
 
-test('CLI: empty stdin still renders the buddy, without savings', () => {
+test('CLI: empty stdin cannot select a session', () => {
   const { env } = cliEnv();
   const out = execFileSync('node', [SCRIPT], { env, input: '' }).toString();
-  assert.match(out, /full/);
-  assert.ok(!out.includes('saved'));
+  assert.strictEqual(out, '');
 });
 
 test('CLI: each invocation advances buddy.frame and the rendered pose', () => {
   const { stateDir, env } = cliEnv();
   const stateFile = path.join(stateDir, 'state.json');
-  const out1 = execFileSync('node', [SCRIPT], { env, input: '' }).toString();
-  assert.strictEqual(JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy.frame, 1);
-  const out2 = execFileSync('node', [SCRIPT], { env, input: '' }).toString();
-  assert.strictEqual(JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy.frame, 2);
+  const out1 = execFileSync('node', [SCRIPT], {
+    env,
+    input: JSON.stringify({ session_id: 'cli-sess' }),
+  }).toString();
+  assert.strictEqual(
+    JSON.parse(fs.readFileSync(stateFile, 'utf8')).sessions['cli-sess'].buddy.frame,
+    1
+  );
+  const out2 = execFileSync('node', [SCRIPT], {
+    env,
+    input: JSON.stringify({ session_id: 'cli-sess' }),
+  }).toString();
+  assert.strictEqual(
+    JSON.parse(fs.readFileSync(stateFile, 'utf8')).sessions['cli-sess'].buddy.frame,
+    2
+  );
   assert.notStrictEqual(out1, out2, 'consecutive refreshes render different poses');
 });
 
@@ -87,8 +99,8 @@ test('CLI: off mode leaves buddy.frame untouched', () => {
   const { stateDir, env } = cliEnv();
   const stateFile = path.join(stateDir, 'state.json');
   fs.writeFileSync(stateFile, JSON.stringify({ current: 'off', events: [], buddy: {} }));
-  execFileSync('node', [SCRIPT], { env, input: '' });
-  assert.ok(!('frame' in JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy));
+  execFileSync('node', [SCRIPT], { env, input: JSON.stringify({ session_id: 'cli-sess' }) });
+  assert.ok(!JSON.parse(fs.readFileSync(stateFile, 'utf8')).sessions?.['cli-sess']?.buddy.frame);
 });
 
 test('CLI: buddy.stepSeconds holds the frame between rapid refreshes', () => {
@@ -98,12 +110,12 @@ test('CLI: buddy.stepSeconds holds the frame between rapid refreshes', () => {
     stateFile,
     JSON.stringify({ current: 'full', events: [], buddy: { stepSeconds: 60 } })
   );
-  execFileSync('node', [SCRIPT], { env, input: '' });
-  const after1 = JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy;
+  execFileSync('node', [SCRIPT], { env, input: JSON.stringify({ session_id: 'cli-sess' }) });
+  const after1 = JSON.parse(fs.readFileSync(stateFile, 'utf8')).sessions['cli-sess'].buddy;
   assert.strictEqual(after1.frame, 1, 'first refresh steps (no lastStepAt yet)');
   assert.ok(after1.lastStepAt, 'lastStepAt stamped');
-  execFileSync('node', [SCRIPT], { env, input: '' });
-  const after2 = JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy;
+  execFileSync('node', [SCRIPT], { env, input: JSON.stringify({ session_id: 'cli-sess' }) });
+  const after2 = JSON.parse(fs.readFileSync(stateFile, 'utf8')).sessions['cli-sess'].buddy;
   assert.strictEqual(after2.frame, 1, 'second refresh within 60s holds the frame');
   assert.strictEqual(after2.lastStepAt, after1.lastStepAt, 'lastStepAt unchanged on hold');
 });
@@ -114,13 +126,23 @@ test('CLI: stale lastStepAt advances the frame', () => {
   fs.writeFileSync(
     stateFile,
     JSON.stringify({
-      current: 'full',
-      events: [],
-      buddy: { stepSeconds: 60, frame: 4, lastStepAt: '2020-01-01T00:00:00.000Z' },
+      version: 2,
+      preferences: { current: 'full', buddy: { stepSeconds: 60 } },
+      sessions: {
+        'cli-sess': {
+          current: 'full',
+          events: [],
+          buddy: { frame: 4, lastStepAt: '2020-01-01T00:00:00.000Z' },
+        },
+      },
+      legacy: { events: [] },
     })
   );
-  execFileSync('node', [SCRIPT], { env, input: '' });
-  assert.strictEqual(JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy.frame, 5);
+  execFileSync('node', [SCRIPT], { env, input: JSON.stringify({ session_id: 'cli-sess' }) });
+  assert.strictEqual(
+    JSON.parse(fs.readFileSync(stateFile, 'utf8')).sessions['cli-sess'].buddy.frame,
+    5
+  );
 });
 
 test('CLI: invalid stepSeconds steps every refresh', () => {
@@ -130,12 +152,15 @@ test('CLI: invalid stepSeconds steps every refresh', () => {
     stateFile,
     JSON.stringify({ current: 'full', events: [], buddy: { stepSeconds: 'fast' } })
   );
-  execFileSync('node', [SCRIPT], { env, input: '' });
-  execFileSync('node', [SCRIPT], { env, input: '' });
-  assert.strictEqual(JSON.parse(fs.readFileSync(stateFile, 'utf8')).buddy.frame, 2);
+  execFileSync('node', [SCRIPT], { env, input: JSON.stringify({ session_id: 'cli-sess' }) });
+  execFileSync('node', [SCRIPT], { env, input: JSON.stringify({ session_id: 'cli-sess' }) });
+  assert.strictEqual(
+    JSON.parse(fs.readFileSync(stateFile, 'utf8')).sessions['cli-sess'].buddy.frame,
+    2
+  );
 });
 
-test('CLI: milestone crossing stamps buddy.milestoneAt', () => {
+test('CLI: inapplicable calibration cannot announce milestones', () => {
   const { stateDir, env } = cliEnv();
   const transcript = path.join(stateDir, 'transcript.jsonl');
   // full factor is 0.26 → saved = tokens/(1-0.26) - tokens ≈ 0.351*tokens;
@@ -153,5 +178,5 @@ test('CLI: milestone crossing stamps buddy.milestoneAt', () => {
     input: JSON.stringify({ session_id: 'cli-mile', transcript_path: transcript }),
   });
   const state = JSON.parse(fs.readFileSync(path.join(stateDir, 'state.json'), 'utf8'));
-  assert.ok(state.buddy.milestoneAt, 'milestoneAt stamped');
+  assert.ok(!state.sessions['cli-mile'].buddy.milestoneAt);
 });

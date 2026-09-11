@@ -130,17 +130,17 @@ function statsEnv() {
 test('stats CLI prints (no data) session line when no session cache exists', () => {
   const { env } = statsEnv();
   const out = execFileSync('node', [STATS_SCRIPT], { env }).toString();
-  assert.match(out, /this session: \(no data\)/);
-  assert.match(out, /lifetime \(all sessions\):/);
+  assert.match(out, /this session: unavailable/);
+  assert.match(out, /lifetime \(all retained schema-2 session accounting caches\):/);
 });
 
-test('stats CLI prints formatted session savings from newest session cache', () => {
+test('stats CLI never substitutes the newest cache for an unidentified caller', () => {
   const { stateDir, env } = statsEnv();
   const sessionsDir = path.join(stateDir, 'sessions');
   fs.mkdirSync(sessionsDir, { recursive: true });
   fs.writeFileSync(path.join(sessionsDir, 'sess-1.json'), JSON.stringify({ savedTokens: 2100 }));
   const out = execFileSync('node', [STATS_SCRIPT], { env }).toString();
-  assert.match(out, /this session: ~2\.1k saved \(full\)/);
+  assert.match(out, /this session: unavailable/);
 });
 
 test('stats CLI no longer writes a lifetime cache or milestone into state', () => {
