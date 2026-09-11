@@ -142,6 +142,7 @@ test('meaning-sensitive changes block automatic overwrite', () => {
 test('supports tilde and longer backtick fences with embedded shorter fences', () => {
   for (const block of [
     '~~~js\n# code\n~~~',
+    '~~~js\r\n# code\r\n~~~\r',
     '````md\n```js\n# code\n```\n````',
     '   ~~~text\n# code\n   ~~~~',
   ]) {

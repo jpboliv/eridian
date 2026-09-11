@@ -99,7 +99,7 @@ function parseMarkdown(text) {
         block = [];
       }
     } else {
-      const open = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+      const open = line.replace(/\r$/, '').match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
       if (open && !(open[1][0] === '`' && open[2].includes('`'))) {
         fence = open[1];
         block = [line];

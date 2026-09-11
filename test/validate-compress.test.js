@@ -18,7 +18,7 @@ test('validate-compress.js exits 0 and prints PASS for a valid compression', () 
   const original = writeTemp('# Title\n\nVerbose text about things.\n\n```bash\nnpm test\n```\n');
   const draft = writeTemp('# Title\n\nDense text.\n\n```bash\nnpm test\n```\n');
   const out = execFileSync('node', [SCRIPT, original, draft], { encoding: 'utf8' });
-  assert.match(out, /^PASS/);
+  assert.match(out, /^PASS structural checks passed; meaning NOT verified/);
   assert.match(out, /headings 1\/1/);
   assert.match(out, /code-blocks 1\/1/);
 });
