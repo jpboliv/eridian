@@ -1,0 +1,28 @@
+[
+  {
+    "id": "definition-and-caller",
+    "task": "Locate total and its caller in these two files. Explain the data flow using source evidence.",
+    "files": {
+      "src/total.js": "function total(items) { return items.reduce((n, item) => n + item.price, 0); }\nmodule.exports = { total };\n",
+      "src/cart.js": "const { total } = require('./total');\nfunction checkout(items) { return total(items); }\n"
+    },
+    "requiredSymbols": ["total", "checkout"],
+    "expectedStatus": "found"
+  },
+  {
+    "id": "missing-symbol",
+    "task": "Locate refund in the supplied scope. State clearly if absent, without guessing another repository.",
+    "files": { "src/pay.js": "function pay(order) { return order.total; }\n" },
+    "requiredSymbols": [],
+    "expectedStatus": "no-match"
+  },
+  {
+    "id": "uncertain-dispatch",
+    "task": "Locate dispatch and explain which handler executes. Preserve uncertainty because the runtime handler key is not supplied.",
+    "files": {
+      "src/dispatch.js": "function dispatch(handlers, key, request) {\n  return handlers[key](request);\n}\n"
+    },
+    "requiredSymbols": ["dispatch"],
+    "expectedStatus": "incomplete"
+  }
+]
