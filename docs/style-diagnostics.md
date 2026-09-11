@@ -58,3 +58,8 @@ prose. This conservative heuristic does not parse every Markdown quotation form
 Code-only or quote-only replies have a null prose phrase rate, never a perfect
 quality rating. A supplied unsupported language (including Portuguese) has null
 lexical counts and rate, even when its visible text resembles an English phrase.
+
+The level candidate expands Rocky-marker observations to suffixes, repeated
+emphasis, third-person phrases, glyphs, acknowledgments and gags. See the
+[marker counting policy](clarity-levels.md#decorative-marker-policy). This does not
+change filler categories or add marker penalties to the phrase-match rate.

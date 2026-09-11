@@ -1,0 +1,23 @@
+{
+  "tokenizer": "tiktoken 0.12.0",
+  "encoding": "cl100k_base",
+  "scope": "approximation for Claude; not provider billing",
+  "baseCommit": "76282a5dc6584b95169e3aab2e39e1ffa74b9de6",
+  "levels": {
+    "lite": {
+      "priorLevel": 181,
+      "candidateLevel": 93,
+      "candidateCombined": 238
+    },
+    "full": {
+      "priorLevel": 242,
+      "candidateLevel": 156,
+      "candidateCombined": 301
+    },
+    "ultra": {
+      "priorLevel": 288,
+      "candidateLevel": 245,
+      "candidateCombined": 390
+    }
+  }
+}

@@ -73,9 +73,13 @@ Eridian therefore requires the explicit opt-out; prompt text such as
 
 ## Levels
 
-- **lite** — max savings, light flavor. `Inline object prop = new ref each render. Wrap in useMemo.`
-- **full** — balanced. `New object every render. useMemo fix, statement. Understand, question?`
-- **ultra** — full Eridian. `♫ Bad bad bad. Object born again every render. useMemo — Rocky fix, statement. Good good good.`
+- **lite** — concise, grammatical prose; no mandatory dialect markers.
+- **full** — clear Rocky engineer phrasing; optional flavor, clarity first.
+- **ultra** — optional extra personality, at most one decorative marker per ordinary reply.
+
+These levels are a draft candidate with quality review pending. See
+[level budgets and evaluation](docs/clarity-levels.md) for marker counting,
+command exceptions, measurements, and the remaining release gates.
 
 ## Shared clarity and artifact boundary
 
@@ -143,6 +147,20 @@ rocky=$(printf '%s' "$input" | node "<plugin-root>/scripts/statusline.js" 2>/dev
 
 ## Savings
 
+**These figures are counterfactual output-token estimates, not measured savings
+or money saved.** Persona blocks, command/skill metadata, activation wrappers and
+reminders add input overhead. [Payload counts are now measured approximately](docs/measurements/input-overhead.md); native-session overhead remains unmeasured. Reused conversation
+context and tool requests may process that text again; cache behavior also matters.
+The available July 2 raw CSV does not reproduce the later full/ultra percentages;
+the July 22 raw snapshot is missing. The historical figures below are published
+observations with incomplete supporting evidence, not a reproducible current baseline.
+
+Whether shorter output reduces a bill depends on input/output rates, cache rates,
+workload and the billing model. Under fixed per-request billing, shorter replies do
+not inherently reduce charges. No universal reply-length break-even follows from
+these estimates. The measurement report distinguishes newly injected text from
+reprocessed context and reports the incomplete cadence experiment honestly.
+
 Measured on 10 real coding prompts via `claude -p`, one run per prompt/mode
 (`eval/run.sh`), 2026-07-02; `full`/`ultra` re-measured 2026-07-22 after the
 canon vocab expansion. Two honest counterfactuals:
@@ -170,6 +188,23 @@ reviews across at least three repetitions; it does not overwrite old factors.
 Run `bash eval/run.sh` for all five arms (costs provider tokens), then
 `node eval/compute-factors.js <run-directory>` for distributions and paired output
 comparisons. Human quality review remains required before accepting new rules.
+
+## Reinforcement cadence
+
+Eridian retains a full reminder after 20 active prompts since the latest
+startup/resume/compaction or mode change. Each session has its own countdown;
+off and `ERIDIAN_OFF=1` suppress injection. Full payloads remain available on
+activation and lifecycle events. A concurrent disable cannot commit before an
+already-selected reminder is emitted.
+
+The [three-policy cadence experiment](eval/snapshots/reinforcement-cadence/README.md)
+retains 262 complete replies, 18 provider spend-limit failures and 116 skipped
+turns from 396 planned cells. It stopped before interval20 reached its first
+periodic refresh, so it cannot establish an optimal cadence. Brief reminders
+added context without resolving observed quality defects. The current default
+stays unchanged pending complete evidence and human acceptance; experimental
+34/34/30-token reminders are not enabled. Emitted characters and replayed input
+are not billed session input or monetary savings.
 
 ## Accounting limitations and storage
 
