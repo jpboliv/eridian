@@ -104,32 +104,62 @@ function aggregate(cache) {
 }
 
 function validObservations(cache) {
-  if (!cache || !cache.records || Array.isArray(cache.records)) return false;
+  const object = (value) => value && typeof value === 'object' && !Array.isArray(value);
+  const tally = (value) => Number.isSafeInteger(value) && value >= 0;
   if (
-    !Number.isInteger(cache.headLength) ||
-    cache.headLength < 0 ||
-    cache.headLength > 4096 ||
-    !Number.isInteger(cache.tailStart) ||
-    cache.tailStart < 0 ||
-    !Number.isInteger(cache.tailLength) ||
-    cache.tailLength < 0 ||
-    cache.tailLength > 4096 ||
-    cache.tailStart + cache.tailLength !== cache.offset ||
-    typeof cache.headHash !== 'string' ||
-    typeof cache.tailHash !== 'string'
+    !object(cache) ||
+    !object(cache.records) ||
+    !object(cache.unidentified) ||
+    !object(cache.excludedSessions) ||
+    typeof cache.language !== 'string' ||
+    !/^[a-z]{2,8}(?:-[a-z0-9]{1,8})*$/i.test(cache.language)
   )
     return false;
+  if (
+    !tally(cache.offset) ||
+    cache.headLength !== Math.min(cache.offset, 4096) ||
+    cache.tailStart !== Math.max(0, cache.offset - 4096) ||
+    cache.tailLength !== Math.min(cache.offset, 4096) ||
+    typeof cache.headHash !== 'string' ||
+    typeof cache.tailHash !== 'string' ||
+    typeof cache.pending !== 'string' ||
+    typeof cache.discarding !== 'boolean' ||
+    !tally(cache.oversizedRecords) ||
+    !tally(cache.malformedRecords) ||
+    Object.values(cache.unidentified).some((value) => value !== true) ||
+    Object.values(cache.excludedSessions).some((value) => value !== true)
+  )
+    return false;
+  const pending = Buffer.from(cache.pending, 'base64');
+  if (
+    pending.toString('base64') !== cache.pending ||
+    pending.length > MAX_LINE_BYTES ||
+    pending.length > cache.offset ||
+    (cache.discarding && pending.length)
+  )
+    return false;
+  const expected = score('', { language: cache.language });
+  const keys = Object.keys(expected.counts);
   return Object.values(cache.records).every((record) => {
     const d = record?.diagnostics;
     return (
       typeof record?.included === 'boolean' &&
-      Number.isFinite(record.textLength) &&
+      tally(record.textLength) &&
+      (record.tokens === null || tally(record.tokens)) &&
       d?.schemaVersion === SCHEMA_VERSION &&
       d.language === cache.language &&
-      [d.proseWords, d.sentences, d.longSentences].every((n) => Number.isFinite(n) && n >= 0) &&
-      (d.phraseMatches === null || (Number.isFinite(d.phraseMatches) && d.phraseMatches >= 0)) &&
-      d.counts &&
-      Object.values(d.counts).every((n) => n === null || (Number.isFinite(n) && n >= 0))
+      d.lexicalSupported === expected.lexicalSupported &&
+      [d.proseWords, d.sentences, d.longSentences].every(tally) &&
+      record.included === d.proseWords > 0 &&
+      d.longSentences <= d.sentences &&
+      (expected.lexicalSupported ? tally(d.phraseMatches) : d.phraseMatches === null) &&
+      object(d.counts) &&
+      Object.keys(d.counts).length === keys.length &&
+      keys.every(
+        (key) =>
+          Object.hasOwn(d.counts, key) &&
+          (expected.counts[key] === null ? d.counts[key] === null : tally(d.counts[key]))
+      )
     );
   });
 }

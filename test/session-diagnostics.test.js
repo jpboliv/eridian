@@ -181,3 +181,48 @@ test('oversized records are skipped without losing subsequent complete replies',
   assert.equal(r.oversizedRecords, 1);
   assert.equal(r.includedReplies, 1);
 });
+
+test('malformed cached count contracts and scanner invariants rebuild instead of producing NaN', (t) => {
+  const f = fixture(t);
+  f.append(reply('one', 'Great question.'));
+  f.scan();
+  const cacheFile = path.join(f.dir, 'diagnostics/current.json');
+  for (const mutate of [
+    (cache, row) => {
+      row.diagnostics.counts = {};
+    },
+    (cache, row) => {
+      delete row.diagnostics.counts.preambles;
+    },
+    (cache, row) => {
+      row.diagnostics.counts.preambles = null;
+    },
+    (cache, row) => {
+      row.diagnostics.proseWords = 0.5;
+    },
+    (cache, row) => {
+      row.diagnostics.lexicalSupported = false;
+    },
+    (cache) => {
+      cache.pending = 'not base64!';
+    },
+    (cache) => {
+      cache.malformedRecords = -1;
+    },
+  ]) {
+    const cache = JSON.parse(fs.readFileSync(cacheFile));
+    mutate(cache, Object.values(cache.records)[0]);
+    fs.writeFileSync(cacheFile, JSON.stringify(cache));
+    const result = f.scan();
+    assert.equal(result.rebuilt, true);
+    assert.equal(result.counts.preambles, 1);
+    assert.ok(Object.values(result.counts).every(Number.isFinite));
+  }
+  f.scan({ language: 'pt' });
+  const cache = JSON.parse(fs.readFileSync(cacheFile));
+  Object.values(cache.records)[0].diagnostics.counts.preambles = 0;
+  fs.writeFileSync(cacheFile, JSON.stringify(cache));
+  const unsupported = f.scan({ language: 'pt' });
+  assert.equal(unsupported.rebuilt, true);
+  assert.equal(unsupported.counts.preambles, null);
+});
