@@ -70,14 +70,63 @@ command-specific exception, not evidence that the ordinary reply budget passed.
 Its contract is tested separately from ordinary response measurements; a model
 behavior check for that command remains pending with the review-contract ticket.
 
-## Evaluation and release gates
+## Captured evaluation and release gates
 
-The repeated evaluation captures 19 cases × five arms × three repetitions,
-including held-out cases. Targets are full output tokens at or below terse, and
-ultra at or below baseline. Provider totals include thinking and cannot be
-substituted into the prose-only runtime factor calibration. Captured run hashes,
-variation, unmet targets, and actual example excerpts will be recorded here after
-completion. No required fact may be removed to reach a token target.
+Run `2026-09-11T16-07-28.095Z-07dd213e` completed **285/285** responses with no
+failed cells: 19 cases × five arms × three repetitions, including held-out cases.
+It used `claude-haiku-4-5-20251001`, Claude CLI 2.1.268, isolated prompts, and
+candidate commit `40c8341`. [Retained provenance and results](design/008-evaluation.json)
+include the manifest, rule/prompt/scorer hashes, per-prompt variation, examples
+with raw-record hashes, and all-output calibration candidates.
 
-Human paired review and the separate full/Rocky recognition check remain release
-gates. Test assertions and low marker counts cannot establish either one.
+Both aggregate cost targets were **missed**. Negative reduction means more output:
+
+| Comparison            | Aggregate reduction | Paired median | Paired 25th–75th percentile |        Paired range |
+| --------------------- | ------------------: | ------------: | --------------------------: | ------------------: |
+| full versus terse     |              −8.65% |        −6.63% |           −30.14% to +8.56% | −132.37% to +57.93% |
+| ultra versus baseline |              −7.34% |        −3.80% |          −18.60% to +10.02% | −149.54% to +28.10% |
+
+Each comparison has 57 paired observations. Relative to baseline, aggregate
+output grew 0.38% for lite, 1.33% for full, and 7.34% for ultra. Shorter input
+payloads and fewer decorative markers did not establish lower output cost.
+These provider totals include any reported thinking; they cannot replace
+prose-only runtime factors. The candidate calibrations explicitly remain
+ineligible for runtime use. Historical factors are unchanged.
+
+English lexical diagnostics covered 51 replies per arm; six Portuguese replies
+per arm remain unsupported. Lite had zero detected markers, full one, and ultra 15. No supported reply exceeded one marker. This is a lexicon observation, not
+proof of compliance for Portuguese or unlisted expressions, and not evidence
+that full remains recognizably Rocky.
+
+### Captured clarification replies
+
+These are complete first-repetition replies to the same tuning case:
+“Delete the old one. There are two backups called old: production and staging.
+What should you do next?” They illustrate the clarity fallback; they are not
+claims of representative dialect quality.
+
+- **lite:** Which backup should be deleted—the production one or staging? Both are named "old," so I need clarification before proceeding with deletion.
+- **full:** Ask which one—you said there are two backups both called "old" (production and staging). Deleting the wrong one in production could be serious, so clarify before you delete either.
+- **ultra:** Before deleting either backup: which one (production or staging)? And confirm you have a current backup elsewhere and verified it works. Deleting a production backup without a tested restore is a high-risk move.
+
+The full raw run remains under `eval/runs/<run-id>/` in this worktree. Committed
+provenance is a compact report, not a replacement for the retained raw replies.
+Human paired correctness/completeness/readability review and a separate full/Rocky
+recognition check remain **pending**. No model judge was run for this candidate.
+Held-out results are reporting evidence only, not tuning input. Tests, token
+counts, and marker observations cannot clear those release gates, and required
+facts must never be removed to meet a cost target. The PR remains a draft.
+
+An [offline assistant audit of six tuning replies](008-quality-review.md)
+found remaining required-fact omissions and factual imprecision: the ultra Git
+reply omits the pushed-history caveat; the full pagination reply omits a bounded
+limit/unique tie-breaker and overstates seek complexity. Four inspected ordinary
+full replies largely read as plain technical prose. This small self-audit does
+not replace paired human review or establish comparative arm effects. The
+candidate remains a draft; no payload changes followed these observations.
+
+A broader [19-case anonymous paired screen](008-quality-review.md#broader-anonymous-paired-screen)
+also failed, including unprovided artifact details in a held-out Portuguese PR
+and an unsupported memory-write claim. Human approval remains pending. The
+[raw archive and checksums](../eval/snapshots/clarity-levels/README.md) deliver all
+285 replies with the PR, alongside the partial assessment's explicit coverage.
