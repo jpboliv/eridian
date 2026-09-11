@@ -30,6 +30,10 @@ see [Credits](#credits).
 | `/eridian:review`                 | one-line-per-finding review. `not ship. fix first.`           |
 | `/eridian:compress`               | compress CLAUDE.md to cut input tokens (backup kept)          |
 
+Compression shows a full diff and requires semantic review and confirmation.
+Structural PASS does not verify meaning; see [compression safeguards](docs/compression-safeguards.md)
+for path restrictions, supported Markdown, and validation limits.
+
 Or just say "talk like Rocky". Mode preferences persist for new sessions until
 `/eridian:mode off`.
 
