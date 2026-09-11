@@ -30,3 +30,27 @@ Retain the existing default if evidence is insufficient to justify another one.
 
 Release gate: retain raw experiments and a readable comparison, then require
 human acceptance. Model/code review must not be labeled human approval.
+
+## Revised rule candidate and rerun
+
+The review corrections in tickets 007/009/008 change the injected payload. The
+archived incomplete comparison belongs to its original rule hash and does not
+measure the revised candidate. Keep those raw runs intact. A new comparison must
+start fresh conversations for all three policies after the final rule source is
+frozen; appending turns to the old conversations would mix treatments.
+
+After provider access resumes, run each command from this ticket's worktree and
+retain the distinct output directories printed by the harness:
+
+```sh
+node eval/multiturn.js --allow-paid --policy start-only --repetitions 3
+node eval/multiturn.js --allow-paid --policy interval20 --repetitions 3
+node eval/multiturn.js --allow-paid --policy brief --repetitions 3
+```
+
+Use `eval/compare-multiturn.js` with the three resulting run directories in that
+order. Verify completion of all 396 turns and comparable post-refresh coverage,
+then inspect semantic correctness and complete task results before interpreting
+usage or style. Failed or skipped calls remain failures; neither old results nor
+runtime counter tests clear this candidate's behavioral gate. The existing
+20-prompt runtime cadence is retained while that comparison is unavailable.

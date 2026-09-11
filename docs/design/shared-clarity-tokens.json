@@ -3,12 +3,14 @@
   "version": "0.12.0",
   "encoding": "o200k_base",
   "scope": "approximation of host tokenizer; exact under named tokenizer",
-  "shared_tokens": 143,
-  "artifact_boundary_tokens_standalone": 39,
-  "shared_sha256": "d4f4754611cecfe8f7436d14b8a7d90a44b2e1c6e715620bf030b628d702800a",
+  "shared_tokens": 249,
+  "artifact_boundary_tokens_standalone": 84,
+  "shared_sha256": "4a0907b25384213e674fb24d8b4e719cfae80f1aff991d2cb4a924d1595b08c3",
   "combined_tokens": {
-    "lite": 318,
-    "full": 380,
-    "ultra": 428
-  }
+    "lite": 424,
+    "full": 486,
+    "ultra": 534
+  },
+  "rule_sha256": "a7e29c02beff4ecd0895711cb1ad4442ac169792033e8f5aef5c64e287b233cf",
+  "sourceStage": "007 shared-rules revision with legacy level blocks; combined_tokens and rule_sha256 are historical stage measurements. Current integrated008 values:008-revision-2.json."
 }
