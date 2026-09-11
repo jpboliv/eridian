@@ -1,0 +1,34 @@
+# Shared clarity rules (tickets 007 and 009)
+
+One `eridian:inject:shared` region is prepended to each active level by
+`loadInjectionBlock`. The existing extraction helper remains a raw-region extractor;
+a separate composition helper requires both shared and level regions. Missing,
+empty or duplicate regions fail closed rather than silently omitting protections.
+SessionStart, mode commands, full prompt reinjection and eval consume the same
+composed payload. Existing skill-source SHA256 provenance remains unchanged as an
+API and naturally changes when these rules change.
+
+The shared rules take precedence over level-specific flavor. Sentence length,
+active voice and structure are preferences. Needed uncertainty, user language,
+requested detail, host communication and complete meaning remain protected. Lite's
+blanket instruction to cut hedging is narrowed to redundant hedging so it cannot
+contradict the shared uncertainty requirement.
+
+Persisted and third-party prose is plain and concise, respects the requested
+language, audience and template, and excludes chat dialect. This includes files,
+comments, commits, PRs, issues and memory. Compression keeps its specialized density
+rules without authorizing dialect or meaning loss. Ticket 009 supplies the matching
+command cleanup and behavioral evaluation; these tickets release together.
+
+The shared block is 143 tokens using `tiktoken` 0.12.0, `o200k_base`. This is a
+named-tokenizer measurement, an approximation of the host's tokenizer cost. The
+43-token increase over the approximately 100-token target retains explicit
+uncertainty/negation protections, host-required communication and the artifact
+boundary. Removing those protections to meet the target would defeat this change.
+
+Release gate: this implementation is a draft until the combined 007+009 rerun of
+006, including held-out cases and full-versus-terse results, is attached and a
+human reviews correctness, completeness and avoidable filler. Model review is
+advisory and cannot satisfy human signoff. Structural counts are diagnostic; no
+requirement says every count must fall. Root orchestration owns the combined run,
+so this ticket does not launch a duplicate paid evaluation.
