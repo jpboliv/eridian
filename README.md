@@ -112,8 +112,8 @@ concise prose in the requested language, respecting the audience and template.
 `/eridian:compress` keeps its specialized density rules without dialect or meaning
 loss. These boundaries apply at every level.
 
-The shared payload including that boundary measures **235 tokens** with `tiktoken`
-0.12.0 / `o200k_base` (an approximation for the host tokenizer). The 135-token overage
+The shared payload including that boundary measures **249 tokens** with `tiktoken`
+0.12.0 / `o200k_base` (an approximation for the host tokenizer). The 149-token overage
 preserves explicit completeness, evidence and artifact safeguards. Artifact drafts use
 ordinary grammar and supplied facts; proposed text is not proof that work was performed. See the
 [design and human release gate](docs/design/shared-clarity.md); combined 007+009

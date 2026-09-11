@@ -20,9 +20,9 @@ comments, commits, PRs, issues and memory. Compression keeps its specialized den
 rules without authorizing dialect or meaning loss. Ticket 009 supplies the matching
 command cleanup and behavioral evaluation; these tickets release together.
 
-The revised shared block is 235 tokens using `tiktoken` 0.12.0, `o200k_base`. This is a
+The revised shared block is 249 tokens using `tiktoken` 0.12.0, `o200k_base`. This is a
 named-tokenizer measurement, an approximation of the host's tokenizer cost. The
-135-token increase over the approximately 100-token target retains explicit
+149-token increase over the approximately 100-token target retains explicit
 uncertainty/negation protections, host-required communication and the artifact
 boundary. Removing those protections to meet the target would defeat this change.
 
