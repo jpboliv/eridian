@@ -79,21 +79,21 @@ Eridian therefore requires the explicit opt-out; prompt text such as
 - **full** — clear Rocky engineer phrasing; optional flavor, clarity first.
 - **ultra** — optional extra personality, at most one decorative marker per ordinary reply.
 
-These levels are a draft candidate that failed the preliminary offline quality
-screen; human review remains pending. See
+These revised levels are an unvalidated draft. The previous candidate failed the
+preliminary offline quality screen; fresh evaluation and human review remain pending. See
 [level budgets and evaluation](docs/clarity-levels.md) for marker counting,
 command exceptions, measurements, and the remaining release gates. In the captured
-285-response candidate run, full used 8.65% more output than terse and ultra used
+285-response previous-candidate run, full used 8.65% more output than terse and ultra used
 7.34% more than baseline; both targets were missed. Runtime factors are unchanged.
 
-Captured clarification excerpts (same prompt, first repetition):
+Historical clarification excerpts from that failed candidate (same prompt, first repetition):
 
 - **lite:** “Which backup should be deleted—the production one or staging?”
 - **full:** “Ask which one—you said there are two backups both called "old" (production and staging).”
 - **ultra:** “Before deleting either backup: which one (production or staging)?”
 
 [Full captured replies and provenance](docs/clarity-levels.md#captured-clarification-replies)
-show the clarity fallback; these examples do not establish dialect quality.
+show the previous clarity fallback; these examples do not validate the revised rules.
 
 ## Shared clarity and artifact boundary
 
@@ -113,9 +113,10 @@ concise prose in the requested language, respecting the audience and template.
 `/eridian:compress` keeps its specialized density rules without dialect or meaning
 loss. These boundaries apply at every level.
 
-The shared payload including that boundary measures **143 tokens** with `tiktoken`
-0.12.0 / `o200k_base` (an approximation for the host tokenizer). The 43-token overage
-preserves explicit clarity and communication safeguards. See the
+The shared payload including that boundary measures **249 tokens** with `tiktoken`
+0.12.0 / `o200k_base` (an approximation for the host tokenizer). The 149-token overage
+preserves explicit completeness, evidence and artifact safeguards. Artifact drafts use
+ordinary grammar and supplied facts; proposed text is not proof that work was performed. See the
 [design and human release gate](docs/design/shared-clarity.md); combined 007+009
 behavioral evaluation and human acceptance remain pending.
 
