@@ -1,11 +1,12 @@
 ---
-description: Show estimated token savings from eridian mode; offers statusline setup
+description: Show output estimates and optional session style diagnostics
+argument-hint: "[--diagnostics --language en [--transcript PATH]]"
 allowed-tools: Bash(node:*)
 ---
 
 Stats output:
 
-!`node "${CLAUDE_PLUGIN_ROOT}/scripts/stats.js" --session-id "${CLAUDE_SESSION_ID}"`
+!`node "${CLAUDE_PLUGIN_ROOT}/scripts/stats.js" $ARGUMENTS --session-id "${CLAUDE_SESSION_ID}"`
 
 Statusline check:
 
@@ -21,3 +22,8 @@ Statusline check:
    - If no, do nothing.
 3. If the statusline check above printed `already-configured: ...`: show the
    user the existing entry and don't touch it.
+
+Optional diagnostics are transparent observations of identified assistant prose,
+not measured quality or reading time. Preserve unsupported-language and exclusion
+labels. Do not turn counts into advice to remove legitimate caution or change the
+buddy/statusline based on them.
