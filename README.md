@@ -161,6 +161,20 @@ rocky=$(printf '%s' "$input" | node "<plugin-root>/scripts/statusline.js" 2>/dev
 
 ## Savings
 
+**These figures are counterfactual output-token estimates, not measured savings
+or money saved.** Persona blocks, command/skill metadata, activation wrappers and
+reminders add input overhead. [Payload counts are now measured approximately](docs/measurements/input-overhead.md); native-session overhead remains unmeasured. Reused conversation
+context and tool requests may process that text again; cache behavior also matters.
+The available July 2 raw CSV does not reproduce the later full/ultra percentages;
+the July 22 raw snapshot is missing. The historical figures below are published
+observations with incomplete supporting evidence, not a reproducible current baseline.
+
+Whether shorter output reduces a bill depends on input/output rates, cache rates,
+workload and the billing model. Under fixed per-request billing, shorter replies do
+not inherently reduce charges. No universal reply-length break-even follows from
+these estimates. The measurement report distinguishes newly injected text from
+reprocessed context and reports the incomplete cadence experiment honestly.
+
 Measured on 10 real coding prompts via `claude -p`, one run per prompt/mode
 (`eval/run.sh`), 2026-07-02; `full`/`ultra` re-measured 2026-07-22 after the
 canon vocab expansion. Two honest counterfactuals:
