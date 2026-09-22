@@ -36,13 +36,18 @@ const change = (s, store) => {
   s.promptsSinceReinject = 0;
   return s;
 };
-if (id) updateSession(id, change);
-else update(change);
-
-if (target === 'off') {
-  console.log('eridian mode: off');
-} else {
-  console.log(`eridian mode: ${target}\n\n${loadInjectionBlock(target)}`);
+const emit = () => {
+  require('node:fs').writeSync(
+    1,
+    target === 'off'
+      ? 'eridian mode: off\n'
+      : `eridian mode: ${target}\n\n${loadInjectionBlock(target)}\n`
+  );
+};
+if (id) updateSession(id, change, { afterCommit: emit });
+else {
+  update(change);
+  emit();
 }
 
 if (!id)
