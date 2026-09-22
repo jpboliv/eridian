@@ -107,3 +107,45 @@ test('post-commit reminder effects serialize before concurrent disabling', async
   assert.equal(fs.readFileSync(log, 'utf8'), 'reminder\noff\n');
   assert.equal(f.run('buddy-hook.js', ['prompt']), '');
 });
+
+for (const script of ['session-start.js', 'mode.js']) {
+  test(`${script}: activation is emitted before a following off transaction`, (t) => {
+    const f = fixture(t);
+    f.run('mode.js', ['full']);
+    const log = path.join(f.dir, 'activation-order');
+    // Disable at the first opportunity after updateSession releases its lock.
+    // An activation printed after that point would restore stale instructions.
+    const source = `
+      const fs = require('node:fs');
+      const { execFileSync } = require('node:child_process');
+      const state = require('./scripts/lib/state');
+      const original = state.updateSession;
+      const log = ${JSON.stringify(log)};
+      const record = text => {
+        if (String(text).includes('ROCKY MODE')) fs.appendFileSync(log, 'activation\\n');
+      };
+      const write = fs.writeSync;
+      fs.writeSync = (fd, text, ...args) => {
+        if (fd === 1) record(text);
+        return write(fd, text, ...args);
+      };
+      const stdout = process.stdout.write.bind(process.stdout);
+      process.stdout.write = (text, ...args) => { record(text); return stdout(text, ...args); };
+      state.updateSession = (...args) => {
+        const result = original(...args);
+        execFileSync(process.execPath, ['scripts/mode.js', 'off'], { env: process.env });
+        fs.appendFileSync(log, 'off\\n');
+        return result;
+      };
+      process.argv = [process.execPath, 'scripts/${script}', 'full'];
+      require('./scripts/${script}');
+    `;
+    execFileSync(process.execPath, ['-e', source], {
+      cwd: root,
+      env: f.env,
+      input: JSON.stringify({ session_id: 'alpha', source: 'resume' }),
+    });
+    assert.equal(fs.readFileSync(log, 'utf8'), 'activation\noff\n');
+    assert.equal(f.run('buddy-hook.js', ['prompt']), '');
+  });
+}

@@ -13,27 +13,31 @@ try {
   }
   const id = sessionId(input.session_id);
   if (!id) process.exit(0);
-  const state = updateSession(
+  updateSession(
     id,
     (s) => {
       s.promptsSinceReinject = 0;
       return s;
     },
-    { initialize: true, cwd: input.cwd }
-  );
-  if (state.current && state.current !== 'off') {
-    const block = loadInjectionBlock(state.current);
-    if (block) {
-      process.stdout.write(
-        JSON.stringify({
-          hookSpecificOutput: {
-            hookEventName: 'SessionStart',
-            additionalContext: `Eridian mode "${state.current}" is active (persisted). Apply these style rules to all responses:\n\n${block}`,
-          },
-        })
-      );
+    {
+      initialize: true,
+      cwd: input.cwd,
+      afterCommit: (state) => {
+        if (!state.current || state.current === 'off') return;
+        const block = loadInjectionBlock(state.current);
+        if (block)
+          require('node:fs').writeSync(
+            1,
+            JSON.stringify({
+              hookSpecificOutput: {
+                hookEventName: 'SessionStart',
+                additionalContext: `Eridian mode "${state.current}" is active (persisted). Apply these style rules to all responses:\n\n${block}`,
+              },
+            })
+          );
+      },
     }
-  }
+  );
 } catch {
   // never block session start
 }

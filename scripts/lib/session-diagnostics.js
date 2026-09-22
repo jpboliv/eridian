@@ -4,7 +4,7 @@ const crypto = require('node:crypto');
 const { score, SCHEMA_VERSION } = require('./readcost');
 const { STATE_DIR, sessionId: validId } = require('./state');
 const { atomicWrite, withLock } = require('./atomic');
-const CACHE_VERSION = 1;
+const CACHE_VERSION = 2;
 const MAX_LINE_BYTES = 1024 * 1024;
 const hash = (value) => crypto.createHash('sha256').update(value).digest('hex');
 const scorerHash = () =>
@@ -45,12 +45,13 @@ function observe(cache, obj) {
   const tokens = Number.isFinite(usage) && usage >= 0 ? usage : null;
   const old = cache.records[key];
   if (old && !text.length && old.textLength > 0) {
-    // Usage-only or protected-block updates do not erase already observed prose.
-    if (tokens !== null) old.tokens = Math.max(old.tokens || 0, tokens);
+    // Keep the usage associated with the selected prose snapshot. Advancing it
+    // from a textless update would suppress later prose arriving out of order.
     return;
   }
   if (
     old &&
+    old.textLength > 0 &&
     ((old.tokens !== null && tokens !== null && tokens < old.tokens) ||
       ((tokens === null || old.tokens === tokens) && text.length <= old.textLength))
   )

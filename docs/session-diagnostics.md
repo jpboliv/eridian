@@ -14,10 +14,11 @@ otherwise use only the path in its own schema-2 accounting cache. Never select
 the newest transcript or another session's cache.
 
 Reply boundaries are assistant message IDs (and model), with outer UUID fallback.
-Cumulative streamed snapshots with the same identity count once: retain the largest
-reported cumulative output usage, breaking ties by visible text length. Without
+Cumulative streamed snapshots with the same identity count once: select the prose
+snapshot with the largest reported cumulative output usage, breaking ties by visible text length. Without
 usage retain the longest text snapshot. Raw deltas are not complete replies and
-are ignored. Usage-only/protected-block updates preserve already observed prose.
+are ignored. Usage-only/protected-block updates preserve already observed prose
+and its snapshot usage, so out-of-order textless updates cannot hide later prose.
 Records without identity are excluded rather than guessed. Explicit
 transcript session-ID mismatches are excluded. Tool/thinking/artifact content blocks
 are excluded; text blocks use the shared scorer's code/quote exclusions. Unmarked
