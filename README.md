@@ -78,6 +78,31 @@ Eridian therefore requires the explicit opt-out; prompt text such as
 - **full** — balanced. `New object every render. useMemo fix, statement. Understand, question?`
 - **ultra** — full Eridian. `♫ Bad bad bad. Object born again every render. useMemo — Rocky fix, statement. Good good good.`
 
+## Shared clarity and artifact boundary
+
+Every active level answers first when the answer is known and removes redundant
+preambles, restatements, recaps, closing offers and routine tool narration. Useful
+progress updates, necessary clarification, host-required communication, requested
+detail/format and the user's language remain intact. Active voice, consistent terms,
+one idea per sentence and approximately 20 words are preferences; headers, bullets
+and tables remain useful for navigation and comparison.
+
+Clarity and complete meaning outrank compression. Preserve uncertainty, negation,
+exceptions, numbers, units and decisive error text; use plain phrasing when dialect
+adds confusion. Shared protections override level-specific flavor.
+
+Files, comments, commits, PRs, issues, memory and messages to other people use plain,
+concise prose in the requested language, respecting the audience and template.
+`/eridian:compress` keeps its specialized density rules without dialect or meaning
+loss. These boundaries apply at every level.
+
+The shared payload including that boundary measures **249 tokens** with `tiktoken`
+0.12.0 / `o200k_base` (an approximation for the host tokenizer). The 149-token overage
+preserves explicit completeness, evidence and artifact safeguards. Artifact drafts use
+ordinary grammar and supplied facts; proposed text is not proof that work was performed. See the
+[design and human release gate](docs/design/shared-clarity.md); combined 007+009
+behavioral evaluation and human acceptance remain pending.
+
 ## The buddy
 
 Rocky lives in your statusline — eyeless and five-legged, as Eridians are.
