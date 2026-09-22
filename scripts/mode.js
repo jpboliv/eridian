@@ -16,21 +16,37 @@ const { normalizeLevel, loadInjectionBlock } = require('./lib/persona');
 
 const id = commandSessionId();
 const arg = (process.argv[2] === '--session-id' ? '' : process.argv[2] || '').trim();
+const reset = arg === 'reset';
+if (reset && !id) {
+  console.log('eridian reset requires a session identity; saved preference unchanged.');
+  process.exit(0);
+}
 let target;
 
 if (!arg) {
   target = readState(id).current === 'off' ? 'full' : 'off';
-} else {
+} else if (!reset) {
   target = normalizeLevel(arg);
   if (!target) {
-    console.log(`unknown level "${arg}". use: lite | full | ultra | eridian | off`);
+    console.log(`unknown level "${arg}". use: lite | full | ultra | eridian | off | reset`);
     process.exit(0);
   }
 }
 
 const change = (s, store) => {
-  if (!arg) target = s.current === 'off' ? 'full' : 'off';
-  if (store) store.preferences.current = target;
+  if (reset) {
+    const { resolveConfig } = require('./lib/config');
+    const resolved = resolveConfig({ preference: store.preferences.current });
+    target = resolved.mode;
+    s.modeOverride = null;
+    s.resolvedSource = resolved.source;
+    s.repoRoot = resolved.repoRoot;
+  } else {
+    if (!arg) target = s.current === 'off' ? 'full' : 'off';
+    s.modeOverride = target;
+    s.resolvedSource = 'session-override';
+    if (store) store.preferences.current = target;
+  }
   s.current = target;
   if (id) recordActivation(s, target);
   s.promptsSinceReinject = 0;

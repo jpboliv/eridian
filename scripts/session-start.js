@@ -21,6 +21,7 @@ try {
     },
     {
       initialize: true,
+      cwd: input.cwd,
       afterCommit: (state) => {
         if (!state.current || state.current === 'off') return;
         const block = loadInjectionBlock(state.current);
