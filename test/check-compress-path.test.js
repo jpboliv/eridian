@@ -1,3 +1,4 @@
+require('./helpers/env').isolateEnv();
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const test = require('node:test');

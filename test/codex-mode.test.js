@@ -4,6 +4,7 @@ const path = require('node:path');
 const { execFileSync, spawnSync } = require('node:child_process');
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const { isolateEnv } = require('./helpers/env');
 const { codexPaths } = require('../scripts/lib/host-paths');
 const { normalizeEvent, readNormalizedEvents } = require('../scripts/codex/usage');
 
@@ -11,17 +12,8 @@ const mode = path.join(__dirname, '..', 'scripts', 'codex', 'mode.js');
 function dir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-codex-mode-'));
 }
-// Tests must not inherit the developer's Codex thread, defaults or user config.
 function isolatedEnv(stateDir, extra = {}) {
-  const env = { ...process.env };
-  for (const key of ['CODEX_THREAD_ID', 'CODEX_HOME', 'ERIDIAN_DEFAULT_MODE', 'ERIDIAN_OFF'])
-    delete env[key];
-  return {
-    ...env,
-    ERIDIAN_STATE_DIR: stateDir,
-    XDG_CONFIG_HOME: path.join(stateDir, 'xdg'),
-    ...extra,
-  };
+  return { ...isolateEnv({ ...process.env }), ERIDIAN_STATE_DIR: stateDir, ...extra };
 }
 function run(args, stateDir, extra = {}) {
   return execFileSync(process.execPath, [mode, ...args], {

@@ -1,3 +1,4 @@
+require('./helpers/env').isolateEnv();
 const test = require('node:test');
 const assert = require('node:assert');
 const { renderLines, formatTokens } = require('../scripts/statusline.js');

@@ -4,6 +4,7 @@ const path = require('node:path');
 const { execFileSync, spawnSync } = require('node:child_process');
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const { isolateEnv } = require('./helpers/env');
 
 const root = path.resolve(__dirname, '..');
 const manifestPath = path.join(root, '.codex-plugin', 'plugin.json');
@@ -82,8 +83,8 @@ test('Codex distribution builder excludes local planning data and ships a self-c
   assert.deepEqual(forbidden, []);
   assert.ok(fs.existsSync(path.join(output, '.agents', 'plugins', 'marketplace.json')));
   const stateDir = path.join(destination, 'state');
-  const env = { ...process.env, ERIDIAN_STATE_DIR: stateDir, ERIDIAN_OFF: '0' };
-  delete env.CODEX_THREAD_ID;
+  const env = isolateEnv({ ...process.env });
+  env.ERIDIAN_STATE_DIR = stateDir;
   for (const [script, args] of [
     ['scripts/codex/mode.js', ['status']],
     ['scripts/codex/stats.js', ['--diagnostics', '--language', 'en']],

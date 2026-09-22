@@ -4,12 +4,12 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const { isolateEnv } = require('./helpers/env');
 
 const backup = path.join(__dirname, '..', 'scripts', 'codex', 'backup.js');
 function fixture() {
   const dir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-codex-backup-')));
-  const env = { ...process.env };
-  for (const key of ['CODEX_THREAD_ID', 'CODEX_HOME']) delete env[key];
+  const env = isolateEnv({ ...process.env });
   env.ERIDIAN_STATE_DIR = dir;
   const run = (args) =>
     spawnSync(process.execPath, [backup, ...args], { cwd: dir, env, encoding: 'utf8' });

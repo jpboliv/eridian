@@ -4,16 +4,14 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const { isolateEnv } = require('./helpers/env');
 const { readNormalizedEvents, MAX_LINE_BYTES } = require('../scripts/codex/usage');
 
 const scripts = path.join(__dirname, '..', 'scripts', 'codex');
 function fixture() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-codex-stats-'));
-  const env = { ...process.env };
-  for (const key of ['CODEX_THREAD_ID', 'CODEX_HOME', 'ERIDIAN_DEFAULT_MODE', 'ERIDIAN_OFF'])
-    delete env[key];
+  const env = isolateEnv({ ...process.env });
   env.ERIDIAN_STATE_DIR = dir;
-  env.XDG_CONFIG_HOME = path.join(dir, 'xdg');
   const run = (script, args = [], extra = {}) =>
     spawnSync(process.execPath, [path.join(scripts, script), ...args], {
       cwd: dir,
