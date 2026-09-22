@@ -9,6 +9,7 @@ if (!isOptedOut()) {
     const { notePrompt } = require('../lib/reinforcement');
     const { readInput, validateInput } = require('./input');
     const { createCodexStore } = require('./store');
+    const { sessionId } = require('../lib/state-store');
     const input = readInput();
     const checked = validateInput(input, { event: 'UserPromptSubmit' });
     if (checked.ok) {
@@ -18,7 +19,7 @@ if (!isOptedOut()) {
         store.updateSession(
           checked.id,
           (state, rawStore) => {
-            const key = typeof input.turn_id === 'string' && input.turn_id ? input.turn_id : null;
+            const key = sessionId(input.turn_id);
             state.recentPromptEvents = Array.isArray(state.recentPromptEvents)
               ? state.recentPromptEvents.filter((item) => typeof item === 'string').slice(-31)
               : [];

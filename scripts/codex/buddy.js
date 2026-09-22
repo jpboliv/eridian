@@ -23,8 +23,8 @@ function describe(stepSeconds) {
 }
 
 if (!identity.ok) {
-  console.log(`bad value: ${identity.reason}`);
-  process.exit(0);
+  console.error(`eridian buddy failed: ${identity.reason}`);
+  process.exit(1);
 }
 if (arg === '--render') {
   const state = readState(identity.id, { cwd: process.cwd() });

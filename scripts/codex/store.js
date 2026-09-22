@@ -1,9 +1,9 @@
 const { createStateStore } = require('../lib/state-store');
 const { resolveConfig } = require('../lib/config');
-const { paths } = require('./paths');
+const { codexPaths } = require('../lib/host-paths');
 
 function createCodexStore({ env = process.env, home, stateDir } = {}) {
-  const resolved = paths(env, home, stateDir);
+  const resolved = codexPaths({ env, home, stateDir });
   return createStateStore({
     stateDir: resolved.stateDir,
     resolveConfig,

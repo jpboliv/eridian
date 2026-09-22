@@ -8,9 +8,14 @@ const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
 const scripts = path.join(root, 'scripts', 'codex');
 
+// Fixtures must not inherit the developer's Codex thread, defaults or user config.
 function fixture() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-codex-runtime-'));
-  const env = { ...process.env, ERIDIAN_STATE_DIR: dir, ERIDIAN_OFF: '0' };
+  const env = { ...process.env };
+  for (const key of ['CODEX_THREAD_ID', 'CODEX_HOME', 'ERIDIAN_DEFAULT_MODE', 'ERIDIAN_OFF'])
+    delete env[key];
+  env.ERIDIAN_STATE_DIR = dir;
+  env.XDG_CONFIG_HOME = path.join(dir, 'xdg');
   const run = (script, args = [], input = {}, extra = {}) =>
     execFileSync(process.execPath, [path.join(scripts, script), ...args], {
       cwd: dir,
@@ -145,4 +150,28 @@ test('Codex and Claude state roots stay separate, including shared override root
   codex.updateSession('same-id', (state) => state, { initialize: true });
   assert.ok(fs.existsSync(path.join(f.dir, 'codex', 'state.json')));
   assert.ok(!fs.existsSync(path.join(f.dir, 'eridian', 'state.json')));
+});
+
+test('oversized turn IDs and oversized hook input are ignored without touching state', () => {
+  const f = fixture();
+  f.run('session-start.js', [], { session_id: 'thread-a', source: 'startup', cwd: f.dir });
+  f.run('mode.js', ['full'], {}, { CODEX_THREAD_ID: 'thread-a' });
+  f.run('prompt.js', [], {
+    session_id: 'thread-a',
+    turn_id: 'x'.repeat(5000),
+    prompt: 'hi',
+    cwd: f.dir,
+  });
+  const session = readState(f).sessions['thread-a'];
+  assert.equal(session.promptsSinceReinject, 1);
+  assert.deepEqual(session.recentPromptEvents, []);
+  const before = fs.readFileSync(f.stateFile, 'utf8');
+  const out = execFileSync(process.execPath, [path.join(scripts, 'prompt.js')], {
+    cwd: f.dir,
+    env: f.env,
+    input: JSON.stringify({ session_id: 'thread-a', prompt: 'y'.repeat(300 * 1024) }),
+    encoding: 'utf8',
+  });
+  assert.equal(out, '');
+  assert.equal(fs.readFileSync(f.stateFile, 'utf8'), before);
 });

@@ -17,7 +17,10 @@ failure, fix only flagged draft issues and allow at most the existing two
 validation attempts; delete the draft on failure and never touch the target.
 
 Request confirmation for the exact reviewed bytes. Re-run guards and compare
-target/draft before applying. Create and verify an exclusively created backup
-under the resolved Codex Eridian store's `backups/` directory before replacing
-the target. If backup verification or approval fails, do not overwrite. Report
-that structural checks do not prove semantic preservation.
+target/draft before applying. Then run
+`node <installed-eridian-root>/scripts/codex/backup.js <target>`: it re-runs the
+path guard, copies the target into the resolved Codex Eridian store's `backups/`
+directory with exclusive creation, verifies the bytes and prints `backup: <path>`.
+If it exits non-zero or prints no backup path, do not overwrite; report its
+reason. Only then replace the target with the confirmed draft and mention the
+backup path. Report that structural checks do not prove semantic preservation.

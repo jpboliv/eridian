@@ -1,18 +1,8 @@
 const fs = require('node:fs');
+const { category } = require('../lib/accounting-core');
 
 const INPUT_VERSION = 1;
-
-function contentCategory(content) {
-  if (!Array.isArray(content) || !content.length) return 'unknown';
-  return content.every(
-    (block) =>
-      block?.type === 'text' &&
-      typeof block.text === 'string' &&
-      !/[`]|^[ \t]*~{3,}|^ {4}\S/m.test(block.text)
-  )
-    ? 'prose'
-    : 'protected-or-mixed';
-}
+const MAX_LINE_BYTES = 1024 * 1024;
 
 function normalizeEvent(value, sessionId) {
   if (!value || value.version !== INPUT_VERSION || value.type !== 'assistant') return null;
@@ -20,8 +10,7 @@ function normalizeEvent(value, sessionId) {
   const usage = value.usage || value.message?.usage;
   const id = value.id || value.message?.id;
   const model = value.model || value.message?.model || null;
-  const timestamp = value.timestamp;
-  const tsMs = Date.parse(timestamp);
+  const tsMs = Date.parse(value.timestamp);
   const outputTokens = usage?.output_tokens;
   const content = value.content || value.message?.content;
   if (!Number.isFinite(tsMs) || !Number.isFinite(outputTokens) || outputTokens < 0) return null;
@@ -30,7 +19,8 @@ function normalizeEvent(value, sessionId) {
     model,
     tsMs,
     outputTokens,
-    category: contentCategory(content),
+    category:
+      usage.output_tokens_details?.thinking_tokens > 0 ? 'protected-or-mixed' : category(content),
     content,
   };
 }
@@ -39,14 +29,19 @@ function readNormalizedEvents(file, sessionId) {
   const events = [];
   let malformed = 0;
   let unknown = 0;
+  let oversized = 0;
   let lines;
   try {
     lines = fs.readFileSync(file, 'utf8').split('\n');
   } catch {
-    return { events, malformed: 0, unknown: 0, unavailable: true };
+    return { events, malformed, unknown, oversized, unavailable: true };
   }
   for (const line of lines) {
     if (!line.trim()) continue;
+    if (Buffer.byteLength(line) > MAX_LINE_BYTES) {
+      oversized++;
+      continue;
+    }
     let parsed;
     try {
       parsed = JSON.parse(line);
@@ -58,7 +53,7 @@ function readNormalizedEvents(file, sessionId) {
     if (event) events.push(event);
     else unknown++;
   }
-  return { events, malformed, unknown, unavailable: false };
+  return { events, malformed, unknown, oversized, unavailable: false };
 }
 
-module.exports = { INPUT_VERSION, contentCategory, normalizeEvent, readNormalizedEvents };
+module.exports = { INPUT_VERSION, MAX_LINE_BYTES, normalizeEvent, readNormalizedEvents };

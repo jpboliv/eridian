@@ -15,6 +15,15 @@ function sessionId(value) {
     : null;
 }
 
+// Best-effort rename of the pre-rename state directory. Claude-only; Codex never calls it.
+function migrateLegacyStateDir(legacyDir, dir) {
+  try {
+    if (!fs.existsSync(dir) && fs.existsSync(legacyDir)) fs.renameSync(legacyDir, dir);
+  } catch {
+    /* best effort */
+  }
+}
+
 function createStateStore({
   stateDir,
   migrateLegacyFrom = null,
@@ -25,14 +34,7 @@ function createStateStore({
   const dir = path.resolve(stateDir);
   const stateFile = path.join(dir, 'state.json');
 
-  if (migrateLegacyFrom) {
-    try {
-      if (!fs.existsSync(dir) && fs.existsSync(migrateLegacyFrom))
-        fs.renameSync(migrateLegacyFrom, dir);
-    } catch {
-      /* best effort */
-    }
-  }
+  if (migrateLegacyFrom) migrateLegacyStateDir(migrateLegacyFrom, dir);
 
   const object = (value) =>
     value && typeof value === 'object' && !Array.isArray(value) ? value : {};
@@ -184,4 +186,4 @@ function recordActivation(state, level, force = true) {
     state.events.push({ ts: new Date().toISOString(), level, rule });
 }
 
-module.exports = { createStateStore, recordActivation, sessionId, VERSION };
+module.exports = { createStateStore, migrateLegacyStateDir, recordActivation, sessionId, VERSION };

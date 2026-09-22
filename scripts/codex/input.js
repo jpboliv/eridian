@@ -5,8 +5,30 @@ const MAX_INPUT_BYTES = 256 * 1024;
 const SOURCES = new Set(['startup', 'resume', 'clear', 'compact']);
 
 function readInput(stream = process.stdin) {
-  const raw = fs.readFileSync(stream.fd, 'utf8');
-  if (Buffer.byteLength(raw) > MAX_INPUT_BYTES) throw new Error('Codex hook input is too large');
+  const chunks = [];
+  const buffer = Buffer.alloc(64 * 1024);
+  let total = 0;
+  let oversized = false;
+  for (;;) {
+    let read;
+    try {
+      read = fs.readSync(stream.fd, buffer, 0, buffer.length, null);
+    } catch (error) {
+      if (error.code === 'EAGAIN') continue;
+      if (error.code === 'EOF') break;
+      throw error;
+    }
+    if (!read) break;
+    total += read;
+    if (total > MAX_INPUT_BYTES) {
+      oversized = true;
+      chunks.length = 0;
+      continue;
+    }
+    chunks.push(Buffer.from(buffer.subarray(0, read)));
+  }
+  if (oversized) throw new Error('Codex hook input is too large');
+  const raw = Buffer.concat(chunks).toString('utf8');
   const input = raw ? JSON.parse(raw) : {};
   if (!input || typeof input !== 'object' || Array.isArray(input))
     throw new Error('invalid hook input');

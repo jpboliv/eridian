@@ -1,6 +1,15 @@
 const { score, SCHEMA_VERSION } = require('../lib/readcost');
 
-function normalizedDiagnostics({ events, sessionId, language = 'und' } = {}) {
+const count = (value) => (Number.isInteger(value) && value >= 0 ? value : 0);
+
+function normalizedDiagnostics({
+  events,
+  sessionId,
+  language = 'und',
+  malformedRecords = 0,
+  unsupportedRecords = 0,
+  oversizedRecords = 0,
+} = {}) {
   if (
     typeof sessionId !== 'string' ||
     !sessionId ||
@@ -60,9 +69,9 @@ function normalizedDiagnostics({ events, sessionId, language = 'und' } = {}) {
     includedReplies: rows.length,
     excludedNonProseReplies: records.size - rows.length,
     unidentifiedRecords,
-    excludedSessionRecords: 0,
-    oversizedRecords: 0,
-    malformedRecords: 0,
+    unsupportedRecords: count(unsupportedRecords),
+    malformedRecords: count(malformedRecords),
+    oversizedRecords: count(oversizedRecords),
     proseWords,
     sentences,
     longSentences,

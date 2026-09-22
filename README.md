@@ -27,6 +27,9 @@ codex plugin marketplace add ./dist/codex-marketplace
 codex plugin add eridian@eridian
 ```
 
+Rebuild with `node scripts/build-codex-package.js --force`; it replaces only a
+directory that a previous build produced.
+
 Codex uses `.codex-plugin/plugin.json`, `adapters/codex/skills/`, and
 `hooks/codex.json`. Hook trust remains a Codex host decision; never use a trust
 bypass as installation. In Codex, use the skill picker for Eridian's mode,

@@ -11,25 +11,49 @@ const mode = path.join(__dirname, '..', 'scripts', 'codex', 'mode.js');
 function dir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-codex-mode-'));
 }
+// Tests must not inherit the developer's Codex thread, defaults or user config.
+function isolatedEnv(stateDir, extra = {}) {
+  const env = { ...process.env };
+  for (const key of ['CODEX_THREAD_ID', 'CODEX_HOME', 'ERIDIAN_DEFAULT_MODE', 'ERIDIAN_OFF'])
+    delete env[key];
+  return {
+    ...env,
+    ERIDIAN_STATE_DIR: stateDir,
+    XDG_CONFIG_HOME: path.join(stateDir, 'xdg'),
+    ...extra,
+  };
+}
 function run(args, stateDir, extra = {}) {
   return execFileSync(process.execPath, [mode, ...args], {
-    env: { ...process.env, ERIDIAN_STATE_DIR: stateDir, ERIDIAN_OFF: '0', ...extra },
+    env: isolatedEnv(stateDir, extra),
     cwd: stateDir,
     encoding: 'utf8',
   });
 }
 
-test('mode supports aliases, off, toggle, status, and preference-only fallback', () => {
+test('mode without any identity saves only the preference and supports aliases, toggle and status', () => {
   const stateDir = dir();
-  assert.match(run(['eridian'], stateDir), /eridian preference \(session unavailable\): ultra/);
-  assert.match(run([], stateDir), /eridian preference \(session unavailable\): off/);
+  assert.match(run(['eridian'], stateDir), /^eridian preference: ultra\n/);
+  assert.match(run([], stateDir), /^eridian preference: off\n/);
   assert.match(run(['status'], stateDir), /host: codex/);
   assert.equal(fs.existsSync(path.join(stateDir, 'codex', 'state.json')), true);
 });
 
+test('mode with a thread ID but no hook-bound session reports the session as unavailable', () => {
+  const stateDir = dir();
+  const out = run(['full'], stateDir, { CODEX_THREAD_ID: 'thread-x' });
+  assert.match(out, /^eridian preference \(session unavailable\): full\n/);
+  assert.match(out, /session tracking unavailable/);
+  assert.equal(
+    JSON.parse(fs.readFileSync(path.join(stateDir, 'codex', 'state.json'))).sessions['thread-x'],
+    undefined
+  );
+});
+
 test('mode rejects conflicting command and environment identities', () => {
+  const stateDir = dir();
   const result = spawnSync(process.execPath, [mode, 'full', '--session-id', 'a'], {
-    env: { ...process.env, ERIDIAN_STATE_DIR: dir(), CODEX_THREAD_ID: 'b' },
+    env: isolatedEnv(stateDir, { CODEX_THREAD_ID: 'b' }),
     encoding: 'utf8',
   });
   assert.equal(result.status, 1);

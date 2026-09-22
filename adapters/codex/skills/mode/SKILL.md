@@ -12,9 +12,9 @@ node <installed-eridian-root>/scripts/codex/mode.js [lite|full|ultra|eridian|off
 ```
 
 No argument toggles off/full. `eridian` aliases `ultra`. `status` is read-only.
-`reset` clears only
-this Codex session's override and resolves defaults again. A fresh install is
-off unless a valid environment, repository, or user default resolves otherwise.
+`reset` clears only this Codex session's override and resolves defaults again.
+A fresh install is off unless a valid environment, repository, or user default
+resolves otherwise.
 
 Adopt only the canonical rules block returned by the helper. Do not paste or
 restate the dialect from this wrapper. If `ERIDIAN_OFF=1` is reported, remain

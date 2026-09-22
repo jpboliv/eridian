@@ -38,18 +38,18 @@ present in a conversation.
 
 The Codex adapter currently implements:
 
-| Capability                                               | Implementation                                                                                                                   | Native acceptance                                        |
-| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `lite`, `full`, `ultra`, `eridian`, `off`, toggle        | `scripts/codex/mode.js` with shared persona blocks                                                                               | Offline fixture passed; live picker/command gate remains |
-| `reset`, defaults, preference persistence                | Separate `${CODEX_HOME:-~/.codex}/eridian/` store; `${ERIDIAN_STATE_DIR}/codex/` test override                                   | Offline fixture passed; app/CLI identity gate remains    |
-| Natural-language activation                              | Explicit Eridian intent in the mode skill                                                                                        | Requires client skill-selection smoke check              |
-| Startup/resume/clear/compact and prompt-20 reinforcement | `SessionStart` and `UserPromptSubmit` hooks                                                                                      | Hook delivery/trust/lifecycle smoke check remains        |
-| Help/status                                              | Read-only Codex help skill and `mode.js status`                                                                                  | Picker and trust-status presentation check remains       |
-| Commit/review/compress                                   | Codex skill wrappers preserving staged-diff, read-only review, and compression safeguards; compression defaults to `./AGENTS.md` | Disposable host execution remains                        |
-| Stats/accounting                                         | Versioned normalized Codex input adapter; unavailable without Codex-specific usage events and calibration                        | Native usage-event contract is unverified                |
-| Optional diagnostics                                     | Normalized Codex prose adapter using the shared scorer; unknown/native transcript formats are unavailable                        | Native event/cache contract is unverified                |
-| Buddy controls/reactions                                 | Codex-local speed state, prompt/tool/error/idle transitions, eligible milestones, and explicit terminal renderer                 | Live app statusline equivalent is unverified             |
-| Investigator                                             | Deferred, as in Claude                                                                                                           | Not in scope                                             |
+| Capability                                               | Implementation                                                                                                                                                                                                                                  | Native acceptance                                        |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `lite`, `full`, `ultra`, `eridian`, `off`, toggle        | `scripts/codex/mode.js` with shared persona blocks                                                                                                                                                                                              | Offline fixture passed; live picker/command gate remains |
+| `reset`, defaults, preference persistence                | Separate `${CODEX_HOME:-~/.codex}/eridian/` store; `${ERIDIAN_STATE_DIR}/codex/` test override                                                                                                                                                  | Offline fixture passed; app/CLI identity gate remains    |
+| Natural-language activation                              | Explicit Eridian intent in the mode skill                                                                                                                                                                                                       | Requires client skill-selection smoke check              |
+| Startup/resume/clear/compact and prompt-20 reinforcement | `SessionStart` and `UserPromptSubmit` hooks                                                                                                                                                                                                     | Hook delivery/trust/lifecycle smoke check remains        |
+| Help/status                                              | Read-only Codex help skill and `mode.js status`                                                                                                                                                                                                 | Picker and trust-status presentation check remains       |
+| Commit/review/compress                                   | Codex skill wrappers preserving staged-diff, read-only review, and compression safeguards; compression defaults to `./AGENTS.md` and backs up through `scripts/codex/backup.js` (exclusive creation, byte verification, Codex store `backups/`) | Disposable host execution remains                        |
+| Stats/accounting                                         | Versioned normalized Codex input adapter over the shared `accounting-core` used by Claude; reports unsupported, malformed and oversized records; unavailable without Codex-specific usage events and calibration                                | Native usage-event contract is unverified                |
+| Optional diagnostics                                     | Normalized Codex prose adapter using the shared scorer; unknown/native transcript formats are unavailable                                                                                                                                       | Native event/cache contract is unverified                |
+| Buddy controls/reactions                                 | Codex-local speed state, prompt/tool/error/idle transitions, eligible milestones, and explicit terminal renderer                                                                                                                                | Live app statusline equivalent is unverified             |
+| Investigator                                             | Deferred, as in Claude                                                                                                                                                                                                                          | Not in scope                                             |
 
 Mode changes with a verified hook-created session update that session and the
 Codex future preference. A command with no verified session binding may save
@@ -59,9 +59,17 @@ an error. No path is used to infer session identity.
 
 Stats never reuse Claude calibration factors. Normalized input is version 1 and
 must identify session, model, assistant message, timestamp, cumulative output
-usage, and content. Without a verified native usage adapter or Codex-specific
-prose calibration, values remain unavailable. The Codex adapter never treats a
-transcript as a stable interface.
+usage, and content; `usage.output_tokens_details.thinking_tokens` marks reasoning
+output as protected, as in Claude. Both hosts share one accounting core, so
+attribution, streamed deduplication, prose eligibility and calibration checks
+cannot drift; a shared parity fixture feeds the same observations through the
+Claude transcript scanner and the Codex adapter. Records that are malformed,
+unsupported or over 1 MiB are counted and reported, never silently dropped.
+Without a verified native usage adapter or Codex-specific prose calibration,
+values remain unavailable. The Codex adapter never treats a transcript as a
+stable interface. Codex stats currently keep no per-session cache, so milestone
+memory and retained calibration snapshots remain Claude-only until a native
+event source exists.
 
 Buddy state is host-local and never changes unrelated UI configuration. The
 explicit terminal renderer is a useful fallback, not a claim of a live Codex
@@ -89,6 +97,12 @@ Official contracts used by this implementation:
 - [Codex skills](https://learn.chatgpt.com/docs/build-skills): explicit `$` selection, packaged skills, and optional implicit-invocation policy.
 - [Codex environment variables](https://learn.chatgpt.com/docs/config-file/environment-variables): `CODEX_HOME` as the Codex state root.
 
+The Codex state root is `${CODEX_HOME:-~/.codex}/eridian/` rather than the
+`PLUGIN_DATA` directory documented for hooks, because explicit skills run in the
+model's shell where that variable is not guaranteed; hooks and skills must
+resolve the same writable store. No sanitized hook inputs are retained yet; the
+fixtures under `test/` model the documented input shape, not captured events.
+
 The fixture did not establish that hooks are trusted or delivered in the app,
 that `CODEX_THREAD_ID` equals hook `session_id`, that fork/subagent delivery is
 safe, that Codex exposes stable usage/reply events, or that either client has a
@@ -109,8 +123,10 @@ The following human/native checks remain before claiming full compatibility:
 2. Capture real sanitized startup, resume, clear, compact, fork, prompt, and
    subagent inputs. Compare hook IDs with command binding and verify no parent
    session is reused by a subagent.
-3. Verify skills appear under the actual client picker and that ordinary prompts
-   do not activate mode implicitly.
+3. Verify skills appear under the actual client picker, record how the client
+   namespaces the unprefixed skill names (`mode`, `help`, `commit`, `review`,
+   `compress`, `stats`, `buddy`) against other plugins, and confirm that ordinary
+   prompts do not activate mode implicitly.
 4. Verify normal-permission state paths, package paths containing spaces, Node
    prerequisite failures, uninstall/reinstall retention, and `ERIDIAN_OFF` in
    the actual runtime process.
