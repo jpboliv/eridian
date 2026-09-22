@@ -31,7 +31,9 @@ factors remain unchanged and do not validate the revised rules.
 Keep release PR #38 open until the following work is complete:
 
 - Implement and review Codex compatibility as a separate feature in this release.
-  Its scope still needs discussion with the maintainer.
+  The implementation milestone is on `feat/017-codex-compatibility`; native app/
+  CLI lifecycle, trust, usage-event, buddy-surface, and human quality gates
+  remain open. See [Codex compatibility](codex-compatibility.md).
 - Run the fresh repeated evaluation of the frozen revised rules described in
   [the level evaluation plan](clarity-levels.md#revision-2-rerun-plan), retain raw
   evidence, and resolve correctness/completeness failures. Earlier archives

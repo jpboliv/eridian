@@ -16,7 +16,8 @@
     "test": "node --test",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "package:codex": "node scripts/build-codex-package.js"
   },
   "engines": {
     "node": ">=18"

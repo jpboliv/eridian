@@ -1,0 +1,10 @@
+{
+  "name": "eridian",
+  "version": "0.6.1",
+  "description": "Rocky-speak for Codex — terse Eridian token compression, workflows, stats, and buddy controls",
+  "author": {
+    "name": "João Oliveira"
+  },
+  "skills": "./adapters/codex/skills/",
+  "hooks": "./hooks/codex.json"
+}

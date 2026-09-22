@@ -1,15 +1,11 @@
 #!/usr/bin/env node
-// Full refresh after 20 active prompts since the last lifecycle/mode reset.
-// This conservative default is retained pending human-reviewed cadence evidence.
-// UserPromptSubmit stdout is visible to Claude.
-const REINJECT_EVERY_PROMPTS = 20;
-
 const { isOptedOut } = require('./lib/runtime');
 if (isOptedOut()) process.exit(0);
 
 function main(raw) {
   const { updateSession, sessionId, recordActivation } = require('./lib/state');
   const { classifyPrompt } = require('./lib/classify');
+  const { notePrompt } = require('./lib/reinforcement');
 
   const kind = process.argv[2];
   let input = {};
@@ -27,16 +23,12 @@ function main(raw) {
     let reinjectLevel = null;
     update(
       (s) => {
-        s.buddy.lastPromptAt = now;
-        s.buddy.promptClass = classifyPrompt(input.prompt);
-        if (s.current && s.current !== 'off') {
-          s.promptsSinceReinject = (s.promptsSinceReinject || 0) + 1;
-          if (s.promptsSinceReinject >= REINJECT_EVERY_PROMPTS) {
-            s.promptsSinceReinject = 0;
-            reinjectLevel = s.current;
-            recordActivation(s, s.current, false);
-          }
-        }
+        reinjectLevel = notePrompt(s, {
+          prompt: input.prompt,
+          now,
+          classify: classifyPrompt,
+          recordActivation,
+        });
         return s;
       },
       {

@@ -4,7 +4,8 @@
 >
 > — riffing on [caveman](https://github.com/juliusbrussee/caveman)'s tagline
 
-Talk terse like Rocky from _Project Hail Mary_. A Claude Code plugin that
+Talk terse like Rocky from _Project Hail Mary_. A Claude Code plugin with a
+native Codex compatibility adapter that
 compresses responses into Rocky's dialect, tracks session output and applicable prose reduction estimates,
 and adds a tiny animated Rocky to your statusline.
 
@@ -17,6 +18,24 @@ see [Credits](#credits).
 /plugin marketplace add jpboliv/eridian
 /plugin install eridian@eridian
 ```
+
+For local Codex CLI testing, use an isolated profile when possible:
+
+```sh
+node scripts/build-codex-package.js
+codex plugin marketplace add ./dist/codex-marketplace
+codex plugin add eridian@eridian
+```
+
+Rebuild with `node scripts/build-codex-package.js --force`; it replaces only a
+directory that a previous build produced.
+
+Codex uses `.codex-plugin/plugin.json`, `adapters/codex/skills/`, and
+`hooks/codex.json`. Hook trust remains a Codex host decision; never use a trust
+bypass as installation. In Codex, use the skill picker for Eridian's mode,
+help, stats, buddy, commit, review, and compress skills. Do not use Claude's
+`/eridian:...` syntax. See [Codex compatibility](docs/codex-compatibility.md)
+for tested packaging evidence, limits, and native acceptance gates.
 
 ## Use
 
