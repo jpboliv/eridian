@@ -73,8 +73,10 @@ event source exists.
 
 Buddy state is host-local and never changes unrelated UI configuration. The
 explicit terminal renderer is a useful fallback, not a claim of a live Codex
-app statusline. Hooks are advisory and never block host work on operational
-errors.
+app statusline. Each explicit render of a hook-bound session advances the shared
+animation clock when the configured speed interval has elapsed. Without a
+session binding it shows a static preference preview without creating session
+state. Hooks are advisory and never block host work on operational errors.
 
 ## Task 0 evidence
 
@@ -107,6 +109,15 @@ The fixture did not establish that hooks are trusted or delivered in the app,
 that `CODEX_THREAD_ID` equals hook `session_id`, that fork/subagent delivery is
 safe, that Codex exposes stable usage/reply events, or that either client has a
 live statusline surface. Those remain acceptance gates, not assumptions.
+
+Release-source inspection of Codex `rust-v0.155.1` confirms that
+[`hook_runtime.rs`](https://github.com/openai/codex/blob/rust-v0.155.1/codex-rs/core/src/hook_runtime.rs)
+dispatches `SubagentStart` for fresh and forked child starts, while child prompt
+and tool hooks carry `agent_id` and `agent_type` (see the release
+[prompt schema](https://github.com/openai/codex/blob/rust-v0.155.1/codex-rs/hooks/schema/generated/user-prompt-submit.command.input.schema.json)).
+The adapter rejects those events, and an offline regression verifies that they
+leave the parent binding, prompt counter, and buddy state unchanged. This source
+check does not replace the native delivery gate below.
 
 ## Parity matrix and remaining gates
 

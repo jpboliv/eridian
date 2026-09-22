@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { renderBuddy } = require('./lib/buddy');
+const { renderBuddy, advanceBuddyFrame } = require('./lib/buddy');
 
 function formatTokens(n) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
@@ -81,14 +81,7 @@ if (require.main === module) {
       // at most once per that many seconds; 0/absent/invalid = every refresh.
       if (state.current && state.current !== 'off') {
         state = update((s) => {
-          s.buddy = s.buddy || {};
-          const secs = Number(s.buddy.stepSeconds);
-          const stepMs = Number.isFinite(secs) && secs > 0 ? secs * 1000 : 0;
-          const last = Date.parse(s.buddy.lastStepAt);
-          if (!stepMs || !Number.isFinite(last) || nowMs - last >= stepMs) {
-            s.buddy.frame = (s.buddy.frame || 0) + 1;
-            s.buddy.lastStepAt = new Date(nowMs).toISOString();
-          }
+          advanceBuddyFrame(s, nowMs);
           if (crossedMilestone) s.buddy.milestoneAt = new Date(nowMs).toISOString();
           return s;
         });

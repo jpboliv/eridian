@@ -1,5 +1,20 @@
 const { MINI } = require('./buddy-art');
 
+// Both hosts advance inside their session transaction so refreshes and speed
+// changes use the same animation clock. Off sessions never advance.
+function advanceBuddyFrame(state, nowMs) {
+  if (!state.current || state.current === 'off') return state;
+  state.buddy = state.buddy || {};
+  const secs = Number(state.buddy.stepSeconds);
+  const stepMs = Number.isFinite(secs) && secs > 0 ? secs * 1000 : 0;
+  const last = Date.parse(state.buddy.lastStepAt);
+  if (!stepMs || !Number.isFinite(last) || nowMs - last >= stepMs) {
+    state.buddy.frame = (state.buddy.frame || 0) + 1;
+    state.buddy.lastStepAt = new Date(nowMs).toISOString();
+  }
+  return state;
+}
+
 const WINDOWS = {
   celebrating: 60_000,
   alarmed: 30_000,
@@ -130,4 +145,4 @@ function renderBuddy(buddy = {}, nowMs) {
   return { rows: [merge(arms, MINI.dome), MINI.body, legs], quip };
 }
 
-module.exports = { deriveMood, renderBuddy };
+module.exports = { deriveMood, renderBuddy, advanceBuddyFrame };

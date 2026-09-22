@@ -120,6 +120,52 @@ test('invalid and subagent hook input is silent and non-blocking', () => {
   assert.ok(!fs.existsSync(f.stateFile));
 });
 
+test('Codex 0.155.1 child lifecycle, prompt and tool payloads leave the parent untouched', () => {
+  const f = fixture();
+  const common = {
+    session_id: 'parent',
+    cwd: f.dir,
+    transcript_path: null,
+    model: 'codex-test',
+    permission_mode: 'default',
+  };
+  f.run('session-start.js', [], { ...common, hook_event_name: 'SessionStart', source: 'startup' });
+  f.run('mode.js', ['full'], {}, { CODEX_THREAD_ID: 'parent' });
+  const state = readState(f);
+  state.sessions.parent.promptsSinceReinject = 19;
+  fs.writeFileSync(f.stateFile, JSON.stringify(state));
+  const before = fs.readFileSync(f.stateFile, 'utf8');
+  // Release hook_runtime.rs dispatches SubagentStart for both fresh and forked
+  // children. Turn hooks flatten SubagentHookContext into agent_id/agent_type.
+  const child = { ...common, turn_id: 'child-turn', agent_id: 'child', agent_type: 'explorer' };
+  for (const [script, payload] of [
+    ['session-start.js', { ...child, hook_event_name: 'SubagentStart' }],
+    ['prompt.js', { ...child, hook_event_name: 'UserPromptSubmit', prompt: 'fix bug' }],
+    [
+      'buddy-hook.js',
+      {
+        ...child,
+        hook_event_name: 'PostToolUse',
+        tool_name: 'Bash',
+        tool_use_id: 'tool-1',
+        tool_input: { command: 'false' },
+        tool_response: { is_error: true },
+      },
+    ],
+  ]) {
+    assert.equal(f.run(script, [], payload), '');
+    assert.equal(fs.readFileSync(f.stateFile, 'utf8'), before);
+  }
+  const output = f.run('prompt.js', [], {
+    ...common,
+    hook_event_name: 'UserPromptSubmit',
+    turn_id: 'parent-turn',
+    prompt: 'continue',
+  });
+  assert.match(JSON.parse(output).hookSpecificOutput.additionalContext, /ROCKY MODE \(full\)/);
+  assert.equal(readState(f).sessions.parent.promptsSinceReinject, 0);
+});
+
 test('ERIDIAN_OFF suppresses Codex reads, writes, and injection', () => {
   const f = fixture();
   const out = execFileSync(process.execPath, [path.join(scripts, 'session-start.js')], {

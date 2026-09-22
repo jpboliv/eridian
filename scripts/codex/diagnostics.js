@@ -33,7 +33,15 @@ function normalizedDiagnostics({
       : '';
     const key = JSON.stringify([event.model || null, event.id]);
     const old = records.get(key);
-    if (old && (!text.length || event.outputTokens < old.tokens || text.length <= old.textLength))
+    // A usage-only snapshot must not pin an empty record above later prose.
+    // Compare usage only after selecting text, as the Claude scanner does.
+    if (
+      old &&
+      old.textLength > 0 &&
+      (!text.length ||
+        event.outputTokens < old.tokens ||
+        (event.outputTokens === old.tokens && text.length <= old.textLength))
+    )
       continue;
     const diagnostics = score(text, { language });
     records.set(key, {

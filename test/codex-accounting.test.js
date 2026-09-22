@@ -9,6 +9,8 @@ const { accountEvents } = require('../scripts/lib/accounting-core');
 const { sessionSavings } = require('../scripts/lib/session-savings');
 const { normalizeEvent } = require('../scripts/codex/usage');
 const { normalizedDiagnostics } = require('../scripts/codex/diagnostics');
+const { sessionDiagnostics } = require('../scripts/lib/session-diagnostics');
+const { score } = require('../scripts/lib/readcost');
 
 const NOW = Date.parse('2026-09-22T10:30:00.000Z');
 const state = { events: [{ ts: '2026-09-22T10:00:00.000Z', level: 'full', rule: 'rule-1' }] };
@@ -196,3 +198,78 @@ test('normalized diagnostics report the reader counts instead of hardcoded zeros
   assert.equal(report.oversizedRecords, 1);
   assert.equal('excludedSessionRecords' in report, false);
 });
+
+for (const [name, snapshots, expectedText] of [
+  [
+    'textless first',
+    [
+      ['', 30],
+      ['Check deployment settings.', 10],
+    ],
+    'Check deployment settings.',
+  ],
+  [
+    'usage-only between prose snapshots',
+    [
+      ['Great question.', 2],
+      ['', 30],
+      ['Check deployment settings.', 10],
+      ['Great question.', 2],
+    ],
+    'Check deployment settings.',
+  ],
+  [
+    'shorter newer prose',
+    [
+      ['Great question.', 2],
+      ['Run all tests.', 12],
+    ],
+    'Run all tests.',
+  ],
+  [
+    'equal usage with longer prose',
+    [
+      ['Run tests.', 10],
+      ['Check deployment settings.', 10],
+      ['Run tests.', 10],
+    ],
+    'Check deployment settings.',
+  ],
+]) {
+  test(`Codex diagnostic snapshot selection matches Claude: ${name}`, () => {
+    const observations = snapshots.map(([text, outputTokens]) => ({
+      version: 1,
+      type: 'assistant',
+      session_id: 'diagnostic-parity',
+      id: 'reply',
+      model: 'codex-test',
+      timestamp: '2026-09-22T10:01:00.000Z',
+      usage: { output_tokens: outputTokens },
+      content: text ? [{ type: 'text', text }] : [{ type: 'thinking', thinking: 'hidden' }],
+    }));
+    const report = normalizedDiagnostics({
+      sessionId: 'diagnostic-parity',
+      language: 'en',
+      events: observations.map((event) => normalizeEvent(event, 'diagnostic-parity')),
+    });
+    const expected = score(expectedText, { language: 'en' });
+    assert.equal(report.includedReplies, 1);
+    assert.equal(report.proseWords, expected.proseWords);
+    assert.equal(report.phraseMatches, expected.phraseMatches);
+    assert.deepEqual(report.counts, expected.counts);
+    const transcript = path.join(process.env.ERIDIAN_STATE_DIR, `diagnostic-${name}.jsonl`);
+    fs.writeFileSync(
+      transcript,
+      observations
+        .map((event) => JSON.stringify({ type: 'assistant', message: event }))
+        .join('\n') + '\n'
+    );
+    const claude = sessionDiagnostics({
+      sessionId: 'diagnostic-parity',
+      transcriptPath: transcript,
+      language: 'en',
+    });
+    for (const key of ['includedReplies', 'proseWords', 'phraseMatches', 'counts'])
+      assert.deepEqual(report[key], claude[key], key);
+  });
+}
