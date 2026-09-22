@@ -165,7 +165,12 @@ function validObservations(cache) {
   });
 }
 
-function sessionDiagnostics({ sessionId, transcriptPath, language = 'und' } = {}) {
+function sessionDiagnostics({
+  sessionId,
+  transcriptPath,
+  language = 'und',
+  stateDir = STATE_DIR,
+} = {}) {
   if (
     !validId(sessionId) ||
     typeof transcriptPath !== 'string' ||
@@ -175,7 +180,7 @@ function sessionDiagnostics({ sessionId, transcriptPath, language = 'und' } = {}
   )
     return null;
   language = language.toLowerCase();
-  const file = path.join(STATE_DIR, 'diagnostics', `${sessionId}.json`);
+  const file = path.join(stateDir, 'diagnostics', `${sessionId}.json`);
   try {
     return withLock(file, () => {
       const fd = fs.openSync(

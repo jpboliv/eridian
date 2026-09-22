@@ -12,3 +12,4 @@ eval/results-isolation.jsonl
 .env.*
 eval/runs/
 eval/reviews/
+dist/codex-marketplace/

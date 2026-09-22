@@ -4,10 +4,12 @@ const { STATE_DIR, sessionId: validId } = require('./state');
 const { atomicWrite, withLock } = require('./atomic');
 const { buildWindows, MILESTONES } = require('./stats-lib');
 const SESSIONS_DIR = path.join(STATE_DIR, 'sessions');
-function readCache(id) {
+function readCache(id, { stateDir = STATE_DIR } = {}) {
   if (!validId(id)) return null;
   try {
-    const cache = JSON.parse(fs.readFileSync(path.join(SESSIONS_DIR, `${id}.json`), 'utf8'));
+    const cache = JSON.parse(
+      fs.readFileSync(path.join(stateDir, 'sessions', `${id}.json`), 'utf8')
+    );
     return cache.version === 2 &&
       cache.sessionId === id &&
       cache.records &&
@@ -44,12 +46,17 @@ function category(content) {
     ? 'prose'
     : 'protected-or-mixed';
 }
-function sessionSavings({ sessionId, transcriptPath }, state, factors, nowMs) {
+function sessionSavings(
+  { sessionId, transcriptPath, stateDir = STATE_DIR },
+  state,
+  factors,
+  nowMs
+) {
   if (!validId(sessionId) || typeof transcriptPath !== 'string') return null;
-  const file = path.join(SESSIONS_DIR, `${sessionId}.json`);
+  const file = path.join(stateDir, 'sessions', `${sessionId}.json`);
   try {
     return withLock(file, () => {
-      const previous = readCache(sessionId);
+      const previous = readCache(sessionId, { stateDir });
       const text = fs.readFileSync(transcriptPath, 'utf8');
       const lines = text.slice(0, text.lastIndexOf('\n') + 1).split('\n');
       const records = {};
@@ -135,15 +142,15 @@ function sessionSavings({ sessionId, transcriptPath }, state, factors, nowMs) {
     return null;
   }
 }
-function currentSessionSaved(id) {
-  return readCache(id)?.savedTokens ?? null;
+function currentSessionSaved(id, { stateDir = STATE_DIR } = {}) {
+  return readCache(id, { stateDir })?.savedTokens ?? null;
 }
-function allCaches() {
+function allCaches({ stateDir = STATE_DIR } = {}) {
   try {
     return fs
-      .readdirSync(SESSIONS_DIR)
+      .readdirSync(path.join(stateDir, 'sessions'))
       .filter((f) => f.endsWith('.json'))
-      .map((f) => readCache(f.slice(0, -5)))
+      .map((f) => readCache(f.slice(0, -5), { stateDir }))
       .filter(Boolean);
   } catch {
     return [];
