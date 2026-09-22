@@ -39,6 +39,28 @@ for tested packaging evidence, limits, and native acceptance gates.
 
 ## Use
 
+### Rocky as a native Codex CLI pet
+
+Eridian includes **Eridian Rocky**, a custom animated terminal pet. Install its
+assets from the installed plugin:
+
+```sh
+node <installed-eridian-root>/scripts/codex/pet.js install
+```
+
+Then select `/pets custom:eridian-rocky` in an interactive Codex CLI session.
+It is distinct from Codex's built-in pet named Rocky. Use `/pets off` to hide it.
+The pet requires iTerm2 3.6+ or a Kitty-graphics/Sixel-capable terminal, outside
+tmux and Zellij. Codex drives its activity states and animation; Eridian mode,
+text-buddy speed, quips, and savings do not control it. This is a native pet,
+not a custom text status line. See [Codex pets](https://learn.chatgpt.com/docs/pets).
+
+For development, `npm run build:codex-pet` regenerates the bundled PNG and manifest
+from Eridian's existing block artwork. The installer respects `CODEX_HOME`,
+leaves Codex configuration unchanged, and refuses to replace modified pet assets.
+
+### Commands
+
 | Command                           | What it does                                                  |
 | --------------------------------- | ------------------------------------------------------------- |
 | `/eridian:help`                   | levels, commands, defaults and how to turn off                |
