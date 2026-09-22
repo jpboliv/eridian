@@ -107,6 +107,27 @@ test('excludes tool, thinking, quoted code/artifacts, missing identity and wrong
   assert.equal(r.proseWords, 2);
 });
 
+test('usage-only updates do not hide a later complete prose snapshot', (t) => {
+  const f = fixture(t);
+  f.append(reply('a', 'Great question.', 2));
+  f.append(reply('a', '', 20, [{ type: 'thinking', thinking: 'hidden' }]));
+  f.scan();
+  f.append(reply('a', 'Run the tests before deployment.', 12));
+  const result = f.scan();
+  assert.equal(result.includedReplies, 1);
+  assert.equal(result.proseWords, 5);
+  assert.equal(result.phraseMatches, 0);
+  // An older snapshot must not displace the newly selected prose either.
+  f.append(reply('a', 'Great question.', 2));
+  assert.equal(f.scan().phraseMatches, 0);
+  f.append(reply('b', '', 30, [{ type: 'thinking', thinking: 'hidden' }]));
+  f.scan();
+  f.append(reply('b', 'Check deployment settings.', 10));
+  const final = f.scan();
+  assert.equal(final.includedReplies, 2);
+  assert.equal(final.proseWords, 8);
+});
+
 test('incremental cache preserves partial UTF-8 lines and only reads appended bytes', (t) => {
   const f = fixture(t);
   const line = Buffer.from(JSON.stringify(reply('unicode', 'Olá amigo.')) + '\n');
