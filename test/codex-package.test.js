@@ -5,6 +5,7 @@ const { execFileSync, spawnSync } = require('node:child_process');
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { isolateEnv } = require('./helpers/env');
+const { loadWorkflow } = require('../scripts/lib/workflows');
 
 const root = path.resolve(__dirname, '..');
 const manifestPath = path.join(root, '.codex-plugin', 'plugin.json');
@@ -66,8 +67,18 @@ test('Codex distribution builder excludes local planning data and ships a self-c
     'skills/speak/SKILL.md',
     'scripts/codex/backup.js',
     'scripts/lib/accounting-core.js',
+    'scripts/lib/diagnostics-core.js',
   ])
     assert.ok(fs.existsSync(path.join(pluginRoot, relative)), relative);
+  // The isolated package must carry the full workflow contract without an
+  // implicit dependency on Claude commands or the source checkout's policies.
+  for (const name of ['commit', 'review']) {
+    const skill = fs.readFileSync(
+      path.join(pluginRoot, 'adapters/codex/skills', name, 'SKILL.md'),
+      'utf8'
+    );
+    assert.ok(skill.includes(loadWorkflow(name)), `${name}: missing shared policy`);
+  }
   for (const relative of ['scripts/codex/paths.js', 'scripts/lib/normalized-accounting.js'])
     assert.equal(fs.existsSync(path.join(pluginRoot, relative)), false, relative);
   const forbidden = [];

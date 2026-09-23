@@ -50,6 +50,17 @@ test('unknown level prints usage, state unchanged', () => {
   assert.ok(!fs.existsSync(path.join(dir, 'state.json')));
 });
 
+test('inherited object properties cannot replace an active mode or saved preference', () => {
+  const dir = freshDir();
+  run(['full'], dir);
+  const file = path.join(dir, 'state.json');
+  const before = fs.readFileSync(file, 'utf8');
+  for (const value of ['constructor', '__proto__']) {
+    assert.match(run([value], dir), /unknown level/);
+    assert.equal(fs.readFileSync(file, 'utf8'), before);
+  }
+});
+
 test('activating a level resets the reinject counter', () => {
   const dir = freshDir();
   fs.mkdirSync(dir, { recursive: true });

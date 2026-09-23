@@ -17,7 +17,9 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "package:codex": "node scripts/build-codex-package.js"
+    "package:codex": "node scripts/build-codex-package.js",
+    "build:workflows": "node scripts/build-workflows.js",
+    "check:workflows": "node scripts/build-workflows.js --check"
   },
   "engines": {
     "node": ">=18"
