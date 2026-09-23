@@ -11,136 +11,55 @@
   },
   "animations": {
     "idle": {
-      "frames": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7
-      ],
+      "frames": [0, 1, 2, 3, 4, 5, 6, 7],
       "fps": 2,
       "loop": true,
       "fallback": "idle"
     },
     "running-right": {
-      "frames": [
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15
-      ],
+      "frames": [8, 9, 10, 11, 12, 13, 14, 15],
       "fps": 6,
       "loop": true,
       "fallback": "idle"
     },
     "running-left": {
-      "frames": [
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
-      ],
+      "frames": [16, 17, 18, 19, 20, 21, 22, 23],
       "fps": 6,
       "loop": true,
       "fallback": "idle"
     },
     "waving": {
-      "frames": [
-        24,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        31
-      ],
+      "frames": [24, 25, 26, 27, 28, 29, 30, 31],
       "fps": 6,
       "loop": true,
       "fallback": "idle"
     },
     "jumping": {
-      "frames": [
-        32,
-        33,
-        34,
-        35,
-        36,
-        37,
-        38,
-        39
-      ],
+      "frames": [32, 33, 34, 35, 36, 37, 38, 39],
       "fps": 6,
       "loop": true,
       "fallback": "idle"
     },
     "failed": {
-      "frames": [
-        40,
-        41,
-        42,
-        43,
-        44,
-        45,
-        46,
-        47
-      ],
+      "frames": [40, 41, 42, 43, 44, 45, 46, 47],
       "fps": 6,
       "loop": true,
       "fallback": "idle"
     },
     "waiting": {
-      "frames": [
-        48,
-        49,
-        50,
-        51,
-        52,
-        53,
-        54,
-        55
-      ],
+      "frames": [48, 49, 50, 51, 52, 53, 54, 55],
       "fps": 6,
       "loop": true,
       "fallback": "idle"
     },
     "running": {
-      "frames": [
-        56,
-        57,
-        58,
-        59,
-        60,
-        61,
-        62,
-        63
-      ],
+      "frames": [56, 57, 58, 59, 60, 61, 62, 63],
       "fps": 6,
       "loop": true,
       "fallback": "idle"
     },
     "review": {
-      "frames": [
-        64,
-        65,
-        66,
-        67,
-        68,
-        69,
-        70,
-        71
-      ],
+      "frames": [64, 65, 66, 67, 68, 69, 70, 71],
       "fps": 6,
       "loop": true,
       "fallback": "idle"
