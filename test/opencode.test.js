@@ -53,6 +53,10 @@ test('OpenCode exports a loadable plugin and registers commands without replacin
   assert.equal(typeof EridianPlugin, 'function');
   const f = await fixture(t);
   assert.equal(Object.keys(f.config.command).length, 4);
+  // Without the execution hook, the template alone must not let the model
+  // report a mode change that never happened.
+  assert.match(f.config.command['eridian-mode'].template, /hook did not run/);
+  assert.match(f.config.command['eridian-mode'].template, /do not claim/i);
   for (const name of ['commit', 'review'])
     assert.ok(f.config.command[`eridian-${name}`].template.includes(loadWorkflow(name)));
   const hooks = await EridianPlugin({ directory: f.root });

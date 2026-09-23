@@ -16,7 +16,10 @@ Buddy, token accounting, diagnostics, and guarded memory compression are not sup
 const COMMANDS = {
   'eridian-mode': {
     description: 'Set Eridian mode or show status',
-    template: 'Report the Eridian mode command result.',
+    // The execution hook replaces this text with the real result. If the host
+    // never ran the hook, the model must report that instead of inventing one.
+    template:
+      'No Eridian result follows this line, so the Eridian plugin hook did not run. Report that the mode command was not applied and do not claim any mode change.',
   },
   'eridian-help': { description: 'Show Eridian commands and limits', template: HELP },
   'eridian-review': {
