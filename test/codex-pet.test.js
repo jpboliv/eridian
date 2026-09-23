@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const zlib = require('node:zlib');
-const { buildPet } = require('../scripts/build-codex-pet');
+const { buildPet, writePet } = require('../scripts/build-codex-pet');
 const { installPet } = require('../scripts/codex/pet');
 
 test('shipped native pet is reproducible, transparent, and covers every Codex animation track', () => {
@@ -43,6 +43,19 @@ test('shipped native pet is reproducible, transparent, and covers every Codex an
       assert.ok(frameBytes(index).some((byte) => byte !== 0));
     }
   }
+});
+
+test('pet generation reproduces both shipped files byte for byte, including formatting', async (t) => {
+  const destination = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-pet-build-'));
+  t.after(() => fs.rmSync(destination, { recursive: true, force: true }));
+  await writePet(destination);
+  for (const name of ['pet.json', 'spritesheet.png'])
+    assert.ok(
+      fs
+        .readFileSync(path.join(destination, name))
+        .equals(fs.readFileSync(path.join(__dirname, '../assets/codex-pet', name))),
+      name
+    );
 });
 
 test('pet install is idempotent, preserves config, and refuses modified files and symlinks', (t) => {

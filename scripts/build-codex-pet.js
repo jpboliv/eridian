@@ -112,13 +112,28 @@ function buildPet() {
   return { png, manifest };
 }
 
-if (require.main === module) {
-  const destination = path.join(__dirname, '..', 'assets', 'codex-pet');
+async function writePet(destination = path.join(__dirname, '..', 'assets', 'codex-pet')) {
+  // Formatting is a development dependency, not part of the native pet runtime.
+  const prettier = require('prettier');
   const { png, manifest } = buildPet();
+  const manifestText = await prettier.format(JSON.stringify(manifest, null, 2), {
+    ...(await prettier.resolveConfig(__filename)),
+    parser: 'json',
+  });
   fs.mkdirSync(destination, { recursive: true });
   fs.writeFileSync(path.join(destination, 'spritesheet.png'), png);
-  fs.writeFileSync(path.join(destination, 'pet.json'), `${JSON.stringify(manifest, null, 2)}\n`);
-  console.log(`Built Eridian Rocky pet: ${destination}`);
+  fs.writeFileSync(path.join(destination, 'pet.json'), manifestText);
+  return destination;
 }
 
-module.exports = { buildPet };
+if (require.main === module) {
+  writePet().then(
+    (destination) => console.log(`Built Eridian Rocky pet: ${destination}`),
+    (error) => {
+      console.error(`Pet build failed: ${error.message}`);
+      process.exitCode = 1;
+    }
+  );
+}
+
+module.exports = { buildPet, writePet };
