@@ -30,6 +30,8 @@ commands and Codex skills. The generated wrappers contain the complete policy;
 installed hosts do not need to resolve a separate policy file. CI runs
 `npm run check:workflows` to detect drift. Host-specific invocation metadata
 belongs in `scripts/build-workflows.js`.
+OpenCode loads the same canonical policies through `scripts/lib/workflows.js`;
+its runtime supplies only the command arguments and host registration.
 
 Diagnostic snapshot selection and aggregation live in
 `scripts/lib/diagnostics-core.js`. Keep transcript parsing, session identity,

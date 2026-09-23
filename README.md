@@ -37,8 +37,6 @@ help, stats, buddy, commit, review, and compress skills. Do not use Claude's
 `/eridian:...` syntax. See [Codex compatibility](docs/codex-compatibility.md)
 for tested packaging evidence, limits, and native acceptance gates.
 
-## Use
-
 ### OpenCode
 
 From a stable Eridian checkout, install the local plugin loader:
@@ -54,7 +52,7 @@ defaults, review and commit prompts. Buddy rendering and token accounting are no
 supported. See [OpenCode compatibility](docs/opencode-compatibility.md) for state
 locations, installation details, and validation limits.
 
-### Commands
+## Use
 
 | Command                           | What it does                                                  |
 | --------------------------------- | ------------------------------------------------------------- |

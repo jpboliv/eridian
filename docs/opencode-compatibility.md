@@ -38,6 +38,9 @@ Existing commands with these names take precedence. Mode changes are handled by
 the plugin using OpenCode's session ID, without shell interpolation or asking the
 model to edit state. Commands still create a model turn to report the result.
 Review and commit are model instructions, subject to the host's permissions.
+Both load the canonical policies in `workflows/`, also used to generate Claude
+commands and Codex skills. Commit confirmation covers the exact proposed message;
+if staged changes differ afterward, a revised preview and confirmation are required.
 Natural-language style requests do not persist a preference; use the mode command.
 
 ## State and injection
@@ -63,6 +66,11 @@ Claude/Codex 20-prompt reminder cadence. Calls without a session ID receive no p
 The hook does not identify the agent, so host auxiliary calls with a session ID may
 also receive the style rules. Full payload injection adds input overhead; no savings
 claim is made.
+
+State failures do not abort model requests. The system hook keeps existing host
+instructions, skips persona injection, and logs the error once until it changes
+or state access recovers. Mode commands report the failure instead of claiming
+success. Future-schema state and existing locks are never removed for recovery.
 
 ## Validation and limits
 

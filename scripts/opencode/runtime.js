@@ -4,6 +4,7 @@ const { createStateStore, sessionId } = require('../lib/state-store');
 const { resolveConfig } = require('../lib/config');
 const { transition, resolveTarget } = require('../lib/mode-service');
 const { loadInjectionBlock } = require('../lib/persona');
+const { loadWorkflow } = require('../lib/workflows');
 
 const HELP = `Eridian for OpenCode: /eridian-mode [lite|full|ultra|eridian|off|reset|status].
 No argument toggles off/full. Explicit levels save a preference for future sessions.
@@ -21,16 +22,22 @@ const COMMANDS = {
   'eridian-review': {
     description: 'Review the workspace diff or a revision without changing files',
     template:
-      'Perform a read-only substantive review of the workspace diff, or this requested revision: $ARGUMENTS. Prioritize bugs and regressions. Give severity, file and line, evidence, and impact for each finding. State when no findings were identified and name verification gaps. Do not modify files.',
+      'Review the workspace diff, or this requested revision: $ARGUMENTS.\n\n' +
+      loadWorkflow('review'),
   },
   'eridian-commit': {
     description: 'Preview a conventional commit from staged changes',
     template:
-      'Inspect the staged diff and propose a plain conventional commit. Additional request: $ARGUMENTS. Use ordinary grammatical prose without Rocky dialect. Do not stage files. Show the exact proposed message and obtain confirmation before creating the commit. If nothing is staged, report that fact.',
+      'Inspect the staged diff. Additional request: $ARGUMENTS.\n\n' + loadWorkflow('commit'),
   },
 };
 
-function createHooks({ directory = process.cwd(), env = process.env, home = os.homedir() } = {}) {
+function createHooks({
+  directory = process.cwd(),
+  env = process.env,
+  home = os.homedir(),
+  diagnostic = (message) => console.error(message),
+} = {}) {
   // Construct lazily: opt-out must not read or write saved state.
   let store;
   const getStore = () =>
@@ -46,6 +53,7 @@ function createHooks({ directory = process.cwd(), env = process.env, home = os.h
     }));
   const optedOut = () => env.ERIDIAN_OFF === '1';
   const owned = new Set();
+  let lastInjectionError;
   function stateFor(id) {
     const currentStore = getStore();
     if (Object.hasOwn(currentStore.readStore().sessions, id))
@@ -77,24 +85,28 @@ function createHooks({ directory = process.cwd(), env = process.env, home = os.h
       } else if (arg !== 'status' && !resolveTarget(arg, 'off')) {
         result = 'Unknown mode. Use lite | full | ultra | eridian | off | reset | status.';
       } else {
-        const state = stateFor(id);
-        if (arg === 'status') {
-          result = `Eridian host: opencode; current: ${state.current}; saved preference: ${getStore().readStore().preferences.current}; source: ${state.resolvedSource}.`;
-        } else {
-          const next = getStore().updateSession(
-            id,
-            (current, raw) => {
-              const change = transition(current, raw, arg, {
-                cwd: directory,
-                resolve: (options) => resolveConfig({ ...options, env, home }),
-                recordActivation: getStore().recordActivation,
-              });
-              if (!change.ok) throw new Error(change.error);
-              return change.state;
-            },
-            { cwd: directory }
-          );
-          result = `Eridian mode: ${next.current}.`;
+        try {
+          const state = stateFor(id);
+          if (arg === 'status') {
+            result = `Eridian host: opencode; current: ${state.current}; saved preference: ${getStore().readStore().preferences.current}; source: ${state.resolvedSource}.`;
+          } else {
+            const next = getStore().updateSession(
+              id,
+              (current, raw) => {
+                const change = transition(current, raw, arg, {
+                  cwd: directory,
+                  resolve: (options) => resolveConfig({ ...options, env, home }),
+                  recordActivation: getStore().recordActivation,
+                });
+                if (!change.ok) throw new Error(change.error);
+                return change.state;
+              },
+              { cwd: directory }
+            );
+            result = `Eridian mode: ${next.current}.`;
+          }
+        } catch (error) {
+          result = `Eridian mode command failed: ${error.message}`;
         }
       }
       // Mutate the host's array in place; its caller retains this reference.
@@ -107,11 +119,25 @@ function createHooks({ directory = process.cwd(), env = process.env, home = os.h
       if (optedOut()) return;
       const id = sessionId(input.sessionID);
       if (!id) return;
-      const state = stateFor(id);
-      const block = loadInjectionBlock(state.current);
-      if (!block) return;
-      const payload = `Eridian mode "${state.current}" is active.\n${block}`;
-      if (!output.system.includes(payload)) output.system.push(payload);
+      try {
+        const state = stateFor(id);
+        lastInjectionError = null;
+        const block = loadInjectionBlock(state.current);
+        if (!block) return;
+        const payload = `Eridian mode "${state.current}" is active.\n${block}`;
+        if (!output.system.includes(payload)) output.system.push(payload);
+      } catch (error) {
+        // Persona injection is advisory. Preserve host instructions and let the
+        // model request proceed when state is unavailable; retry on the next call.
+        if (error.message !== lastInjectionError) {
+          lastInjectionError = error.message;
+          try {
+            diagnostic(`eridian: style injection unavailable: ${error.message}`);
+          } catch {
+            // Diagnostic delivery must not turn an advisory hook into a failure.
+          }
+        }
+      }
     },
   };
 }
