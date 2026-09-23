@@ -4,8 +4,8 @@
 >
 > — riffing on [caveman](https://github.com/juliusbrussee/caveman)'s tagline
 
-Talk terse like Rocky from _Project Hail Mary_. A Claude Code plugin with a
-native Codex compatibility adapter that
+Talk terse like Rocky from _Project Hail Mary_. A Claude Code plugin with
+Codex and OpenCode compatibility adapters that
 compresses responses into Rocky's dialect, tracks session output and applicable prose reduction estimates,
 and adds a tiny animated Rocky to your statusline.
 
@@ -38,6 +38,23 @@ help, stats, buddy, commit, review, and compress skills. Do not use Claude's
 for tested packaging evidence, limits, and native acceptance gates.
 
 ## Use
+
+### OpenCode
+
+From a stable Eridian checkout, install the local plugin loader:
+
+```sh
+node scripts/opencode/install.js "${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
+```
+
+Restart OpenCode, then use `/eridian-mode full` to activate, `/eridian-mode off`
+to disable, or `/eridian-help` for commands. For project-only installation, pass
+`/path/to/project/.opencode` instead. The adapter supports persistent modes, team
+defaults, review and commit prompts. Buddy rendering and token accounting are not
+supported. See [OpenCode compatibility](docs/opencode-compatibility.md) for state
+locations, installation details, and validation limits.
+
+### Commands
 
 | Command                           | What it does                                                  |
 | --------------------------------- | ------------------------------------------------------------- |
