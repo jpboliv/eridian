@@ -21,12 +21,17 @@ if (!Number.isFinite(secs) || secs < 0) {
   process.exit(0);
 }
 
-update((s) => {
-  s.buddy = s.buddy || {};
-  if (secs > 0) s.buddy.stepSeconds = secs;
-  else delete s.buddy.stepSeconds;
-  return s;
-});
+try {
+  update((s) => {
+    s.buddy = s.buddy || {};
+    if (secs > 0) s.buddy.stepSeconds = secs;
+    else delete s.buddy.stepSeconds;
+    return s;
+  });
+} catch (error) {
+  console.error(`eridian buddy failed: ${error.message}`);
+  process.exit(1);
+}
 
 console.log(`${describe(secs)}. good.`);
 process.exit(0);

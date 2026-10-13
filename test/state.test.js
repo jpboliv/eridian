@@ -178,3 +178,26 @@ test('Claude and Codex hooks exit 0 and leave a corrupt state.json untouched', (
   }
   for (const file of files) assert.equal(fs.readFileSync(file, 'utf8'), corrupt);
 });
+
+test('Claude commands report a corrupt state.json in one line and leave it untouched', () => {
+  const { spawnSync } = require('node:child_process');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-corrupt-cmd-'));
+  const file = path.join(dir, 'state.json');
+  const corrupt = '{"version":2,';
+  fs.writeFileSync(file, corrupt);
+  const scripts = path.join(__dirname, '..', 'scripts');
+  for (const [script, args, prefix] of [
+    ['mode.js', ['full', '--session-id', 'delta'], 'eridian mode failed'],
+    ['mode.js', ['full'], 'eridian mode failed'],
+    ['buddy-speed.js', ['3'], 'eridian buddy failed'],
+  ]) {
+    const result = spawnSync(process.execPath, [path.join(scripts, script), ...args], {
+      env: { ...process.env, ERIDIAN_STATE_DIR: dir },
+      encoding: 'utf8',
+    });
+    assert.equal(result.status, 1, `${script} exit code`);
+    assert.match(result.stderr, new RegExp(`^${prefix}: .*unreadable.*\\n$`), script);
+    assert.equal(result.stdout, '', `${script} claims nothing on stdout`);
+  }
+  assert.equal(fs.readFileSync(file, 'utf8'), corrupt);
+});
