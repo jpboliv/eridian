@@ -107,3 +107,74 @@ test('future schemas are never downgraded or overwritten', () => {
   assert.equal(fs.readFileSync(state.STATE_FILE, 'utf8'), before);
   state.writeState({ current: 'off' });
 });
+
+test('concurrent updates from many processes keep state.json valid and the mode intact', async () => {
+  const { spawn } = require('node:child_process');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-race-'));
+  const file = path.join(dir, 'state.json');
+  fs.writeFileSync(file, JSON.stringify({ version: 2, preferences: { current: 'full' } }));
+  const script = `
+    const s = require(${JSON.stringify(require.resolve('../scripts/lib/state'))});
+    for (let i = 0; i < 40; i++) {
+      s.update((x) => x);
+      s.updateSession('w' + process.pid, (x) => x, { initialize: true });
+    }`;
+  const env = { ...process.env, ERIDIAN_STATE_DIR: dir };
+  const codes = await Promise.all(
+    Array.from(
+      { length: 8 },
+      () =>
+        new Promise((resolve) =>
+          spawn(process.execPath, ['-e', script], { env, stdio: 'ignore' }).on('exit', resolve)
+        )
+    )
+  );
+  assert.deepEqual(codes, Array(8).fill(0), 'every worker finished its updates');
+  const parsed = JSON.parse(fs.readFileSync(file, 'utf8'));
+  assert.equal(parsed.preferences.current, 'full');
+  assert.deepEqual(
+    fs.readdirSync(dir).filter((f) => f.endsWith('.tmp')),
+    [],
+    'no orphaned temp files'
+  );
+});
+
+test('update leaves a corrupt state.json untouched instead of resetting it', () => {
+  for (const corrupt of ['{"version":2,"preferences":{"current":"fu', 'null', '[]']) {
+    fs.writeFileSync(state.STATE_FILE, corrupt);
+    assert.throws(() => state.update((s) => s), /unreadable/);
+    assert.throws(() => state.updateSession('beta', (s) => s, { initialize: true }), /unreadable/);
+    assert.equal(fs.readFileSync(state.STATE_FILE, 'utf8'), corrupt);
+    assert.equal(state.readState().current, 'off', 'readers still fall back to defaults');
+  }
+  state.writeState({ current: 'off' });
+});
+
+test('Claude and Codex hooks exit 0 and leave a corrupt state.json untouched', () => {
+  const { spawnSync } = require('node:child_process');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-corrupt-'));
+  const corrupt = '{"version":2,"preferences":{"current":"fu';
+  const files = [path.join(dir, 'state.json'), path.join(dir, 'codex', 'state.json')];
+  fs.mkdirSync(path.join(dir, 'codex'));
+  for (const file of files) fs.writeFileSync(file, corrupt);
+  const input = JSON.stringify({ session_id: 'gamma', cwd: dir, source: 'startup', prompt: 'hi' });
+  const scripts = path.join(__dirname, '..', 'scripts');
+  for (const [script, args] of [
+    ['session-start.js', []],
+    ['buddy-hook.js', ['prompt']],
+    ['buddy-hook.js', ['post-tool']],
+    ['codex/session-start.js', []],
+    ['codex/prompt.js', []],
+    ['codex/buddy-hook.js', []],
+  ]) {
+    const result = spawnSync(process.execPath, [path.join(scripts, script), ...args], {
+      cwd: dir,
+      env: { ...process.env, ERIDIAN_STATE_DIR: dir },
+      input,
+      encoding: 'utf8',
+    });
+    assert.equal(result.status, 0, `${script} exit code`);
+    assert.equal(result.stderr, '', `${script} stderr`);
+  }
+  for (const file of files) assert.equal(fs.readFileSync(file, 'utf8'), corrupt);
+});

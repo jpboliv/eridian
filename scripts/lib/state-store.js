@@ -40,14 +40,22 @@ function createStateStore({
     value && typeof value === 'object' && !Array.isArray(value) ? value : {};
   const level = (value) => (MODES.includes(value) ? value : 'off');
 
-  function readStore() {
-    let parsed;
+  // Writers refuse an unreadable file: saving defaults over it would wipe the mode and history.
+  function readStore({ forWrite = false } = {}) {
+    const unreadable = (cause) =>
+      new Error(`Eridian state file ${stateFile} is unreadable; fix or remove it before writing`, {
+        cause,
+      });
+    let parsed = {};
     try {
       parsed = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
-    } catch {
-      /* default */
+    } catch (error) {
+      if (forWrite && error.code !== 'ENOENT') throw unreadable(error);
     }
-    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) parsed = {};
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      if (forWrite) throw unreadable();
+      parsed = {};
+    }
     if (parsed.version > VERSION)
       throw new Error('Unsupported Eridian state schema; update the plugin before writing state');
     if (parsed.version === VERSION) {
@@ -129,7 +137,7 @@ function createStateStore({
 
   function update(fn) {
     return withLock(stateFile, () => {
-      const store = readStore();
+      const store = readStore({ forWrite: true });
       const next = fn(effective(store, null), store);
       store.preferences = {
         ...store.preferences,
@@ -145,7 +153,7 @@ function createStateStore({
     id = sessionId(id);
     if (!id) return null;
     return withLock(stateFile, () => {
-      const store = readStore();
+      const store = readStore({ forWrite: true });
       const state = effective(store, id, cwd);
       if (initialize) recordActivation(state, state.current, false);
       const next = fn(state, store);
