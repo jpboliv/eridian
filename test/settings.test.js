@@ -80,5 +80,29 @@ test('writeSettings creates parent directory and writes atomically', () => {
   writeSettings(file, { statusLine: { type: 'command', command: 'x' } });
   const written = JSON.parse(fs.readFileSync(file, 'utf8'));
   assert.deepStrictEqual(written, { statusLine: { type: 'command', command: 'x' } });
-  assert.ok(!fs.existsSync(`${file}.tmp`));
+  assert.deepStrictEqual(
+    fs.readdirSync(path.dirname(file)).filter((f) => f.endsWith('.tmp')),
+    []
+  );
+});
+
+test('concurrent writeSettings calls from many processes leave valid JSON', async () => {
+  const { spawn } = require('node:child_process');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-settings-race-'));
+  const file = path.join(dir, 'settings.json');
+  const script = `
+    const { writeSettings } = require(${JSON.stringify(require.resolve('../scripts/lib/settings'))});
+    for (let i = 0; i < 200; i++) writeSettings(${JSON.stringify(file)}, { n: i, pid: process.pid });`;
+  const codes = await Promise.all(
+    Array.from(
+      { length: 8 },
+      () =>
+        new Promise((resolve) =>
+          spawn(process.execPath, ['-e', script], { stdio: 'ignore' }).on('exit', resolve)
+        )
+    )
+  );
+  assert.deepStrictEqual(codes, Array(8).fill(0), 'no writer crashed on a shared temp file');
+  assert.strictEqual(JSON.parse(fs.readFileSync(file, 'utf8')).n, 199);
+  assert.strictEqual(fs.statSync(file).mode & 0o777, 0o600);
 });

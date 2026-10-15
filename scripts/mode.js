@@ -36,10 +36,15 @@ const emit = () => {
       : `eridian mode: ${target}\n\n${loadInjectionBlock(target)}\n`
   );
 };
-if (id) updateSession(id, change, { afterCommit: emit });
-else {
-  update(change);
-  emit();
+try {
+  if (id) updateSession(id, change, { afterCommit: emit });
+  else {
+    update(change);
+    emit();
+  }
+} catch (error) {
+  console.error(`eridian mode failed: ${error.message}`);
+  process.exit(1);
 }
 
 if (!id)

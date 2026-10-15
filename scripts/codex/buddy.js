@@ -49,10 +49,15 @@ if (!Number.isFinite(secs) || secs < 0) {
   console.log(`bad value "${arg}". use: <seconds>, 0 = every refresh`);
   process.exit(0);
 }
-update((state) => {
-  state.buddy = state.buddy || {};
-  if (secs > 0) state.buddy.stepSeconds = secs;
-  else delete state.buddy.stepSeconds;
-  return state;
-});
+try {
+  update((state) => {
+    state.buddy = state.buddy || {};
+    if (secs > 0) state.buddy.stepSeconds = secs;
+    else delete state.buddy.stepSeconds;
+    return state;
+  });
+} catch (error) {
+  console.error(`eridian buddy failed: ${error.message}`);
+  process.exit(1);
+}
 console.log(`${describe(secs)}. good.`);
