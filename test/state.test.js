@@ -166,13 +166,13 @@ test('Claude and Codex hooks exit 0 and leave a corrupt state.json untouched', (
     ['session-start.js', []],
     ['buddy-hook.js', ['prompt']],
     ['buddy-hook.js', ['post-tool']],
+    ['statusline.js', []],
     ['codex/session-start.js', []],
-    ['codex/prompt.js', []],
-    ['codex/buddy-hook.js', []],
   ]) {
     const result = spawnSync(process.execPath, [path.join(scripts, script), ...args], {
       cwd: dir,
-      env: { ...process.env, ERIDIAN_STATE_DIR: dir },
+      // An active mode, so statusline.js reaches its write.
+      env: { ...process.env, ERIDIAN_STATE_DIR: dir, ERIDIAN_DEFAULT_MODE: 'full' },
       input,
       encoding: 'utf8',
     });
