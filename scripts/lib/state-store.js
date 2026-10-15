@@ -43,9 +43,10 @@ function createStateStore({
   // Writers refuse an unreadable file: saving defaults over it would wipe the mode and history.
   function readStore({ forWrite = false } = {}) {
     const unreadable = (cause) =>
-      new Error(`Eridian state file ${stateFile} is unreadable; fix or remove it before writing`, {
-        cause,
-      });
+      new Error(
+        `Eridian state file ${stateFile} is unreadable (${cause?.message ?? 'not a JSON object'}); fix or remove it before writing`,
+        { cause }
+      );
     let parsed = {};
     try {
       parsed = JSON.parse(fs.readFileSync(stateFile, 'utf8'));

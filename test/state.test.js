@@ -142,8 +142,11 @@ test('concurrent updates from many processes keep state.json valid and the mode 
 test('update leaves a corrupt state.json untouched instead of resetting it', () => {
   for (const corrupt of ['{"version":2,"preferences":{"current":"fu', 'null', '[]']) {
     fs.writeFileSync(state.STATE_FILE, corrupt);
-    assert.throws(() => state.update((s) => s), /unreadable/);
-    assert.throws(() => state.updateSession('beta', (s) => s, { initialize: true }), /unreadable/);
+    assert.throws(() => state.update((s) => s), /unreadable \(.+\)/);
+    assert.throws(
+      () => state.updateSession('beta', (s) => s, { initialize: true }),
+      /unreadable \(.+\)/
+    );
     assert.equal(fs.readFileSync(state.STATE_FILE, 'utf8'), corrupt);
     assert.equal(state.readState().current, 'off', 'readers still fall back to defaults');
   }
