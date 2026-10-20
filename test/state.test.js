@@ -153,7 +153,7 @@ test('update leaves a corrupt state.json untouched instead of resetting it', () 
   state.writeState({ current: 'off' });
 });
 
-test('Claude and Codex hooks exit 0 and leave a corrupt state.json untouched', () => {
+test('Claude and Codex hooks keep the mode on a corrupt state.json and leave it untouched', () => {
   const { spawnSync } = require('node:child_process');
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eridian-corrupt-'));
   const corrupt = '{"version":2,"preferences":{"current":"fu';
@@ -178,6 +178,12 @@ test('Claude and Codex hooks exit 0 and leave a corrupt state.json untouched', (
     });
     assert.equal(result.status, 0, `${script} exit code`);
     assert.equal(result.stderr, '', `${script} stderr`);
+    if (script.endsWith('session-start.js')) {
+      const out = JSON.parse(result.stdout);
+      assert.match(out.systemMessage, /unreadable.*mode not saved/, `${script} notice`);
+      assert.match(out.hookSpecificOutput.additionalContext, /Eridian mode "full"/, script);
+    }
+    if (script === 'statusline.js') assert.match(result.stdout, /∙ full/, 'statusline renders');
   }
   for (const file of files) assert.equal(fs.readFileSync(file, 'utf8'), corrupt);
 });

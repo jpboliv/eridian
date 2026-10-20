@@ -80,11 +80,15 @@ if (require.main === module) {
       // buddy.stepSeconds (set via /eridian:buddy) throttles the advance to
       // at most once per that many seconds; 0/absent/invalid = every refresh.
       if (state.current && state.current !== 'off') {
-        state = update((s) => {
-          advanceBuddyFrame(s, nowMs);
-          if (crossedMilestone) s.buddy.milestoneAt = new Date(nowMs).toISOString();
-          return s;
-        });
+        try {
+          state = update((s) => {
+            advanceBuddyFrame(s, nowMs);
+            if (crossedMilestone) s.buddy.milestoneAt = new Date(nowMs).toISOString();
+            return s;
+          });
+        } catch {
+          // refused write (unreadable state.json): draw the frame already read
+        }
       }
       process.stdout.write(renderLines(state, nowMs, savedTokens).join('\n'));
     } catch {
