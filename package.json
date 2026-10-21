@@ -17,7 +17,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "package:codex": "node scripts/build-codex-package.js"
+    "package:codex": "node scripts/build-codex-package.js",
+    "build:codex-pet": "node scripts/build-codex-pet.js"
   },
   "engines": {
     "node": ">=18"

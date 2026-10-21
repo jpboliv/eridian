@@ -26,6 +26,8 @@ const pluginRoot = path.join(destination, 'plugin');
 const files = [
   '.codex-plugin/plugin.json',
   'hooks/codex.json',
+  'assets/codex-pet/pet.json',
+  'assets/codex-pet/spritesheet.png',
   'skills/speak/SKILL.md',
   'scripts/check-compress-path.js',
   'scripts/validate-compress.js',
@@ -36,6 +38,7 @@ const files = [
   'scripts/codex/input.js',
   'scripts/codex/mode.js',
   'scripts/codex/prompt.js',
+  'scripts/codex/pet.js',
   'scripts/codex/session-start.js',
   'scripts/codex/stats.js',
   'scripts/codex/store.js',

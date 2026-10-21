@@ -65,6 +65,9 @@ test('Codex distribution builder excludes local planning data and ships a self-c
     'hooks/codex.json',
     'skills/speak/SKILL.md',
     'scripts/codex/backup.js',
+    'scripts/codex/pet.js',
+    'assets/codex-pet/pet.json',
+    'assets/codex-pet/spritesheet.png',
     'scripts/lib/accounting-core.js',
   ])
     assert.ok(fs.existsSync(path.join(pluginRoot, relative)), relative);
@@ -83,6 +86,16 @@ test('Codex distribution builder excludes local planning data and ships a self-c
   assert.deepEqual(forbidden, []);
   assert.ok(fs.existsSync(path.join(output, '.agents', 'plugins', 'marketplace.json')));
   const stateDir = path.join(destination, 'state');
+  const petInstall = spawnSync(
+    process.execPath,
+    [path.join(pluginRoot, 'scripts/codex/pet.js'), 'install'],
+    {
+      env: { ...isolateEnv({ ...process.env }), CODEX_HOME: path.join(destination, 'codex-home') },
+      encoding: 'utf8',
+    }
+  );
+  assert.equal(petInstall.status, 0, petInstall.stderr);
+  assert.ok(fs.existsSync(path.join(destination, 'codex-home/pets/eridian-rocky/pet.json')));
   const env = isolateEnv({ ...process.env });
   env.ERIDIAN_STATE_DIR = stateDir;
   for (const [script, args] of [
