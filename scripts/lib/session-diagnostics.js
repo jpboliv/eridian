@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const { score, SCHEMA_VERSION } = require('./readcost');
+const { selectDiagnosticSnapshot, aggregateDiagnostics } = require('./diagnostics-core');
 const { STATE_DIR, sessionId: validId } = require('./state');
 const { atomicWrite, withLock } = require('./atomic');
 const CACHE_VERSION = 2;
@@ -10,7 +11,8 @@ const hash = (value) => crypto.createHash('sha256').update(value).digest('hex');
 const scorerHash = () =>
   hash(
     fs.readFileSync(require.resolve('./readcost')) +
-      fs.readFileSync(require.resolve('./readcost-lexicon'))
+      fs.readFileSync(require.resolve('./readcost-lexicon')) +
+      fs.readFileSync(require.resolve('./diagnostics-core'))
   );
 
 function fingerprint(fd, start, length) {
@@ -35,72 +37,21 @@ function observe(cache, obj) {
     cache.excludedSessions[key] = true;
     return;
   }
-  const text = Array.isArray(message?.content)
-    ? message.content
-        .filter((block) => block?.type === 'text' && typeof block.text === 'string')
-        .map((block) => block.text)
-        .join('\n')
-    : '';
-  const usage = message?.usage?.output_tokens;
-  const tokens = Number.isFinite(usage) && usage >= 0 ? usage : null;
-  const old = cache.records[key];
-  if (old && !text.length && old.textLength > 0) {
-    // Keep the usage associated with the selected prose snapshot. Advancing it
-    // from a textless update would suppress later prose arriving out of order.
-    return;
-  }
-  if (
-    old &&
-    old.textLength > 0 &&
-    ((old.tokens !== null && tokens !== null && tokens < old.tokens) ||
-      ((tokens === null || old.tokens === tokens) && text.length <= old.textLength))
-  )
-    return;
-  const diagnostics = score(text, { language: cache.language });
-  cache.records[key] = {
-    tokens,
-    textLength: text.length,
-    diagnostics,
-    included: diagnostics.proseWords > 0,
-  };
+  cache.records[key] = selectDiagnosticSnapshot(
+    cache.records[key],
+    { content: message?.content, outputTokens: message?.usage?.output_tokens },
+    cache.language
+  );
 }
 
 function aggregate(cache) {
-  const empty = score('', { language: cache.language });
-  const rows = Object.values(cache.records).filter((r) => r.included);
-  const counts = Object.fromEntries(
-    Object.entries(empty.counts).map(([key, value]) => [key, value === null ? null : 0])
-  );
-  let proseWords = 0,
-    phraseMatches = empty.lexicalSupported ? 0 : null,
-    sentences = 0,
-    longSentences = 0;
-  for (const { diagnostics: d } of rows) {
-    proseWords += d.proseWords;
-    sentences += d.sentences;
-    longSentences += d.longSentences;
-    if (phraseMatches !== null) phraseMatches += d.phraseMatches;
-    for (const key of Object.keys(counts)) if (counts[key] !== null) counts[key] += d.counts[key];
-  }
   return {
-    label: 'optional style diagnostics',
+    ...aggregateDiagnostics(Object.values(cache.records), cache.language),
     sessionId: cache.sessionId,
-    language: cache.language,
-    lexicalSupported: empty.lexicalSupported,
-    scorerVersion: cache.scorerVersion,
-    includedReplies: rows.length,
-    excludedNonProseReplies: Object.values(cache.records).length - rows.length,
     unidentifiedRecords: Object.keys(cache.unidentified).length,
     excludedSessionRecords: Object.keys(cache.excludedSessions).length,
     oversizedRecords: cache.oversizedRecords,
     malformedRecords: cache.malformedRecords,
-    proseWords,
-    sentences,
-    longSentences,
-    counts,
-    phraseMatches,
-    phraseMatchRatePer100ProseWords:
-      phraseMatches !== null && proseWords ? (phraseMatches * 100) / proseWords : null,
   };
 }
 

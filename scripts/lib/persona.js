@@ -10,7 +10,7 @@ function normalizeLevel(input) {
   const key = String(input || '')
     .trim()
     .toLowerCase();
-  if (ALIASES[key]) return ALIASES[key];
+  if (Object.hasOwn(ALIASES, key)) return ALIASES[key];
   return LEVELS.includes(key) ? key : null;
 }
 

@@ -235,6 +235,14 @@ for (const [name, snapshots, expectedText] of [
     ],
     'Check deployment settings.',
   ],
+  [
+    'older longer prose does not replace newer prose',
+    [
+      ['Run tests.', 12],
+      ['Great question. Check deployment settings.', 10],
+    ],
+    'Run tests.',
+  ],
 ]) {
   test(`Codex diagnostic snapshot selection matches Claude: ${name}`, () => {
     const observations = snapshots.map(([text, outputTokens]) => ({
@@ -271,5 +279,55 @@ for (const [name, snapshots, expectedText] of [
     });
     for (const key of ['includedReplies', 'proseWords', 'phraseMatches', 'counts'])
       assert.deepEqual(report[key], claude[key], key);
+  });
+}
+
+for (const language of ['en', 'zz']) {
+  test(`diagnostic adapters aggregate streamed replies and model identities equally: ${language}`, () => {
+    const events = [
+      { id: 'a', model: 'first', outputTokens: 5, content: prose },
+      { id: 'a', model: 'first', outputTokens: 100, content: [] },
+      {
+        id: 'a',
+        model: 'second',
+        outputTokens: 8,
+        content: [{ type: 'text', text: 'Great question. Check settings.' }],
+      },
+      {
+        id: 'b',
+        model: 'first',
+        outputTokens: 4,
+        content: [{ type: 'text', text: '```js\nconst n = 1;\n```' }],
+      },
+    ];
+    const sessionId = `aggregate-${language}`;
+    const transcript = path.join(process.env.ERIDIAN_STATE_DIR, `${sessionId}.jsonl`);
+    fs.writeFileSync(
+      transcript,
+      events
+        .map(({ outputTokens, ...event }) =>
+          JSON.stringify({
+            type: 'assistant',
+            message: { ...event, usage: { output_tokens: outputTokens } },
+          })
+        )
+        .join('\n') + '\n'
+    );
+    const codex = normalizedDiagnostics({ sessionId, language, events });
+    const claude = sessionDiagnostics({ sessionId, language, transcriptPath: transcript });
+    const { unsupportedRecords, ...codexCommon } = codex;
+    const { bytesRead, rebuilt, pendingBytes, excludedSessionRecords, ...claudeCommon } = claude;
+    assert.deepEqual(codexCommon, claudeCommon);
+    assert.equal(codex.includedReplies, 2);
+    assert.equal(codex.excludedNonProseReplies, 1);
+    assert.equal(unsupportedRecords, 0);
+    assert.equal(excludedSessionRecords, 0);
+    assert.ok(bytesRead > 0);
+    assert.equal(rebuilt, true);
+    assert.equal(pendingBytes, 0);
+    const cached = sessionDiagnostics({ sessionId, language, transcriptPath: transcript });
+    assert.equal(cached.bytesRead, 0);
+    assert.equal(cached.rebuilt, false);
+    assert.deepEqual(cached.counts, codex.counts);
   });
 }

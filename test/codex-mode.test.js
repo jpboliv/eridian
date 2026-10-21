@@ -42,6 +42,17 @@ test('mode with a thread ID but no hook-bound session reports the session as una
   );
 });
 
+test('inherited object properties cannot replace a saved Codex preference', () => {
+  const stateDir = dir();
+  run(['full'], stateDir);
+  const file = path.join(stateDir, 'codex', 'state.json');
+  const before = fs.readFileSync(file, 'utf8');
+  for (const value of ['constructor', '__proto__']) {
+    assert.match(run([value], stateDir), /unknown level/);
+    assert.equal(fs.readFileSync(file, 'utf8'), before);
+  }
+});
+
 test('mode rejects conflicting command and environment identities', () => {
   const stateDir = dir();
   const result = spawnSync(process.execPath, [mode, 'full', '--session-id', 'a'], {

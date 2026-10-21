@@ -87,6 +87,8 @@ test('normalizeLevel handles aliases and junk', () => {
   assert.strictEqual(normalizeLevel('FULL'), 'full');
   assert.strictEqual(normalizeLevel('off'), 'off');
   assert.strictEqual(normalizeLevel('banana'), null);
+  for (const value of ['constructor', '__proto__', 'prototype', ' CONSTRUCTOR '])
+    assert.strictEqual(normalizeLevel(value), null);
 });
 
 test('ultra budget counts gags, triples, suffixes, third person and glyphs', () => {

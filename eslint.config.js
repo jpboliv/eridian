@@ -21,5 +21,9 @@ module.exports = [
       },
     },
   },
+  {
+    files: ['**/*.mjs'],
+    languageOptions: { sourceType: 'module' },
+  },
   prettierConfig,
 ];

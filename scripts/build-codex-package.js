@@ -47,6 +47,7 @@ const files = [
   'scripts/lib/classify.js',
   'scripts/lib/compress-guard.js',
   'scripts/lib/config.js',
+  'scripts/lib/diagnostics-core.js',
   'scripts/lib/host-paths.js',
   'scripts/lib/mode-service.js',
   'scripts/lib/persona.js',

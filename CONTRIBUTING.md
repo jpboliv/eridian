@@ -22,6 +22,22 @@ All Rocky-dialect rules (levels, invariants, examples) live in one place:
 `skills/speak/SKILL.md`. If you're changing how eridian talks, change it
 there — don't re-derive or duplicate rules in commands or scripts.
 
+## Shared workflows and diagnostics
+
+Commit and review behavior lives in `workflows/commit.md` and `workflows/review.md`.
+Edit those policies, then run `npm run build:workflows` to regenerate the Claude
+commands and Codex skills. The generated wrappers contain the complete policy;
+installed hosts do not need to resolve a separate policy file. CI runs
+`npm run check:workflows` to detect drift. Host-specific invocation metadata
+belongs in `scripts/build-workflows.js`.
+OpenCode loads the same canonical policies through `scripts/lib/workflows.js`;
+its runtime supplies only the command arguments and host registration.
+
+Diagnostic snapshot selection and aggregation live in
+`scripts/lib/diagnostics-core.js`. Keep transcript parsing, session identity,
+reader error counts, and cache storage in the host adapters. The Claude cache
+fingerprint includes the shared reducer so policy changes invalidate saved results.
+
 ## Pull requests
 
 - Tests, lint, and format checks must pass:

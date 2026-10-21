@@ -1,4 +1,4 @@
-const { score, SCHEMA_VERSION } = require('../lib/readcost');
+const { selectDiagnosticSnapshot, aggregateDiagnostics } = require('../lib/diagnostics-core');
 
 const count = (value) => (Number.isInteger(value) && value >= 0 ? value : 0);
 
@@ -25,68 +25,16 @@ function normalizedDiagnostics({
       unidentifiedRecords++;
       continue;
     }
-    const text = Array.isArray(event.content)
-      ? event.content
-          .filter((block) => block?.type === 'text' && typeof block.text === 'string')
-          .map((block) => block.text)
-          .join('\n')
-      : '';
     const key = JSON.stringify([event.model || null, event.id]);
-    const old = records.get(key);
-    // A usage-only snapshot must not pin an empty record above later prose.
-    // Compare usage only after selecting text, as the Claude scanner does.
-    if (
-      old &&
-      old.textLength > 0 &&
-      (!text.length ||
-        event.outputTokens < old.tokens ||
-        (event.outputTokens === old.tokens && text.length <= old.textLength))
-    )
-      continue;
-    const diagnostics = score(text, { language });
-    records.set(key, {
-      tokens: event.outputTokens,
-      textLength: text.length,
-      diagnostics,
-      included: diagnostics.proseWords > 0,
-    });
-  }
-  const rows = [...records.values()].filter((record) => record.included);
-  const empty = score('', { language });
-  const counts = Object.fromEntries(
-    Object.entries(empty.counts).map(([key, value]) => [key, value === null ? null : 0])
-  );
-  let proseWords = 0;
-  let sentences = 0;
-  let longSentences = 0;
-  let phraseMatches = empty.lexicalSupported ? 0 : null;
-  for (const { diagnostics: item } of rows) {
-    proseWords += item.proseWords;
-    sentences += item.sentences;
-    longSentences += item.longSentences;
-    if (phraseMatches !== null) phraseMatches += item.phraseMatches;
-    for (const key of Object.keys(counts))
-      if (counts[key] !== null) counts[key] += item.counts[key];
+    records.set(key, selectDiagnosticSnapshot(records.get(key), event, language));
   }
   return {
-    label: 'optional style diagnostics',
+    ...aggregateDiagnostics(records.values(), language),
     sessionId,
-    language,
-    lexicalSupported: empty.lexicalSupported,
-    scorerVersion: SCHEMA_VERSION,
-    includedReplies: rows.length,
-    excludedNonProseReplies: records.size - rows.length,
     unidentifiedRecords,
     unsupportedRecords: count(unsupportedRecords),
     malformedRecords: count(malformedRecords),
     oversizedRecords: count(oversizedRecords),
-    proseWords,
-    sentences,
-    longSentences,
-    counts,
-    phraseMatches,
-    phraseMatchRatePer100ProseWords:
-      phraseMatches !== null && proseWords ? (phraseMatches * 100) / proseWords : null,
   };
 }
 
