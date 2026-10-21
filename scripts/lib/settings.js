@@ -3,6 +3,7 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const { atomicWrite } = require('./atomic');
 
 const SETTINGS_FILE =
   process.env.ERIDIAN_SETTINGS_FILE || path.join(os.homedir(), '.claude', 'settings.json');
@@ -45,10 +46,7 @@ function addStatusLine(settings, pluginRoot) {
 }
 
 function writeSettings(filePath, settings) {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  const tmp = `${filePath}.tmp`;
-  fs.writeFileSync(tmp, JSON.stringify(settings, null, 2));
-  fs.renameSync(tmp, filePath);
+  atomicWrite(filePath, settings);
 }
 
 module.exports = {
