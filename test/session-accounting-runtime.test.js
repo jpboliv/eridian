@@ -108,15 +108,27 @@ test('failed transactions release locks and atomic-write failures clean temporar
     fs.readdirSync(f.dir).every((name) => !name.endsWith('.tmp') && !name.endsWith('.lock'))
   );
 });
-test('abandoned lock times out without stealing ownership or overwriting data', (t) => {
+test('a lock held by a live owner times out without stealing ownership or overwriting data', (t) => {
   const f = fixture(t);
   run(f, 'mode.js', ['full']);
   const before = fs.readFileSync(path.join(f.dir, 'state.json'), 'utf8');
   fs.mkdirSync(path.join(f.dir, 'state.json.lock'));
-  fs.writeFileSync(path.join(f.dir, 'state.json.lock', 'owner'), '99999999');
+  fs.writeFileSync(path.join(f.dir, 'state.json.lock', 'owner'), String(process.pid));
   run(f, 'buddy-hook.js', ['prompt'], { session_id: 'alpha' });
   assert.equal(fs.readFileSync(path.join(f.dir, 'state.json'), 'utf8'), before);
-  assert.equal(fs.readFileSync(path.join(f.dir, 'state.json.lock', 'owner'), 'utf8'), '99999999');
+  assert.equal(
+    fs.readFileSync(path.join(f.dir, 'state.json.lock', 'owner'), 'utf8'),
+    String(process.pid)
+  );
+});
+test('a lock abandoned by a dead owner is reclaimed and the write lands', (t) => {
+  const f = fixture(t);
+  run(f, 'mode.js', ['full']);
+  fs.mkdirSync(path.join(f.dir, 'state.json.lock'));
+  fs.writeFileSync(path.join(f.dir, 'state.json.lock', 'owner'), '99999999');
+  run(f, 'buddy-hook.js', ['prompt'], { session_id: 'alpha' });
+  assert.ok(read(f).sessions.alpha, 'the session write landed');
+  assert.equal(fs.existsSync(path.join(f.dir, 'state.json.lock')), false);
 });
 
 test('simultaneous accounting refreshes deduplicate usage and emit one milestone', async (t) => {
