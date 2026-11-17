@@ -1,7 +1,9 @@
+const fs = require('node:fs');
+const path = require('node:path');
 const { MINI } = require('./buddy-art');
+const { atomicWrite } = require('./atomic');
 
-// Both hosts advance inside their session transaction so refreshes and speed
-// changes use the same animation clock. Off sessions never advance.
+// Off sessions never advance.
 function advanceBuddyFrame(state, nowMs) {
   if (!state.current || state.current === 'off') return state;
   state.buddy = state.buddy || {};
@@ -13,6 +15,32 @@ function advanceBuddyFrame(state, nowMs) {
     state.buddy.lastStepAt = new Date(nowMs).toISOString();
   }
   return state;
+}
+
+// A per-session file, not state.json: rewriting the locked store on every
+// refresh made mode changes wait on the statusline.
+function stepBuddyFrame(stateDir, id, state, nowMs) {
+  if (!state.current || state.current === 'off') return state;
+  const file = path.join(stateDir, 'frames', `${id}.json`);
+  let saved;
+  try {
+    saved = JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch {
+    saved = state.buddy || {}; // first refresh since frames moved out of state.json
+  }
+  const next = {
+    ...state,
+    buddy: { ...state.buddy, frame: saved.frame, lastStepAt: saved.lastStepAt },
+  };
+  advanceBuddyFrame(next, nowMs);
+  if (next.buddy.lastStepAt !== saved.lastStepAt) {
+    try {
+      atomicWrite(file, { frame: next.buddy.frame, lastStepAt: next.buddy.lastStepAt });
+    } catch {
+      // unwritable: draw this frame anyway; the next refresh retries
+    }
+  }
+  return next;
 }
 
 const WINDOWS = {
@@ -37,7 +65,7 @@ const QUIPS = {
 };
 
 // Per mood: which arm poses cycle, and special flags. Poses advance one
-// step per statusline refresh (buddy.frame, bumped by statusline.js) —
+// step per statusline refresh (buddy.frame, bumped by stepBuddyFrame) —
 // the host re-runs the statusline too rarely (~10s) for wall-clock ticks
 // to ever be seen, so the frame counter is the only animation clock.
 // still = frozen figure; tucked = asleep;
@@ -145,4 +173,4 @@ function renderBuddy(buddy = {}, nowMs) {
   return { rows: [merge(arms, MINI.dome), MINI.body, legs], quip };
 }
 
-module.exports = { deriveMood, renderBuddy, advanceBuddyFrame };
+module.exports = { deriveMood, renderBuddy, advanceBuddyFrame, stepBuddyFrame };

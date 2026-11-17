@@ -6,13 +6,13 @@ if (isOptedOut()) {
   process.exit(0);
 }
 
-const { readState, readStore, update, updateSession } = (() => {
+const { readState, readStore, update, STATE_DIR } = (() => {
   const { createCodexStore } = require('./store');
   return createCodexStore();
 })();
 const { commandIdentity } = require('./input');
 const { renderLines } = require('../statusline');
-const { advanceBuddyFrame } = require('../lib/buddy');
+const { stepBuddyFrame } = require('../lib/buddy');
 const arg = (process.argv[2] || '').trim();
 const identity = commandIdentity();
 
@@ -34,9 +34,7 @@ if (arg === '--render') {
   // Without a hook binding, retain the static preference preview and avoid
   // creating session state from an unverified command identity.
   if (identity.id && readStore().sessions[identity.id]?.binding?.id === identity.id)
-    state = updateSession(identity.id, (current) => advanceBuddyFrame(current, nowMs), {
-      cwd: process.cwd(),
-    });
+    state = stepBuddyFrame(STATE_DIR, identity.id, state, nowMs);
   process.stdout.write(renderLines(state, nowMs, null).join('\n'));
   process.exit(0);
 }

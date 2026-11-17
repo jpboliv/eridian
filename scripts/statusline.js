@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { renderBuddy, advanceBuddyFrame } = require('./lib/buddy');
+const { renderBuddy, stepBuddyFrame } = require('./lib/buddy');
 
 function formatTokens(n) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
@@ -39,7 +39,7 @@ if (require.main === module) {
   // the current session's transcript, everything else from our own state.
   const render = (raw) => {
     try {
-      const { readState, updateSession, sessionId } = require('./lib/state');
+      const { readState, updateSession, sessionId, STATE_DIR } = require('./lib/state');
       let input = {};
       try {
         input = JSON.parse(raw);
@@ -79,17 +79,17 @@ if (require.main === module) {
       // counter, not wall clock, is the buddy's clock (see lib/buddy.js).
       // buddy.stepSeconds (set via /eridian:buddy) throttles the advance to
       // at most once per that many seconds; 0/absent/invalid = every refresh.
-      if (state.current && state.current !== 'off') {
+      if (crossedMilestone && state.current && state.current !== 'off') {
         try {
           state = update((s) => {
-            advanceBuddyFrame(s, nowMs);
-            if (crossedMilestone) s.buddy.milestoneAt = new Date(nowMs).toISOString();
+            s.buddy.milestoneAt = new Date(nowMs).toISOString();
             return s;
           });
         } catch {
-          // refused write (unreadable state.json): draw the frame already read
+          // refused write (unreadable state.json): draw the state already read
         }
       }
+      state = stepBuddyFrame(STATE_DIR, id, state, nowMs);
       process.stdout.write(renderLines(state, nowMs, savedTokens).join('\n'));
     } catch {
       // statusline must never crash the host renderer
