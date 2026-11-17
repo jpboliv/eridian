@@ -51,33 +51,34 @@ test('buddy --render prints nothing when off and the mode segment when active', 
 test('bound buddy renders advance frames, obey speed, and stop advancing when off', () => {
   const f = fixture();
   const identity = { CODEX_THREAD_ID: 'thread-a' };
+  const frameFile = path.join(f.dir, 'codex', 'frames', 'thread-a.json');
+  const saved = () => JSON.parse(fs.readFileSync(frameFile, 'utf8'));
   f.run('session-start.js', [], { session_id: 'thread-a', source: 'startup', cwd: f.dir });
   f.run('mode.js', ['full'], {}, identity);
   f.run('buddy.js', ['0']);
+  const before = f.state();
   const first = f.run('buddy.js', ['--render'], {}, identity);
   const second = f.run('buddy.js', ['--render'], {}, identity);
   assert.notEqual(first, second);
-  assert.equal(f.state().sessions['thread-a'].buddy.frame, 2);
+  assert.equal(saved().frame, 2);
+  assert.deepEqual(f.state(), before, 'rendering never rewrites state.json');
 
   f.run('buddy.js', ['3600']);
-  const lastStepAt = f.state().sessions['thread-a'].buddy.lastStepAt;
+  const { lastStepAt } = saved();
   f.run('buddy.js', ['--render'], {}, identity);
-  assert.equal(f.state().sessions['thread-a'].buddy.frame, 2);
-  assert.equal(f.state().sessions['thread-a'].buddy.lastStepAt, lastStepAt);
+  assert.deepEqual(saved(), { frame: 2, lastStepAt });
 
-  const state = f.state();
-  state.sessions['thread-a'].buddy.lastStepAt = '2000-01-01T00:00:00.000Z';
-  fs.writeFileSync(path.join(f.dir, 'codex', 'state.json'), JSON.stringify(state));
+  fs.writeFileSync(frameFile, JSON.stringify({ frame: 2, lastStepAt: '2000-01-01T00:00:00.000Z' }));
   f.run('buddy.js', ['--render'], {}, identity);
-  assert.equal(f.state().sessions['thread-a'].buddy.frame, 3);
+  assert.equal(saved().frame, 3);
   f.run('buddy.js', ['0']);
   f.run('buddy.js', ['--render'], {}, identity);
-  assert.equal(f.state().sessions['thread-a'].buddy.frame, 4);
+  assert.equal(saved().frame, 4);
 
   f.run('mode.js', ['off'], {}, identity);
-  const before = f.state();
+  const frameBefore = saved();
   assert.equal(f.run('buddy.js', ['--render'], {}, identity), '');
-  assert.deepEqual(f.state(), before);
+  assert.deepEqual(saved(), frameBefore);
 });
 
 test('unbound buddy previews do not create sessions or modify preferences', () => {
