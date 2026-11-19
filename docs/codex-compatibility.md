@@ -80,6 +80,33 @@ state. Hooks are advisory and never block host work on operational errors.
 
 ## Task 0 evidence
 
+### Native pet addition
+
+The native CLI pet is a separate presentation path from `buddy.js --render`.
+`scripts/codex/pet.js install` copies the bundled `assets/codex-pet/` files to
+`${CODEX_HOME:-~/.codex}/pets/eridian-rocky/`. Select it with
+`/pets custom:eridian-rocky`; installation does not change the selected pet.
+The installer preserves existing different contents rather than overwriting them.
+
+The manifest and 1536 × 1872 transparent PNG use the Codex 0.155.1 custom pet
+contract (192 × 208 frames, eight columns and nine rows). Geometry, discovery,
+and animation tracks were checked against OpenAI's `rust-v0.155.1`
+`codex-rs/tui/src/pets/model.rs` and `catalog.rs`.
+Codex controls native activity states; this path does not display Eridian's
+mode, quips, savings, or custom hook moods. It requires a supported graphics
+terminal outside tmux/Zellij. See [official pets documentation](https://learn.chatgpt.com/docs/pets).
+The native pet does not establish support for a command-backed Codex status line.
+
+Native smoke check on 2026-09-22 with Codex CLI 0.155.1: selecting
+`/pets custom:eridian-rocky` loaded the installed assets, generated the native
+frame cache, emitted repeated Kitty-protocol image frames, and persisted
+`tui.pet = "custom:eridian-rocky"`. No model prompt was submitted. This verifies
+native loading and rendering output, not a visual inspection of the user's
+terminal window or every activity transition. The sprite sheet was inspected
+visually; the 259-test suite and lint passed.
+
+### Original implementation evidence
+
 Checked 2026-09-22 on macOS Darwin 25.6.0 arm64 with Node `v22.14.0` and
 `codex-cli 0.155.1`. No provider model turn, paid evaluation, plugin trust
 bypass, normal user profile mutation, or app installation was performed.
