@@ -99,7 +99,16 @@ test('CLI: a refresh without a milestone leaves state.json untouched', () => {
   const before = fs.readFileSync(stateFile, 'utf8');
   execFileSync('node', [SCRIPT], { env, input: JSON.stringify({ session_id: 'cli-sess' }) });
   assert.strictEqual(fs.readFileSync(stateFile, 'utf8'), before);
-  assert.ok(!fs.existsSync(`${stateFile}.lock`));
+});
+
+test('CLI: a refresh advances the frame while another process holds the state lock', () => {
+  const { stateDir, env } = cliEnv();
+  const lock = path.join(stateDir, 'state.json.lock');
+  fs.mkdirSync(lock);
+  fs.writeFileSync(path.join(lock, 'owner'), String(process.pid));
+  execFileSync('node', [SCRIPT], { env, input: JSON.stringify({ session_id: 'cli-sess' }) });
+  assert.strictEqual(savedFrame(stateDir, 'cli-sess').frame, 1);
+  assert.strictEqual(fs.readFileSync(path.join(lock, 'owner'), 'utf8'), String(process.pid));
 });
 
 test('CLI: off mode leaves buddy.frame untouched', () => {
