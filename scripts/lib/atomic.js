@@ -14,7 +14,8 @@ function atomicWrite(file, value) {
 }
 
 // A holder that is hard-killed (SIGKILL, host timeout) never runs its finally,
-// so its lock outlives it. Every holder finishes in well under this.
+// so its lock outlives it. The longest holder parses a session transcript, so
+// hold time grows with transcript size; one held past this is judged dead.
 const STALE_LOCK_MS = 30000;
 
 function ownerAlive(pid) {
@@ -26,45 +27,64 @@ function ownerAlive(pid) {
   }
 }
 
+function readOwner(lock) {
+  try {
+    return fs.readFileSync(path.join(lock, 'owner'), 'utf8');
+  } catch {
+    return null;
+  }
+}
+
 // Stale when the owner process is gone, or when the lock is too old to belong
 // to a live holder (covers a dead owner's PID being reused).
 function isStale(lock, stat) {
   if (Date.now() - stat.mtimeMs > STALE_LOCK_MS) return true;
-  let pid;
-  try {
-    pid = Number.parseInt(fs.readFileSync(path.join(lock, 'owner'), 'utf8'), 10);
-  } catch {
-    return false; // owner not written yet: a holder is mid-acquire
-  }
+  const owner = readOwner(lock);
+  if (owner === null) return false; // owner not written yet: a holder is mid-acquire
+  const pid = Number.parseInt(owner, 10);
   return Number.isInteger(pid) && pid > 0 && !ownerAlive(pid);
 }
 
-// Move the stale lock aside before deleting it, so a lock another process
-// acquired in the meantime is put back rather than deleted.
-function reclaim(lock, stat) {
-  const aside = `${lock}.${randomUUID()}.stale`;
+// Reclaimers queue behind a second lock and re-check staleness inside it. A dead
+// owner never releases its lock, so it cannot change between that check and the
+// rename; only a live holder already past STALE_LOCK_MS can still race it.
+function reclaim(lock) {
+  const guard = `${lock}.reclaim`;
   try {
+    fs.mkdirSync(guard);
+  } catch (error) {
+    // A reclaimer killed inside the guard would otherwise block reclaiming for good.
+    try {
+      if (error.code === 'EEXIST' && Date.now() - fs.statSync(guard).mtimeMs > STALE_LOCK_MS)
+        fs.rmdirSync(guard);
+    } catch {
+      /* another waiter removed it */
+    }
+    return false;
+  }
+  try {
+    if (!isStale(lock, fs.statSync(lock))) return false;
+    const aside = `${lock}.${randomUUID()}.stale`;
     fs.renameSync(lock, aside);
+    fs.rmSync(aside, { recursive: true, force: true });
+    return true;
   } catch {
-    return;
+    return false;
+  } finally {
+    fs.rmSync(guard, { recursive: true, force: true });
   }
-  try {
-    if (fs.statSync(aside).ino !== stat.ino) fs.renameSync(aside, lock);
-  } catch {
-    /* put-back lost the race; its holder already left */
-  }
-  fs.rmSync(aside, { recursive: true, force: true });
 }
 
 function withLock(file, fn) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   const lock = `${file}.lock`;
+  const owner = `${process.pid} ${randomUUID()}`;
   const deadline = Date.now() + 3000;
   while (true) {
     try {
       fs.mkdirSync(lock);
       try {
-        fs.writeFileSync(path.join(lock, 'owner'), String(process.pid));
+        fs.writeFileSync(path.join(lock, 'owner'), owner);
       } catch (error) {
         fs.rmSync(lock, { recursive: true, force: true });
         throw error;
@@ -78,10 +98,7 @@ function withLock(file, fn) {
       } catch {
         continue; // released between mkdir and stat
       }
-      if (isStale(lock, stat)) {
-        reclaim(lock, stat);
-        continue;
-      }
+      if (isStale(lock, stat) && reclaim(lock)) continue;
       if (Date.now() >= deadline)
         throw new Error('Eridian state lock timed out; inspect the lock owner before recovery', {
           cause: error,
@@ -92,7 +109,8 @@ function withLock(file, fn) {
   try {
     return fn();
   } finally {
-    fs.rmSync(lock, { recursive: true, force: true });
+    // A holder judged stale may have lost its lock to the next one; leave that one alone.
+    if (readOwner(lock) === owner) fs.rmSync(lock, { recursive: true, force: true });
   }
 }
 module.exports = { atomicWrite, withLock, STALE_LOCK_MS };
