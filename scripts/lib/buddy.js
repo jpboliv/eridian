@@ -173,4 +173,4 @@ function renderBuddy(buddy = {}, nowMs) {
   return { rows: [merge(arms, MINI.dome), MINI.body, legs], quip };
 }
 
-module.exports = { deriveMood, renderBuddy, advanceBuddyFrame, stepBuddyFrame };
+module.exports = { deriveMood, renderBuddy, stepBuddyFrame };
